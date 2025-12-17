@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { PostOffice } from './types';
+import type { PostOffice } from './types';
 import { unstable_noStore as noStore } from 'next/cache';
 
 // A simple CSV parser. This will not handle complex cases like quoted commas.
@@ -19,17 +19,36 @@ export async function loadPostOffices(): Promise<PostOffice[]> {
     const headerLine = lines.shift();
     if (!headerLine) return [];
 
-    const headers = headerLine.split(',').map(h => h.trim());
+    const headers = headerLine.split(',').map(h => h.trim().toLowerCase());
+    
+    const officenameIndex = headers.indexOf('officename');
+    const pincodeIndex = headers.indexOf('pincode');
+    const officetypeIndex = headers.indexOf('officetype');
+    const deliveryIndex = headers.indexOf('delivery');
+    const districtIndex = headers.indexOf('district');
+    const statenameIndex = headers.indexOf('statename');
+    const regionnameIndex = headers.indexOf('regionname');
+    const circlenameIndex = headers.indexOf('circlename');
+    const divisionnameIndex = headers.indexOf('divisionname');
+
 
     return lines
       .map(line => {
         if (!line) return null;
-        const values = line.split(',');
-        const entry: Record<string, string> = {};
-        headers.forEach((header, index) => {
-          entry[header] = values[index]?.trim() || '';
-        });
-        return entry as unknown as PostOffice;
+        // This regex handles quoted commas
+        const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/"/g, '').trim());
+        
+        return {
+            OfficeName: values[officenameIndex] || '',
+            Pincode: values[pincodeIndex] || '',
+            OfficeType: values[officetypeIndex] || '',
+            Delivery: values[deliveryIndex] || '',
+            District: values[districtIndex] || '',
+            StateName: values[statenameIndex] || '',
+            Region: values[regionnameIndex] || '',
+            Circle: values[circlenameIndex] || '',
+            Division: values[divisionnameIndex] || '',
+        } as PostOffice;
       })
       .filter((p): p is PostOffice => p !== null && !!p.OfficeName);
   } catch (error) {

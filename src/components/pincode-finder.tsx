@@ -30,49 +30,41 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, X } from 'lucide-react';
 
 export function PincodeFinder({ postOffices: initialPostOffices }: { postOffices: PostOffice[] }) {
-  const [postOffices, setPostOffices] = useState<PostOffice[]>([]);
-  const [filteredPostOffices, setFilteredPostOffices] = useState<PostOffice[]>([]);
+  const [isClient, setIsClient] = useState(false);
   
   const [selectedState, setSelectedState] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('');
-  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    setPostOffices(initialPostOffices);
-    setFilteredPostOffices(initialPostOffices);
-  }, [initialPostOffices]);
+  }, []);
 
   const states = useMemo(() => {
-    if (!isClient) return [];
-    const stateSet = new Set(postOffices.map(po => po.StateName));
+    const stateSet = new Set(initialPostOffices.map(po => po.StateName));
     return Array.from(stateSet).sort();
-  }, [postOffices, isClient]);
+  }, [initialPostOffices]);
 
   const districts = useMemo(() => {
-    if (!isClient || !selectedState) return [];
+    if (!selectedState) return [];
     const districtSet = new Set(
-      postOffices
+      initialPostOffices
         .filter(po => po.StateName === selectedState)
         .map(po => po.District)
     );
     return Array.from(districtSet).sort();
-  }, [postOffices, selectedState, isClient]);
+  }, [initialPostOffices, selectedState]);
   
-  useEffect(() => {
-    if (!isClient) return;
-
-    const filtered = postOffices.filter(po => {
+  const filteredPostOffices = useMemo(() => {
+    return initialPostOffices.filter(po => {
       if (selectedState && po.StateName !== selectedState) return false;
       if (selectedDistrict && po.District !== selectedDistrict) return false;
       if (searchTerm && !po.OfficeName.toLowerCase().includes(searchTerm.toLowerCase())) return false;
       if (selectedLetter && !po.OfficeName.toLowerCase().startsWith(selectedLetter.toLowerCase())) return false;
       return true;
     });
-    setFilteredPostOffices(filtered);
-  }, [postOffices, selectedState, selectedDistrict, searchTerm, selectedLetter, isClient]);
+  }, [initialPostOffices, selectedState, selectedDistrict, searchTerm, selectedLetter]);
 
 
   const handleStateChange = (state: string) => {
@@ -172,27 +164,25 @@ export function PincodeFinder({ postOffices: initialPostOffices }: { postOffices
                 <TableRow>
                   <TableHead>Office Name</TableHead>
                   <TableHead>Pincode</TableHead>
-                  <TableHead>Taluk</TableHead>
-                  <TableHead>Division</TableHead>
-                  <TableHead>Region</TableHead>
-                  <TableHead>Circle</TableHead>
+                  <TableHead>Office Type</TableHead>
+                  <TableHead>District</TableHead>
+                  <TableHead>State</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isClient && filteredPostOffices.length > 0 ? (
-                  filteredPostOffices.map(po => (
-                    <TableRow key={`${po.OfficeName}-${po.Pincode}`}>
+                  filteredPostOffices.map((po, index) => (
+                    <TableRow key={`${po.OfficeName}-${po.Pincode}-${index}`}>
                       <TableCell className="font-medium">{po.OfficeName}</TableCell>
                       <TableCell>{po.Pincode}</TableCell>
-                      <TableCell>{po.Taluk}</TableCell>
-                      <TableCell>{po.Division}</TableCell>
-                      <TableCell>{po.Region}</TableCell>
-                      <TableCell>{po.Circle}</TableCell>
+                      <TableCell>{po.OfficeType}</TableCell>
+                      <TableCell>{po.District}</TableCell>
+                      <TableCell>{po.StateName}</TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center">
+                    <TableCell colSpan={5} className="h-24 text-center">
                        {isClient ? "No results found. Try adjusting your filters." : "Loading..."}
                     </TableCell>
                   </TableRow>
