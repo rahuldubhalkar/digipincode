@@ -29,7 +29,10 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, X } from 'lucide-react';
 
-export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
+export function PincodeFinder({ postOffices: initialPostOffices }: { postOffices: PostOffice[] }) {
+  const [postOffices, setPostOffices] = useState<PostOffice[]>([]);
+  const [filteredPostOffices, setFilteredPostOffices] = useState<PostOffice[]>([]);
+  
   const [selectedState, setSelectedState] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,36 +41,39 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
 
   useEffect(() => {
     setIsClient(true);
-  }, []);
+    setPostOffices(initialPostOffices);
+    setFilteredPostOffices(initialPostOffices);
+  }, [initialPostOffices]);
 
   const states = useMemo(() => {
+    if (!isClient) return [];
     const stateSet = new Set(postOffices.map(po => po.StateName));
     return Array.from(stateSet).sort();
-  }, [postOffices]);
+  }, [postOffices, isClient]);
 
   const districts = useMemo(() => {
-    if (!selectedState) return [];
+    if (!isClient || !selectedState) return [];
     const districtSet = new Set(
       postOffices
         .filter(po => po.StateName === selectedState)
         .map(po => po.District)
     );
     return Array.from(districtSet).sort();
-  }, [postOffices, selectedState]);
+  }, [postOffices, selectedState, isClient]);
+  
+  useEffect(() => {
+    if (!isClient) return;
 
-  const filteredPostOffices = useMemo(() => {
-    // We only filter on the client to avoid hydration issues.
-    if (!isClient) {
-      return postOffices;
-    }
-    return postOffices.filter(po => {
+    const filtered = postOffices.filter(po => {
       if (selectedState && po.StateName !== selectedState) return false;
       if (selectedDistrict && po.District !== selectedDistrict) return false;
       if (searchTerm && !po.OfficeName.toLowerCase().includes(searchTerm.toLowerCase())) return false;
       if (selectedLetter && !po.OfficeName.toLowerCase().startsWith(selectedLetter.toLowerCase())) return false;
       return true;
     });
+    setFilteredPostOffices(filtered);
   }, [postOffices, selectedState, selectedDistrict, searchTerm, selectedLetter, isClient]);
+
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
@@ -173,7 +179,7 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredPostOffices.length > 0 ? (
+                {isClient && filteredPostOffices.length > 0 ? (
                   filteredPostOffices.map(po => (
                     <TableRow key={`${po.OfficeName}-${po.Pincode}`}>
                       <TableCell className="font-medium">{po.OfficeName}</TableCell>
@@ -187,7 +193,7 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={6} className="h-24 text-center">
-                      No results found. Try adjusting your filters.
+                       {isClient ? "No results found. Try adjusting your filters." : "Loading..."}
                     </TableCell>
                   </TableRow>
                 )}
