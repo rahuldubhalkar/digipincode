@@ -1,10 +1,12 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { PostOffice } from './types';
+import { unstable_noStore as noStore } from 'next/cache';
 
 // A simple CSV parser. This will not handle complex cases like quoted commas.
 // For this app's data, it's sufficient.
 export async function loadPostOffices(): Promise<PostOffice[]> {
+  noStore();
   const csvPath = path.join(process.cwd(), 'src', 'lib', 'pincode-data.csv');
   try {
     const csvData = await fs.readFile(csvPath, 'utf-8');
