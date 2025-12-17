@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import type { PostOffice } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,11 +34,6 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('');
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const states = useMemo(() => {
     const stateSet = new Set(postOffices.map(po => po.StateName));
@@ -68,6 +63,14 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
   const handleStateChange = (state: string) => {
     setSelectedState(state);
     setSelectedDistrict('');
+    setSearchTerm('');
+    setSelectedLetter('');
+  };
+
+  const handleDistrictChange = (district: string) => {
+    setSelectedDistrict(district);
+    setSearchTerm('');
+    setSelectedLetter('');
   };
 
   const handleLetterClick = (letter: string) => {
@@ -83,10 +86,6 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-  const resultKey = useMemo(() => {
-    return `${selectedState}-${selectedDistrict}-${searchTerm}-${selectedLetter}`;
-  }, [selectedState, selectedDistrict, searchTerm, selectedLetter]);
-
   return (
     <Card className="w-full shadow-lg border-none">
       <CardHeader>
@@ -101,19 +100,23 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
                 <SelectValue placeholder="Select a State" />
               </SelectTrigger>
               <SelectContent>
-                {states.map(state => (
-                  <SelectItem key={state} value={state}>{state}</SelectItem>
-                ))}
+                <ScrollArea className="h-72">
+                  {states.map(state => (
+                    <SelectItem key={state} value={state}>{state}</SelectItem>
+                  ))}
+                </ScrollArea>
               </SelectContent>
             </Select>
-            <Select onValueChange={setSelectedDistrict} value={selectedDistrict} disabled={!selectedState}>
+            <Select onValueChange={handleDistrictChange} value={selectedDistrict} disabled={!selectedState}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a City/District" />
               </SelectTrigger>
               <SelectContent>
-                {districts.map(district => (
-                  <SelectItem key={district} value={district}>{district}</SelectItem>
-                ))}
+                <ScrollArea className="h-72">
+                  {districts.map(district => (
+                    <SelectItem key={district} value={district}>{district}</SelectItem>
+                  ))}
+                </ScrollArea>
               </SelectContent>
             </Select>
             <div className="relative">
@@ -147,7 +150,7 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
            </div>
         </div>
 
-        {isClient && <div key={resultKey} className="animate-in fade-in-50 duration-500">
+        <div className="animate-in fade-in-50 duration-500">
           <ScrollArea className="h-[500px] border rounded-lg">
             <Table>
               <TableHeader className="sticky top-0 bg-card">
@@ -182,7 +185,7 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
               </TableBody>
             </Table>
           </ScrollArea>
-        </div>}
+        </div>
       </CardContent>
     </Card>
   );
