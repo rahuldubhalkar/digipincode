@@ -56,6 +56,7 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
   }, [postOffices, selectedState]);
 
   const filteredPostOffices = useMemo(() => {
+    // We only filter on the client to avoid hydration issues.
     if (!isClient) {
       return postOffices;
     }
