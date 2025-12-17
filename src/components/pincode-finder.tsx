@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { PostOffice } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,6 +34,11 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('');
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const states = useMemo(() => {
     const stateSet = new Set(postOffices.map(po => po.StateName));
@@ -142,7 +147,7 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
            </div>
         </div>
 
-        <div key={resultKey} className="animate-in fade-in-50 duration-500">
+        {isClient && <div key={resultKey} className="animate-in fade-in-50 duration-500">
           <ScrollArea className="h-[500px] border rounded-lg">
             <Table>
               <TableHeader className="sticky top-0 bg-card">
@@ -177,7 +182,7 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
               </TableBody>
             </Table>
           </ScrollArea>
-        </div>
+        </div>}
       </CardContent>
     </Card>
   );
