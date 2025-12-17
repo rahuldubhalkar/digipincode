@@ -1,0 +1,33 @@
+OfficeName,Pincode,Taluk,District,StateName,Division,Region,Circle
+Agra Fort,282003,Agra,Agra,UTTAR PRADESH,Agra,Agra,Uttar Pradesh
+Agra University,282004,Agra,Agra,UTTAR PRADESH,Agra,Agra,Uttar Pradesh
+Allahabad Kty,211002,Allahabad,Allahabad,UTTAR PRADESH,Allahabad,Allahabad,Uttar Pradesh
+Bandra West,400050,Mumbai,Mumbai,MAHARASHTRA,Mumbai West,Mumbai,Maharashtra
+Borivali,400091,Mumbai,Mumbai,MAHARASHTRA,Mumbai North,Mumbai,Maharashtra
+Chembur,400071,Mumbai,Mumbai,MAHARASHTRA,Mumbai East,Mumbai,Maharashtra
+Dadar,400014,Mumbai,Mumbai,MAHARASHTRA,Mumbai South Central,Mumbai,Maharashtra
+Pune City,411002,Pune,Pune,MAHARASHTRA,Pune City East,Pune,Maharashtra
+Shivaji Nagar,411005,Pune,Pune,MAHARASHTRA,Pune City West,Pune,Maharashtra
+Kolkata G.P.O.,700001,Kolkata,Kolkata,WEST BENGAL,Kolkata GPO,Kolkata,West Bengal
+Park Street,700016,Kolkata,Kolkata,WEST BENGAL,Kolkata South,Kolkata,West Bengal
+Howrah,711101,Howrah,Howrah,WEST BENGAL,Howrah,South Bengal,West Bengal
+Abhor,148107,Dhuri,Sangrur,PUNJAB,Sangrur,Chandigarh HQ,Punjab
+Acharwal,148104,Malerkotla,Sangrur,PUNJAB,Sangrur,Chandigarh HQ,Punjab
+Adampur,144102,Jalandhar - I,Jalandhar,PUNJAB,Jalandhar,Chandigarh HQ,Punjab
+Amritsar G.P.O.,143001,Amritsar -I,Amritsar,PUNJAB,Amritsar,Chandigarh HQ,Punjab
+Ludhiana Kty,141008,Ludhiana (East),Ludhiana,PUNJAB,Ludhiana City East,Chandigarh HQ,Punjab
+Patiala,147001,Patiala,Patiala,PUNJAB,Patiala,Chandigarh HQ,Punjab
+Anna Road,600002,Chennai,Chennai,TAMIL NADU,Chennai City Central,Chennai,Tamil Nadu
+T. Nagar,600017,Chennai,Chennai,TAMIL NADU,Chennai City South,Chennai,Tamil Nadu
+Madurai,625001,Madurai South,Madurai,TAMIL NADU,Madurai,Southern,Tamil Nadu
+Coimbatore,641001,Coimbatore South,Coimbatore,TAMIL NADU,Coimbatore,Western,Tamil Nadu
+Bangalore G.P.O.,560001,Bangalore North,Bangalore,KARNATAKA,Bangalore GPO,Bangalore HQ,Karnataka
+Jayanagar,560041,Bangalore South,Bangalore,KARNATAKA,Bangalore South,Bangalore HQ,Karnataka
+Mysore,570001,Mysore,Mysore,KARNATAKA,Mysore,South Karnataka,Karnataka
+Mangalore,575001,Mangalore,Dakshina Kannada,KARNATAKA,Mangalore,South Karnataka,Karnataka
+Jaipur G.P.O.,302001,Jaipur,Jaipur,RAJASTHAN,Jaipur,Jaipur HQ,Rajasthan
+Udaipur,313001,Girwa,Udaipur,RAJASTHAN,Udaipur,Ajmer,Rajasthan
+Jodhpur,342001,Jodhpur,Jodhpur,RAJASTHAN,Jodhpur,Jodhpur,Rajasthan
+Ahmedabad G.P.O.,380001,Ahmadabad City,Ahmedabad,GUJARAT,Ahmedabad GPO,Ahmedabad HQ,Gujarat
+Surat,395003,Surat City,Surat,GUJARAT,Surat,Vadodara,Gujarat
+Vadodara,390001,Vadodara,Vadodara,GUJARAT,Vadodara East,Vadodara,Gujarat
