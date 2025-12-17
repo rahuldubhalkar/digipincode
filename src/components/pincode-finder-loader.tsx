@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { PostOffice } from '@/lib/types';
 
 const PincodeFinder = dynamic(() => import('@/components/pincode-finder').then(mod => mod.PincodeFinder), { 
   ssr: false,
@@ -13,6 +12,6 @@ const PincodeFinder = dynamic(() => import('@/components/pincode-finder').then(m
   </div>
 });
 
-export function PincodeFinderLoader({ postOffices }: { postOffices: PostOffice[] }) {
-  return <PincodeFinder postOffices={postOffices} />;
+export function PincodeFinderLoader({ states }: { states: string[] }) {
+  return <PincodeFinder states={states} />;
 }

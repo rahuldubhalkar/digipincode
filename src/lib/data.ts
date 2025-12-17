@@ -1,58 +1,92 @@
-import fs from 'fs/promises';
-import path from 'path';
 import type { PostOffice } from './types';
 import { unstable_noStore as noStore } from 'next/cache';
 
-// A simple CSV parser. This will not handle complex cases like quoted commas.
-// For this app's data, it's sufficient.
-export async function loadPostOffices(): Promise<PostOffice[]> {
+const API_KEY = '579b464db66ec23bdd000001f96a317e4daa449850b07ef3ce5c9f4a';
+const API_URL = 'https://api.data.gov.in/resource/6176ee09-3d56-4a3b-8115-21841576b2f6';
+
+async function fetchFromAPI(filters: Record<string, string>, limit: number = 1000, offset: number = 0) {
   noStore();
-  const csvPath = path.join(process.cwd(), 'src', 'lib', 'pincode-data.csv');
+  const params = new URLSearchParams({
+    'api-key': API_KEY,
+    'format': 'json',
+    'limit': limit.toString(),
+    'offset': offset.toString(),
+  });
+
+  for (const key in filters) {
+    if (filters[key]) {
+      params.append(`filters[${key}]`, filters[key]);
+    }
+  }
+
   try {
-    const csvData = await fs.readFile(csvPath, 'utf-8');
-    const lines = csvData.trim().split('\n');
-    
-    if (lines.length < 2) {
+    const response = await fetch(`${API_URL}?${params.toString()}`);
+    if (!response.ok) {
+      console.error('API request failed with status:', response.status);
+      const errorBody = await response.text();
+      console.error('Error body:', errorBody);
       return [];
     }
-
-    const headerLine = lines.shift();
-    if (!headerLine) return [];
-
-    const headers = headerLine.split(',').map(h => h.trim().toLowerCase());
-    
-    const officenameIndex = headers.indexOf('officename');
-    const pincodeIndex = headers.indexOf('pincode');
-    const officetypeIndex = headers.indexOf('officetype');
-    const deliveryIndex = headers.indexOf('delivery');
-    const districtIndex = headers.indexOf('district');
-    const statenameIndex = headers.indexOf('statename');
-    const regionnameIndex = headers.indexOf('regionname');
-    const circlenameIndex = headers.indexOf('circlename');
-    const divisionnameIndex = headers.indexOf('divisionname');
-
-
-    return lines
-      .map(line => {
-        if (!line) return null;
-        // This regex handles quoted commas
-        const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/"/g, '').trim());
-        
-        return {
-            OfficeName: values[officenameIndex] || '',
-            Pincode: values[pincodeIndex] || '',
-            OfficeType: values[officetypeIndex] || '',
-            Delivery: values[deliveryIndex] || '',
-            District: values[districtIndex] || '',
-            StateName: values[statenameIndex] || '',
-            Region: values[regionnameIndex] || '',
-            Circle: values[circlenameIndex] || '',
-            Division: values[divisionnameIndex] || '',
-        } as PostOffice;
-      })
-      .filter((p): p is PostOffice => p !== null && !!p.OfficeName);
+    const data = await response.json();
+    return data.records;
   } catch (error) {
-    console.error("Failed to load or parse post office data:", error);
+    console.error("Failed to fetch data from API:", error);
     return [];
   }
+}
+
+export async function getStates(): Promise<string[]> {
+    // This API doesn't have a dedicated endpoint for states.
+    // For this demonstration, we'll hardcode a list of states.
+    // In a real-world application, you might pre-fetch and cache all records 
+    // to build this list, or have a separate endpoint.
+    return [
+        "ANDAMAN AND NICOBAR ISLANDS", "ANDHRA PRADESH", "ARUNACHAL PRADESH", "ASSAM",
+        "BIHAR", "CHANDIGARH", "CHHATTISGARH", "DADRA AND NAGAR HAVELI",
+        "DAMAN AND DIU", "DELHI", "GOA", "GUJARAT", "HARYANA", "HIMACHAL PRADESH",
+        "JAMMU AND KASHMIR", "JHARKHAND", "KARNATAKA", "KERALA", "LADAKH", "LAKSHADWEEP",
+        "MADHYA PRADESH", "MAHARASHTRA", "MANIPUR", "MEGHALAYA", "MIZORAM", "NAGALAND",
+        "ODISHA", "PUDUCHERRY", "PUNJAB", "RAJASTHAN", "SIKKIM", "TAMIL NADU",
+        "TELANGANA", "TRIPURA", "UTTAR PRADESH", "UTTARAKHAND", "WEST BENGAL"
+    ].sort();
+}
+
+
+export async function getDistricts(state: string): Promise<string[]> {
+  if (!state) return [];
+  // The API is slow for distinct values. We fetch a large number of records
+  // for the selected state and then derive the unique districts.
+  const records = await fetchFromAPI({ 'statename': state }, 1000);
+  const districtSet = new Set(records.map((r: any) => r.district));
+  return Array.from(districtSet).sort() as string[];
+}
+
+export async function findPostOffices(filters: {
+  state?: string;
+  district?: string;
+  searchTerm?: string;
+  letter?: string;
+}): Promise<PostOffice[]> {
+  const apiFilters: Record<string, string> = {};
+  if (filters.state) apiFilters['statename'] = filters.state;
+  if (filters.district) apiFilters['district'] = filters.district;
+  if (filters.searchTerm) apiFilters['officename'] = filters.searchTerm;
+
+  let records = await fetchFromAPI(apiFilters, 100);
+
+  if (filters.letter) {
+      records = records.filter((r: any) => r.officename.toLowerCase().startsWith(filters.letter!.toLowerCase()));
+  }
+
+  return records.map((r: any) => ({
+      OfficeName: r.officename,
+      Pincode: r.pincode,
+      OfficeType: r.officetype,
+      Delivery: r.deliverystatus,
+      District: r.district,
+      StateName: r.statename,
+      Region: r.regionname,
+      Circle: r.circlename,
+      Division: r.divisionname
+  }));
 }
