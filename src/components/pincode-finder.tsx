@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { PostOffice } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,6 +34,11 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('');
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const states = useMemo(() => {
     const stateSet = new Set(postOffices.map(po => po.StateName));
@@ -51,6 +56,9 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
   }, [postOffices, selectedState]);
 
   const filteredPostOffices = useMemo(() => {
+    if (!isClient) {
+      return postOffices;
+    }
     return postOffices.filter(po => {
       if (selectedState && po.StateName !== selectedState) return false;
       if (selectedDistrict && po.District !== selectedDistrict) return false;
@@ -58,7 +66,7 @@ export function PincodeFinder({ postOffices }: { postOffices: PostOffice[] }) {
       if (selectedLetter && !po.OfficeName.toLowerCase().startsWith(selectedLetter.toLowerCase())) return false;
       return true;
     });
-  }, [postOffices, selectedState, selectedDistrict, searchTerm, selectedLetter]);
+  }, [postOffices, selectedState, selectedDistrict, searchTerm, selectedLetter, isClient]);
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
