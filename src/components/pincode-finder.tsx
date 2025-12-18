@@ -75,7 +75,8 @@ export function PincodeFinder({ states }: { states: string[] }) {
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
-    setSelectedDistrict(''); // Reset district on state change
+    setSelectedDistrict(''); 
+    setDistricts([]);
   };
 
   const handleDistrictChange = (district: string) => {
