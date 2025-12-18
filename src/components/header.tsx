@@ -16,7 +16,7 @@ export default function Header() {
             <Link href="/">Home</Link>
           </Button>
           <Button variant="link" asChild>
-            <Link href="/">Find by Pincode</Link>
+            <Link href="/pincode">Find by Pincode</Link>
           </Button>
           <Button variant="link" asChild>
             <Link href="/about">About Us</Link>

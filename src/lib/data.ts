@@ -56,6 +56,24 @@ export async function getDivisions(state: string): Promise<string[]> {
   return Array.from(divisionSet).sort() as string[];
 }
 
+export async function findPostOfficesByPincode(pincode: string): Promise<PostOffice[]> {
+  if (!pincode) return [];
+  const records = await fetchFromAPI({ 'pincode': pincode }, 100);
+  if (!records) return [];
+  return records.map((r: any) => ({
+    officename: r.officename,
+    pincode: r.pincode,
+    officetype: r.officetype,
+    deliverystatus: r.deliverystatus,
+    district: r.district,
+    statename: r.statename,
+    regionname: r.regionname,
+    circlename: r.circlename,
+    divisionname: r.divisionname,
+    Taluk: r.taluk
+  }));
+}
+
 export async function findPostOffices(filters: {
   state?: string;
   division?: string;
