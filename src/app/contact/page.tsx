@@ -17,8 +17,8 @@ export default function ContactPage() {
               <Mail className="h-6 w-6 text-primary" />
               <div>
                 <h3 className="font-semibold">Email</h3>
-                <a href="mailto:support@digipincode.com" className="text-muted-foreground hover:text-primary">
-                  support@digipincode.com
+                <a href="mailto:rdubhalkar10@gmail.com" className="text-muted-foreground hover:text-primary">
+                  rdubhalkar10@gmail.com
                 </a>
               </div>
             </div>
