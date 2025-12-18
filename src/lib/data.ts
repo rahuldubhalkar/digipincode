@@ -4,7 +4,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 const API_KEY = '579b464db66ec23bdd000001f96a317e4daa449850b07ef3ce5c9f4a';
 const API_URL = 'https://api.data.gov.in/resource/6176ee09-3d56-4a3b-8115-21841576b2f6';
 
-async function fetchFromAPI(filters: Record<string, string>, limit: number = 1000, offset: number = 0) {
+async function fetchFromAPI(filters: Record<string, string>, limit: number = 1000, offset: number = 0): Promise<any[]> {
   noStore();
   const params = new URLSearchParams({
     'api-key': API_KEY,
@@ -28,7 +28,7 @@ async function fetchFromAPI(filters: Record<string, string>, limit: number = 100
       return [];
     }
     const data = await response.json();
-    return data.records;
+    return data.records || [];
   } catch (error) {
     console.error("Failed to fetch data from API:", error);
     return [];
@@ -57,6 +57,7 @@ export async function getDistricts(state: string): Promise<string[]> {
   // The API is slow for distinct values. We fetch a large number of records
   // for the selected state and then derive the unique districts.
   const records = await fetchFromAPI({ 'statename': state }, 1000);
+  if (!records) return [];
   const districtSet = new Set(records.map((r: any) => r.district));
   return Array.from(districtSet).sort() as string[];
 }
@@ -70,23 +71,31 @@ export async function findPostOffices(filters: {
   const apiFilters: Record<string, string> = {};
   if (filters.state) apiFilters['statename'] = filters.state;
   if (filters.district) apiFilters['district'] = filters.district;
-  if (filters.searchTerm) apiFilters['officename'] = filters.searchTerm;
+  // The API doesn't support partial matches well, so we only filter by search term if it's long enough
+  if (filters.searchTerm && filters.searchTerm.length > 2) apiFilters['officename'] = filters.searchTerm;
 
   let records = await fetchFromAPI(apiFilters, 100);
+  if (!records) return [];
+
+
+  if (filters.searchTerm && filters.searchTerm.length <= 2) {
+    records = records.filter((r: any) => r.officename.toLowerCase().includes(filters.searchTerm!.toLowerCase()));
+  }
 
   if (filters.letter) {
       records = records.filter((r: any) => r.officename.toLowerCase().startsWith(filters.letter!.toLowerCase()));
   }
 
   return records.map((r: any) => ({
-      OfficeName: r.officename,
-      Pincode: r.pincode,
-      OfficeType: r.officetype,
-      Delivery: r.deliverystatus,
-      District: r.district,
-      StateName: r.statename,
-      Region: r.regionname,
-      Circle: r.circlename,
-      Division: r.divisionname
+      officename: r.officename,
+      pincode: r.pincode,
+      officetype: r.officetype,
+      deliverystatus: r.deliverystatus,
+      district: r.district,
+      statename: r.statename,
+      regionname: r.regionname,
+      circlename: r.circlename,
+      divisionname: r.divisionname,
+      Taluk: r.taluk
   }));
 }

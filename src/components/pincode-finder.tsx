@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useEffect, useTransition, useMemo } from 'react';
 import type { PostOffice } from '@/lib/types';
 import { getDistricts, findPostOffices } from '@/lib/data';
 import { Button } from '@/components/ui/button';
@@ -161,14 +161,18 @@ export function PincodeFinder({ states }: { states: string[] }) {
                   <TableHead>Office Name</TableHead>
                   <TableHead>Pincode</TableHead>
                   <TableHead>Office Type</TableHead>
+                  <TableHead>Taluk</TableHead>
                   <TableHead>District</TableHead>
                   <TableHead>State</TableHead>
+                  <TableHead>Division</TableHead>
+                  <TableHead>Region</TableHead>
+                  <TableHead>Circle</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isPending ? (
                   <TableRow>
-                    <TableCell colSpan={5}>
+                    <TableCell colSpan={9}>
                       <div className='space-y-2'>
                         <Skeleton className="h-8 w-full" />
                         <Skeleton className="h-8 w-full" />
@@ -180,17 +184,21 @@ export function PincodeFinder({ states }: { states: string[] }) {
                   </TableRow>
                 ) : postOffices.length > 0 ? (
                   postOffices.map((po, index) => (
-                    <TableRow key={`${po.OfficeName}-${po.Pincode}-${index}`}>
-                      <TableCell className="font-medium">{po.OfficeName}</TableCell>
-                      <TableCell>{po.Pincode}</TableCell>
-                      <TableCell>{po.OfficeType}</TableCell>
-                      <TableCell>{po.District}</TableCell>
-                      <TableCell>{po.StateName}</TableCell>
+                    <TableRow key={`${po.officename}-${po.pincode}-${index}`}>
+                      <TableCell className="font-medium">{po.officename}</TableCell>
+                      <TableCell>{po.pincode}</TableCell>
+                      <TableCell>{po.officetype}</TableCell>
+                      <TableCell>{po.Taluk}</TableCell>
+                      <TableCell>{po.district}</TableCell>
+                      <TableCell>{po.statename}</TableCell>
+                      <TableCell>{po.divisionname}</TableCell>
+                      <TableCell>{po.regionname}</TableCell>
+                      <TableCell>{po.circlename}</TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">
+                    <TableCell colSpan={9} className="h-24 text-center">
                        No results found. Try adjusting your filters.
                     </TableCell>
                   </TableRow>

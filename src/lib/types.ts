@@ -1,11 +1,13 @@
 export type PostOffice = {
-  OfficeName: string;
-  Pincode: string;
-  OfficeType: string;
-  Delivery: string;
-  District: string;
-  StateName: string;
-  Region: string;
-  Circle: string;
-  Division: string;
-};
+    officename: string;
+    pincode: string;
+    officetype: string;
+    deliverystatus: string;
+    district: string;
+    statename: string;
+    regionname: string;
+    circlename: string;
+    divisionname: string;
+    Taluk: string;
+  };
+  
