@@ -165,7 +165,6 @@ export function PincodeFinder({ states }: { states: string[] }) {
                   <TableHead>Pincode</TableHead>
                   <TableHead>Office Type</TableHead>
                   <TableHead>Taluk</TableHead>
-                  <TableHead>District</TableHead>
                   <TableHead>State</TableHead>
                   <TableHead>Division</TableHead>
                   <TableHead>Region</TableHead>
@@ -175,7 +174,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
               <TableBody>
                 {isPending ? (
                   <TableRow>
-                    <TableCell colSpan={9}>
+                    <TableCell colSpan={8}>
                       <div className='space-y-2'>
                         <Skeleton className="h-8 w-full" />
                         <Skeleton className="h-8 w-full" />
@@ -192,7 +191,6 @@ export function PincodeFinder({ states }: { states: string[] }) {
                       <TableCell>{po.pincode}</TableCell>
                       <TableCell>{po.officetype}</TableCell>
                       <TableCell>{po.Taluk}</TableCell>
-                      <TableCell>{po.district}</TableCell>
                       <TableCell>{po.statename}</TableCell>
                       <TableCell>{po.divisionname}</TableCell>
                       <TableCell>{po.regionname}</TableCell>
@@ -201,7 +199,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={9} className="h-24 text-center">
+                    <TableCell colSpan={8} className="h-24 text-center">
                        No results found. Try adjusting your filters.
                     </TableCell>
                   </TableRow>
