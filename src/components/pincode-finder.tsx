@@ -78,8 +78,8 @@ export function PincodeFinder({ states }: { states: string[] }) {
     setSelectedDivision(division);
   };
 
-  const handleLetterClick = (letter: string) => {
-    setSelectedLetter(prev => (prev === letter ? '' : letter));
+  const handleLetterChange = (letter: string) => {
+    setSelectedLetter(letter === 'all' ? '' : letter);
   };
   
   const clearFilters = () => {
@@ -100,7 +100,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
       </CardHeader>
       <CardContent className="space-y-8">
         <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Select onValueChange={handleStateChange} value={selectedState}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a State" />
@@ -134,21 +134,19 @@ export function PincodeFinder({ states }: { states: string[] }) {
                 className="pl-10"
               />
             </div>
+            <Select onValueChange={handleLetterChange} value={selectedLetter}>
+                <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Filter by Letter" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    {alphabet.map(letter => (
+                        <SelectItem key={letter} value={letter}>{letter}</SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
           </div>
-          <div className="flex flex-wrap gap-1 md:gap-2 justify-center pt-4">
-            {alphabet.map(letter => (
-              <Button
-                key={letter}
-                variant={selectedLetter === letter ? 'default' : 'outline'}
-                size="icon"
-                className="h-8 w-8 md:h-9 md:w-9"
-                onClick={() => handleLetterClick(letter)}
-              >
-                {letter}
-              </Button>
-            ))}
-          </div>
-           <div className="flex justify-center">
+           <div className="flex justify-center pt-4">
             <Button variant="ghost" onClick={clearFilters} className="text-primary hover:text-primary">
               <X className="mr-2 h-4 w-4" />
               Clear All Filters
