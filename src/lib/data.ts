@@ -1,3 +1,5 @@
+'use server';
+
 import type { PostOffice } from './types';
 import { unstable_noStore as noStore } from 'next/cache';
 
