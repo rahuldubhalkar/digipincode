@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useTransition } from 'react';
 import type { PostOffice } from '@/lib/types';
-import { getDistricts, findPostOffices } from '@/lib/data';
+import { getRegions, findPostOffices } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -34,28 +34,28 @@ import { Skeleton } from './ui/skeleton';
 export function PincodeFinder({ states }: { states: string[] }) {
   const [isPending, startTransition] = useTransition();
 
-  const [districts, setDistricts] = useState<string[]>([]);
+  const [regions, setRegions] = useState<string[]>([]);
   const [postOffices, setPostOffices] = useState<PostOffice[]>([]);
 
   const [selectedState, setSelectedState] = useState('');
-  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('');
   
-  const [isLoadingDistricts, setIsLoadingDistricts] = useState(false);
+  const [isLoadingRegions, setIsLoadingRegions] = useState(false);
 
   useEffect(() => {
     if (selectedState) {
-      setIsLoadingDistricts(true);
-      setDistricts([]);
-      setSelectedDistrict('');
-      getDistricts(selectedState).then(d => {
-        setDistricts(d);
-        setIsLoadingDistricts(false);
+      setIsLoadingRegions(true);
+      setRegions([]);
+      setSelectedRegion('');
+      getRegions(selectedState).then(r => {
+        setRegions(r);
+        setIsLoadingRegions(false);
       });
     } else {
-      setDistricts([]);
-      setSelectedDistrict('');
+      setRegions([]);
+      setSelectedRegion('');
     }
   }, [selectedState]);
 
@@ -63,19 +63,19 @@ export function PincodeFinder({ states }: { states: string[] }) {
     startTransition(() => {
       findPostOffices({
         state: selectedState,
-        district: selectedDistrict,
+        region: selectedRegion,
         searchTerm,
         letter: selectedLetter,
       }).then(setPostOffices);
     });
-  }, [selectedState, selectedDistrict, searchTerm, selectedLetter]);
+  }, [selectedState, selectedRegion, searchTerm, selectedLetter]);
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
   };
 
-  const handleDistrictChange = (district: string) => {
-    setSelectedDistrict(district);
+  const handleRegionChange = (region: string) => {
+    setSelectedRegion(region);
   };
 
   const handleLetterClick = (letter: string) => {
@@ -84,10 +84,10 @@ export function PincodeFinder({ states }: { states: string[] }) {
   
   const clearFilters = () => {
     setSelectedState('');
-    setSelectedDistrict('');
+    setSelectedRegion('');
     setSearchTerm('');
     setSelectedLetter('');
-    setDistricts([]);
+    setRegions([]);
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -107,20 +107,20 @@ export function PincodeFinder({ states }: { states: string[] }) {
               </SelectTrigger>
               <SelectContent>
                 <ScrollArea className="h-72">
-                  {states.map((state, index) => (
-                    <SelectItem key={`${state}-${index}`} value={state}>{state}</SelectItem>
+                  {states.map((state) => (
+                    <SelectItem key={state} value={state}>{state}</SelectItem>
                   ))}
                 </ScrollArea>
               </SelectContent>
             </Select>
-            <Select onValueChange={handleDistrictChange} value={selectedDistrict} disabled={!selectedState || isLoadingDistricts}>
+            <Select onValueChange={handleRegionChange} value={selectedRegion} disabled={!selectedState || isLoadingRegions}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder={isLoadingDistricts ? "Loading..." : "Select a City/District"} />
+                <SelectValue placeholder={isLoadingRegions ? "Loading..." : "Select a Region"} />
               </SelectTrigger>
               <SelectContent>
                 <ScrollArea className="h-72">
-                  {districts.map((district, index) => (
-                    <SelectItem key={`${district}-${index}`} value={district}>{district}</SelectItem>
+                  {regions.map((region) => (
+                    <SelectItem key={region} value={region}>{region}</SelectItem>
                   ))}
                 </ScrollArea>
               </SelectContent>

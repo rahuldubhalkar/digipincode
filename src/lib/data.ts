@@ -36,10 +36,6 @@ async function fetchFromAPI(filters: Record<string, string>, limit: number = 100
 }
 
 export async function getStates(): Promise<string[]> {
-    // This API doesn't have a dedicated endpoint for states.
-    // For this demonstration, we'll hardcode a list of states.
-    // In a real-world application, you might pre-fetch and cache all records 
-    // to build this list, or have a separate endpoint.
     return [
         "ANDAMAN AND NICOBAR ISLANDS", "ANDHRA PRADESH", "ARUNACHAL PRADESH", "ASSAM",
         "BIHAR", "CHANDIGARH", "CHHATTISGARH", "DADRA AND NAGAR HAVELI",
@@ -52,30 +48,26 @@ export async function getStates(): Promise<string[]> {
 }
 
 
-export async function getDistricts(state: string): Promise<string[]> {
+export async function getRegions(state: string): Promise<string[]> {
   if (!state) return [];
-  // Fetch a large number of records for the selected state to get all districts.
   const records = await fetchFromAPI({ 'statename': state }, 5000);
   if (!records) return [];
-  const districtSet = new Set(records.map((r: any) => r.district));
-  return Array.from(districtSet).sort() as string[];
+  const regionSet = new Set(records.map((r: any) => r.regionname));
+  return Array.from(regionSet).sort() as string[];
 }
 
 export async function findPostOffices(filters: {
   state?: string;
-  district?: string;
+  region?: string;
   searchTerm?: string;
   letter?: string;
 }): Promise<PostOffice[]> {
   const apiFilters: Record<string, string> = {};
   if (filters.state) apiFilters['statename'] = filters.state;
-  if (filters.district) apiFilters['district'] = filters.district;
-  // The API doesn't support partial matches well, so we only filter by search term if it's long enough
-  if (filters.searchTerm && filters.searchTerm.length > 2) apiFilters['officename'] = filters.searchTerm;
-
-  let records = await fetchFromAPI(apiFilters, 1000);
+  if (filters.region) apiFilters['regionname'] = filters.region;
+  
+  let records = await fetchFromAPI(apiFilters, 2000);
   if (!records) return [];
-
 
   if (filters.searchTerm) {
     records = records.filter((r: any) => r.officename.toLowerCase().includes(filters.searchTerm!.toLowerCase()));
