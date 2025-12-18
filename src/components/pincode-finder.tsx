@@ -43,6 +43,11 @@ export function PincodeFinder({ states }: { states: string[] }) {
   const [selectedLetter, setSelectedLetter] = useState('');
   
   const [isLoadingDistricts, setIsLoadingDistricts] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (selectedState) {
@@ -90,6 +95,14 @@ export function PincodeFinder({ states }: { states: string[] }) {
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  
+  if (!isClient) {
+    return <div className="space-y-4">
+      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-64 w-full" />
+    </div>;
+  }
 
   return (
     <Card className="w-full shadow-lg border-none">
