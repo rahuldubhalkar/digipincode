@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition, useMemo } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import type { PostOffice } from '@/lib/types';
 import { getDistricts, findPostOffices } from '@/lib/data';
 import { Button } from '@/components/ui/button';
@@ -43,23 +43,20 @@ export function PincodeFinder({ states }: { states: string[] }) {
   const [selectedLetter, setSelectedLetter] = useState('');
   
   const [isLoadingDistricts, setIsLoadingDistricts] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   useEffect(() => {
     if (selectedState) {
       setIsLoadingDistricts(true);
+      setDistricts([]);
+      setSelectedDistrict('');
       getDistricts(selectedState).then(d => {
         setDistricts(d);
         setIsLoadingDistricts(false);
       });
     } else {
       setDistricts([]);
+      setSelectedDistrict('');
     }
-    setSelectedDistrict('');
   }, [selectedState]);
 
   useEffect(() => {
@@ -75,8 +72,6 @@ export function PincodeFinder({ states }: { states: string[] }) {
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
-    setSelectedDistrict(''); 
-    setDistricts([]);
   };
 
   const handleDistrictChange = (district: string) => {
@@ -96,14 +91,6 @@ export function PincodeFinder({ states }: { states: string[] }) {
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-  
-  if (!isClient) {
-    return <div className="space-y-4">
-      <Skeleton className="h-10 w-full" />
-      <Skeleton className="h-10 w-full" />
-      <Skeleton className="h-64 w-full" />
-    </div>;
-  }
 
   return (
     <Card className="w-full shadow-lg border-none">
