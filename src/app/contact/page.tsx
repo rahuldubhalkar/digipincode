@@ -27,7 +27,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-semibold">Phone</h3>
                 <span className="text-muted-foreground">
-                  +91 (555) 123-4567
+                  +91 8237418168
                 </span>
               </div>
             </div>
