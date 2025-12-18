@@ -156,7 +156,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
            </div>
         </div>
 
-        <div>
+        <div className="w-full overflow-x-auto">
           <ScrollArea className="h-[500px] border rounded-lg">
             <Table>
               <TableHeader className="sticky top-0 bg-card">
