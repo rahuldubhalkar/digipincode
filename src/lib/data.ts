@@ -48,23 +48,23 @@ export async function getStates(): Promise<string[]> {
 }
 
 
-export async function getRegions(state: string): Promise<string[]> {
+export async function getDivisions(state: string): Promise<string[]> {
   if (!state) return [];
   const records = await fetchFromAPI({ 'statename': state }, 5000);
   if (!records) return [];
-  const regionSet = new Set(records.map((r: any) => r.regionname));
-  return Array.from(regionSet).sort() as string[];
+  const divisionSet = new Set(records.map((r: any) => r.divisionname));
+  return Array.from(divisionSet).sort() as string[];
 }
 
 export async function findPostOffices(filters: {
   state?: string;
-  region?: string;
+  division?: string;
   searchTerm?: string;
   letter?: string;
 }): Promise<PostOffice[]> {
   const apiFilters: Record<string, string> = {};
   if (filters.state) apiFilters['statename'] = filters.state;
-  if (filters.region) apiFilters['regionname'] = filters.region;
+  if (filters.division) apiFilters['divisionname'] = filters.division;
   
   let records = await fetchFromAPI(apiFilters, 2000);
   if (!records) return [];

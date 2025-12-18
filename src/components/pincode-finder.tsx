@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useTransition } from 'react';
 import type { PostOffice } from '@/lib/types';
-import { getRegions, findPostOffices } from '@/lib/data';
+import { getDivisions, findPostOffices } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -34,28 +34,28 @@ import { Skeleton } from './ui/skeleton';
 export function PincodeFinder({ states }: { states: string[] }) {
   const [isPending, startTransition] = useTransition();
 
-  const [regions, setRegions] = useState<string[]>([]);
+  const [divisions, setDivisions] = useState<string[]>([]);
   const [postOffices, setPostOffices] = useState<PostOffice[]>([]);
 
   const [selectedState, setSelectedState] = useState('');
-  const [selectedRegion, setSelectedRegion] = useState('');
+  const [selectedDivision, setSelectedDivision] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('');
   
-  const [isLoadingRegions, setIsLoadingRegions] = useState(false);
+  const [isLoadingDivisions, setIsLoadingDivisions] = useState(false);
 
   useEffect(() => {
     if (selectedState) {
-      setIsLoadingRegions(true);
-      setRegions([]);
-      setSelectedRegion('');
-      getRegions(selectedState).then(r => {
-        setRegions(r);
-        setIsLoadingRegions(false);
+      setIsLoadingDivisions(true);
+      setDivisions([]);
+      setSelectedDivision('');
+      getDivisions(selectedState).then(d => {
+        setDivisions(d);
+        setIsLoadingDivisions(false);
       });
     } else {
-      setRegions([]);
-      setSelectedRegion('');
+      setDivisions([]);
+      setSelectedDivision('');
     }
   }, [selectedState]);
 
@@ -63,19 +63,19 @@ export function PincodeFinder({ states }: { states: string[] }) {
     startTransition(() => {
       findPostOffices({
         state: selectedState,
-        region: selectedRegion,
+        division: selectedDivision,
         searchTerm,
         letter: selectedLetter,
       }).then(setPostOffices);
     });
-  }, [selectedState, selectedRegion, searchTerm, selectedLetter]);
+  }, [selectedState, selectedDivision, searchTerm, selectedLetter]);
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
   };
 
-  const handleRegionChange = (region: string) => {
-    setSelectedRegion(region);
+  const handleDivisionChange = (division: string) => {
+    setSelectedDivision(division);
   };
 
   const handleLetterClick = (letter: string) => {
@@ -84,10 +84,10 @@ export function PincodeFinder({ states }: { states: string[] }) {
   
   const clearFilters = () => {
     setSelectedState('');
-    setSelectedRegion('');
+    setSelectedDivision('');
     setSearchTerm('');
     setSelectedLetter('');
-    setRegions([]);
+    setDivisions([]);
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -113,14 +113,14 @@ export function PincodeFinder({ states }: { states: string[] }) {
                 </ScrollArea>
               </SelectContent>
             </Select>
-            <Select onValueChange={handleRegionChange} value={selectedRegion} disabled={!selectedState || isLoadingRegions}>
+            <Select onValueChange={handleDivisionChange} value={selectedDivision} disabled={!selectedState || isLoadingDivisions}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder={isLoadingRegions ? "Loading..." : "Select a Region"} />
+                <SelectValue placeholder={isLoadingDivisions ? "Loading..." : "Select a Division"} />
               </SelectTrigger>
               <SelectContent>
                 <ScrollArea className="h-72">
-                  {regions.map((region) => (
-                    <SelectItem key={region} value={region}>{region}</SelectItem>
+                  {divisions.map((division) => (
+                    <SelectItem key={division} value={division}>{division}</SelectItem>
                   ))}
                 </ScrollArea>
               </SelectContent>
