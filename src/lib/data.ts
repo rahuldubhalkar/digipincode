@@ -54,9 +54,8 @@ export async function getStates(): Promise<string[]> {
 
 export async function getDistricts(state: string): Promise<string[]> {
   if (!state) return [];
-  // The API is slow for distinct values. We fetch a large number of records
-  // for the selected state and then derive the unique districts.
-  const records = await fetchFromAPI({ 'statename': state }, 1000);
+  // Fetch a large number of records for the selected state to get all districts.
+  const records = await fetchFromAPI({ 'statename': state }, 5000);
   if (!records) return [];
   const districtSet = new Set(records.map((r: any) => r.district));
   return Array.from(districtSet).sort() as string[];
@@ -74,11 +73,11 @@ export async function findPostOffices(filters: {
   // The API doesn't support partial matches well, so we only filter by search term if it's long enough
   if (filters.searchTerm && filters.searchTerm.length > 2) apiFilters['officename'] = filters.searchTerm;
 
-  let records = await fetchFromAPI(apiFilters, 100);
+  let records = await fetchFromAPI(apiFilters, 1000);
   if (!records) return [];
 
 
-  if (filters.searchTerm && filters.searchTerm.length <= 2) {
+  if (filters.searchTerm) {
     records = records.filter((r: any) => r.officename.toLowerCase().includes(filters.searchTerm!.toLowerCase()));
   }
 
