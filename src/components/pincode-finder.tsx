@@ -70,6 +70,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
+    setSelectedDistrict(''); // Reset district on state change
   };
 
   const handleDistrictChange = (district: string) => {
@@ -85,6 +86,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
     setSelectedDistrict('');
     setSearchTerm('');
     setSelectedLetter('');
+    setDistricts([]);
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
