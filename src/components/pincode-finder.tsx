@@ -156,57 +156,105 @@ export function PincodeFinder({ states }: { states: string[] }) {
            </div>
         </div>
 
-        <div className="w-full overflow-x-auto">
-          <ScrollArea className="h-[500px] border rounded-lg">
-            <Table>
-              <TableHeader className="sticky top-0 bg-card">
-                <TableRow>
-                  <TableHead>Office Name</TableHead>
-                  <TableHead>Pincode</TableHead>
-                  <TableHead>Office Type</TableHead>
-                  <TableHead>Taluk</TableHead>
-                  <TableHead>State</TableHead>
-                  <TableHead>Division</TableHead>
-                  <TableHead>Region</TableHead>
-                  <TableHead>Circle</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isPending ? (
-                  <TableRow>
-                    <TableCell colSpan={8}>
-                      <div className='space-y-2'>
-                        <Skeleton className="h-8 w-full" />
-                        <Skeleton className="h-8 w-full" />
-                        <Skeleton className="h-8 w-full" />
-                        <Skeleton className="h-8 w-full" />
-                        <Skeleton className="h-8 w-full" />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ) : postOffices.length > 0 ? (
-                  postOffices.map((po, index) => (
-                    <TableRow key={`${po.officename}-${po.pincode}-${index}`}>
-                      <TableCell className="font-medium">{po.officename}</TableCell>
-                      <TableCell>{po.pincode}</TableCell>
-                      <TableCell>{po.officetype}</TableCell>
-                      <TableCell>{po.Taluk}</TableCell>
-                      <TableCell>{po.statename}</TableCell>
-                      <TableCell>{po.divisionname}</TableCell>
-                      <TableCell>{po.regionname}</TableCell>
-                      <TableCell>{po.circlename}</TableCell>
+        <div className="w-full">
+            <div className="hidden md:block">
+              <ScrollArea className="h-[500px] border rounded-lg">
+                <Table>
+                  <TableHeader className="sticky top-0 bg-card">
+                    <TableRow>
+                      <TableHead>Office Name</TableHead>
+                      <TableHead>Pincode</TableHead>
+                      <TableHead>Office Type</TableHead>
+                      <TableHead>Taluk</TableHead>
+                      <TableHead>State</TableHead>
+                      <TableHead>Division</TableHead>
+                      <TableHead>Region</TableHead>
+                      <TableHead>Circle</TableHead>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={8} className="h-24 text-center">
-                       No results found. Try adjusting your filters.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </ScrollArea>
+                  </TableHeader>
+                  <TableBody>
+                    {isPending ? (
+                      <TableRow>
+                        <TableCell colSpan={8}>
+                          <div className='space-y-2'>
+                            <Skeleton className="h-8 w-full" />
+                            <Skeleton className="h-8 w-full" />
+                            <Skeleton className="h-8 w-full" />
+                            <Skeleton className="h-8 w-full" />
+                            <Skeleton className="h-8 w-full" />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ) : postOffices.length > 0 ? (
+                      postOffices.map((po, index) => (
+                        <TableRow key={`${po.officename}-${po.pincode}-${index}`}>
+                          <TableCell className="font-medium">{po.officename}</TableCell>
+                          <TableCell>{po.pincode}</TableCell>
+                          <TableCell>{po.officetype}</TableCell>
+                          <TableCell>{po.Taluk}</TableCell>
+                          <TableCell>{po.statename}</TableCell>
+                          <TableCell>{po.divisionname}</TableCell>
+                          <TableCell>{po.regionname}</TableCell>
+                          <TableCell>{po.circlename}</TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={8} className="h-24 text-center">
+                           No results found. Try adjusting your filters.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </ScrollArea>
+            </div>
+            <div className="block md:hidden">
+                <ScrollArea className="h-[500px]">
+                    <div className="space-y-4">
+                    {isPending ? (
+                        <div className='space-y-4'>
+                            <Skeleton className="h-32 w-full" />
+                            <Skeleton className="h-32 w-full" />
+                            <Skeleton className="h-32 w-full" />
+                        </div>
+                    ) : postOffices.length > 0 ? (
+                        postOffices.map((po, index) => (
+                            <Card key={`${po.officename}-${po.pincode}-${index}`} className="border rounded-lg p-4">
+                                <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                                    <div className="font-semibold col-span-2 text-base">{po.officename}</div>
+                                    
+                                    <div className="text-muted-foreground">Pincode</div>
+                                    <div>{po.pincode}</div>
+                                    
+                                    <div className="text-muted-foreground">Type</div>
+                                    <div>{po.officetype}</div>
+
+                                    <div className="text-muted-foreground">Taluk</div>
+                                    <div>{po.Taluk}</div>
+                                    
+                                    <div className="text-muted-foreground">State</div>
+                                    <div>{po.statename}</div>
+
+                                    <div className="text-muted-foreground">Division</div>
+                                    <div>{po.divisionname}</div>
+
+                                    <div className="text-muted-foreground">Region</div>
+                                    <div>{po.regionname}</div>
+
+                                    <div className="text-muted-foreground">Circle</div>
+                                    <div>{po.circlename}</div>
+                                </div>
+                            </Card>
+                        ))
+                    ) : (
+                        <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
+                            No results found. Try adjusting your filters.
+                        </div>
+                    )}
+                    </div>
+                </ScrollArea>
+            </div>
         </div>
       </CardContent>
     </Card>
