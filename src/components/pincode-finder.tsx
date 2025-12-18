@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useTransition } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import type { PostOffice } from '@/lib/types';
 import { getDistricts, findPostOffices } from '@/lib/data';
 import { Button } from '@/components/ui/button';
