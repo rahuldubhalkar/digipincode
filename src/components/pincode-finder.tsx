@@ -107,8 +107,8 @@ export function PincodeFinder({ states }: { states: string[] }) {
               </SelectTrigger>
               <SelectContent>
                 <ScrollArea className="h-72">
-                  {states.map(state => (
-                    <SelectItem key={state} value={state}>{state}</SelectItem>
+                  {states.map((state, index) => (
+                    <SelectItem key={`${state}-${index}`} value={state}>{state}</SelectItem>
                   ))}
                 </ScrollArea>
               </SelectContent>
@@ -119,8 +119,8 @@ export function PincodeFinder({ states }: { states: string[] }) {
               </SelectTrigger>
               <SelectContent>
                 <ScrollArea className="h-72">
-                  {districts.map(district => (
-                    <SelectItem key={district} value={district}>{district}</SelectItem>
+                  {districts.map((district, index) => (
+                    <SelectItem key={`${district}-${index}`} value={district}>{district}</SelectItem>
                   ))}
                 </ScrollArea>
               </SelectContent>
