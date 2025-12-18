@@ -8,20 +8,20 @@ export default function Header() {
   return (
     <header className="bg-card border-b shadow-sm">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-primary">
+        <Link href="/" className="text-2xl font-bold text-foreground">
           digi-pincode
         </Link>
-        <nav className="hidden md:flex items-center space-x-4">
-          <Button variant="link" asChild>
+        <nav className="hidden md:flex items-center space-x-1">
+          <Button variant="ghost" asChild>
             <Link href="/">Home</Link>
           </Button>
-          <Button variant="link" asChild>
+          <Button variant="ghost" asChild>
             <Link href="/pincode">Find by Pincode</Link>
           </Button>
-          <Button variant="link" asChild>
+          <Button variant="ghost" asChild>
             <Link href="/about">About Us</Link>
           </Button>
-          <Button variant="link" asChild>
+          <Button variant="ghost" asChild>
             <Link href="/contact">Contact Us</Link>
           </Button>
         </nav>
