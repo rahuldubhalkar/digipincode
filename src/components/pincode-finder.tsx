@@ -46,19 +46,22 @@ export function PincodeFinder({ states }: { states: string[] }) {
   
   const [isLoadingDivisions, setIsLoadingDivisions] = useState(false);
 
-  const performSearch = useCallback(() => {
-    if (!selectedState || !selectedDivision) {
+  const performSearch = useCallback((state = selectedState, division = selectedDivision) => {
+    if (!state || !division) {
       setPostOffices([]);
       return;
     };
     setSearched(true);
     startTransition(() => {
       findPostOffices({
-        state: selectedState,
-        division: selectedDivision,
+        state,
+        division,
         searchTerm,
         letter: selectedLetter,
-      }).then(setPostOffices);
+      }).then(offices => {
+        const sortedOffices = offices.sort((a, b) => a.officename.localeCompare(b.officename));
+        setPostOffices(sortedOffices);
+      });
     });
   }, [selectedState, selectedDivision, searchTerm, selectedLetter]);
 
@@ -66,11 +69,8 @@ export function PincodeFinder({ states }: { states: string[] }) {
   useEffect(() => {
     if (selectedState && selectedDivision) {
       performSearch();
-    } else {
-        setPostOffices([]);
-        setSearched(false);
     }
-  }, [selectedState, selectedDivision, searchTerm, selectedLetter, performSearch]);
+  }, [searchTerm, selectedLetter, performSearch, selectedState, selectedDivision]);
 
 
   useEffect(() => {
@@ -80,16 +80,34 @@ export function PincodeFinder({ states }: { states: string[] }) {
       getDivisions(selectedState).then(d => {
         setDivisions(d);
         setIsLoadingDivisions(false);
+        if (d.length > 0) {
+            // Automatically select the first division and trigger search
+            const firstDivision = d[0];
+            setSelectedDivision(firstDivision);
+            performSearch(selectedState, firstDivision);
+        }
       });
     } else {
       setDivisions([]);
       setSelectedDivision('');
     }
-  }, [selectedState]);
+  }, [selectedState, performSearch]);
+
+  useEffect(() => {
+    // On initial load, set a default state to show some data.
+    if (states.length > 0 && !selectedState) {
+        const defaultState = "ANDAMAN AND NICOBAR ISLANDS";
+        setSelectedState(defaultState);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [states]);
 
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
+    setSearchTerm('');
+    setSelectedLetter('');
+    setPostOffices([]);
   };
 
   const handleDivisionChange = (division: string) => {
