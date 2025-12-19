@@ -23,8 +23,10 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "@/lib/i18n/use-translation";
 
 export default function PincodePage() {
+  const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
   const [pincode, setPincode] = useState("");
   const [postOffices, setPostOffices] = useState<PostOffice[]>([]);
@@ -45,23 +47,23 @@ export default function PincodePage() {
     <main className="container mx-auto px-4 py-8">
       <Card className="w-full max-w-4xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-3xl">Find by Pincode</CardTitle>
+          <CardTitle className="text-3xl">{t('pincodePage.title')}</CardTitle>
           <CardDescription>
-            Enter a 6-digit pincode to find post office details.
+            {t('pincodePage.description')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-8">
           <div className="flex w-full max-w-sm items-center space-x-2">
             <Input
               type="text"
-              placeholder="Enter 6-digit pincode"
+              placeholder={t('pincodePage.placeholder')}
               value={pincode}
               onChange={(e) => setPincode(e.target.value)}
               maxLength={6}
             />
             <Button type="button" onClick={handleSearch} disabled={isPending}>
               <Search className="mr-2 h-4 w-4" />
-              {isPending ? "Searching..." : "Search"}
+              {isPending ? t('pincodePage.searching') : t('pincodePage.search')}
             </Button>
           </div>
 
@@ -71,14 +73,14 @@ export default function PincodePage() {
                 <Table>
                   <TableHeader className="sticky top-0 bg-card">
                     <TableRow>
-                      <TableHead>Office Name</TableHead>
-                      <TableHead>Pincode</TableHead>
-                      <TableHead>Office Type</TableHead>
-                      <TableHead>Taluka</TableHead>
-                      <TableHead>State</TableHead>
-                      <TableHead>Division</TableHead>
-                      <TableHead>Region</TableHead>
-                      <TableHead>Circle</TableHead>
+                      <TableHead>{t('table.officeName')}</TableHead>
+                      <TableHead>{t('table.pincode')}</TableHead>
+                      <TableHead>{t('table.officeType')}</TableHead>
+                      <TableHead>{t('table.taluka')}</TableHead>
+                      <TableHead>{t('table.state')}</TableHead>
+                      <TableHead>{t('table.division')}</TableHead>
+                      <TableHead>{t('table.region')}</TableHead>
+                      <TableHead>{t('table.circle')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -111,8 +113,8 @@ export default function PincodePage() {
                       <TableRow>
                         <TableCell colSpan={8} className="h-24 text-center">
                           {searched
-                            ? "No results found for this pincode."
-                            : "Enter a pincode to start a search."}
+                            ? t('pincodePage.noResults')
+                            : t('pincodePage.startSearch')}
                         </TableCell>
                       </TableRow>
                     )}
@@ -135,25 +137,25 @@ export default function PincodePage() {
                                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                                     <div className="font-semibold col-span-2 text-base">{po.officename}</div>
                                     
-                                    <div className="text-muted-foreground">Pincode</div>
+                                    <div className="text-muted-foreground">{t('table.pincode')}</div>
                                     <div>{po.pincode}</div>
                                     
-                                    <div className="text-muted-foreground">Type</div>
+                                    <div className="text-muted-foreground">{t('table.officeType')}</div>
                                     <div>{po.officetype}</div>
 
-                                    <div className="text-muted-foreground">Taluka</div>
+                                    <div className="text-muted-foreground">{t('table.taluka')}</div>
                                     <div>{po.Taluk}</div>
                                     
-                                    <div className="text-muted-foreground">State</div>
+                                    <div className="text-muted-foreground">{t('table.state')}</div>
                                     <div>{po.statename}</div>
 
-                                    <div className="text-muted-foreground">Division</div>
+                                    <div className="text-muted-foreground">{t('table.division')}</div>
                                     <div>{po.divisionname}</div>
 
-                                    <div className="text-muted-foreground">Region</div>
+                                    <div className="text-muted-foreground">{t('table.region')}</div>
                                     <div>{po.regionname}</div>
 
-                                    <div className="text-muted-foreground">Circle</div>
+                                    <div className="text-muted-foreground">{t('table.circle')}</div>
                                     <div>{po.circlename}</div>
                                 </div>
                             </Card>
@@ -161,8 +163,8 @@ export default function PincodePage() {
                     ) : (
                         <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
                             {searched
-                            ? "No results found for this pincode."
-                            : "Enter a pincode to start a search."}
+                            ? t('pincodePage.noResults')
+                            : t('pincodePage.startSearch')}
                         </div>
                     )}
                     </div>

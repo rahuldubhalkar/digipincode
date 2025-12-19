@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "home": "Home",
+    "findByPincode": "Find by Pincode",
+    "about": "About Us",
+    "privacyPolicy": "Privacy Policy",
+    "contact": "Contact Us"
+  },
+  "header": {
+    "tagline": "An elegant way to find any post office across India"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  },
+  "home": {
+    "title": "Welcome to digi-pincode",
+    "selectState": "Select a State",
+    "loading": "Loading...",
+    "selectDivision": "Select a Division",
+    "searchByBranch": "Search by Branch Name",
+    "filterByLetter": "Filter by Letter",
+    "allLetters": "All",
+    "clearFilters": "Clear All Filters",
+    "noResults": "No results found. Try adjusting your filters."
+  },
+  "pincodePage": {
+    "title": "Find by Pincode",
+    "description": "Enter a 6-digit pincode to find post office details.",
+    "placeholder": "Enter 6-digit pincode",
+    "search": "Search",
+    "searching": "Searching...",
+    "noResults": "No results found for this pincode.",
+    "startSearch": "Enter a pincode to start a search."
+  },
+  "table": {
+    "officeName": "Office Name",
+    "pincode": "Pincode",
+    "officeType": "Office Type",
+    "taluka": "Taluka",
+    "state": "State",
+    "division": "Division",
+    "region": "Region",
+    "circle": "Circle"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "q1": {
+      "question": "What is a PIN Code?",
+      "answer": "A Postal Index Number (PIN) or PIN Code is a 6-digit code used by India Post for sorting mail. Each digit has a specific geographical meaning, helping to route mail efficiently across the country."
+    },
+    "q2": {
+      "question": "What is DIGIPIN?",
+      "answer": "DIGIPIN is a modern digital addressing system. It provides a unique, short, and easy-to-share code for any precise location, making it simpler to communicate addresses than with traditional, often complex, street names and building numbers."
+    },
+    "q3": {
+      "question": "How is this website useful?",
+      "answer": "Our website allows you to easily find information about any post office in India. You can search by state, division, or even by the name of the post office branch. It's a quick and convenient tool for both personal and business needs."
+    }
+  },
+  "about": {
+    "title": "About digi-pincode",
+    "p1": "Welcome to digi-pincode, your one-stop solution for finding postal information across India. Our mission is to provide an easy-to-use, fast, and reliable tool for looking up pincodes and post office details.",
+    "p2": "This application is built with modern web technologies to ensure a seamless experience on any device. We leverage the official Indian postal data API to provide you with the most accurate and up-to-date information available.",
+    "p3": "Whether you're sending a letter, shipping a package, or just curious about a location, digi-pincode is here to help."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "p1": "Have questions or feedback? We'd love to hear from you. Reach out to us through any of the channels below.",
+    "email": "Email",
+    "phone": "Phone"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "p1": "Your privacy is important to us. It is digi-pincode's policy to respect your privacy regarding any information we may collect from you across our website.",
+    "h1": "1. Information We Collect",
+    "p2": "We do not collect any personally identifiable information from our users. Our service allows you to search for postal information without requiring you to create an account or provide any personal data.",
+    "h2": "2. Use of Data",
+    "p3": "The data you enter (such as pincodes or location names) is used solely to query the public API from data.gov.in to fetch the postal information you requested. We do not store your search queries.",
+    "h3": "3. Cookies",
+    "p4": "We do not use cookies to track users or store personal information. Our website is designed to be stateless from a user perspective.",
+    "h4": "4. Third-Party Services",
+    "p5": "This website uses the Government of India's public API (data.gov.in) to provide postal information. We are not responsible for the privacy practices of this third-party service. We encourage you to read their privacy policies.",
+    "h5": "5. Changes to This Privacy Policy",
+    "p6": "We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.",
+    "h6": "6. Contact Us",
+    "p7": "If you have any questions about this Privacy Policy, you can contact us via the details on our Contact Us page."
+  },
+  "languageSwitcher": {
+    "tooltip": "Change language"
+  }
+}

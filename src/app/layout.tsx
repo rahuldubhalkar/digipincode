@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import Header from '@/components/header';
 import Footer from '@/components/footer';
+import { I18nProvider } from '@/lib/i18n/i18n-provider';
 
 export const metadata: Metadata = {
   title: 'digi-pincode',
@@ -22,12 +23,14 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Toaster />
-        <Footer />
+        <I18nProvider>
+          <Header />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Toaster />
+          <Footer />
+        </I18nProvider>
       </body>
     </html>
   );
