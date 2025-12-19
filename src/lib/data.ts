@@ -60,29 +60,30 @@ export async function getDivisions(state: string): Promise<string[]> {
   
   const BATCH_SIZE = 1000;
   let offset = 0;
-  let total = 0;
   let allRecords: any[] = [];
-  
-  // The API is inconsistent. Sometimes `total` is not returned on the first request.
-  // We make one request to get the total, then paginate through the rest.
+  let totalFetched = 0;
+  let totalAvailable = 0;
+
+  // First, get the total number of records
   const initialFetch = await fetchFromAPI({ 'statename': state }, 1, 0);
   if (!initialFetch || !initialFetch.total) {
     // Fallback if total is missing
-    const fallbackFetch = await fetchFromAPI({ 'statename': state }, BATCH_SIZE, 0);
-    const divisions = new Set(fallbackFetch.records.map((r: any) => r.divisionname));
-    return Array.from(divisions).sort() as string[];
+     const fallbackFetch = await fetchFromAPI({ 'statename': state }, BATCH_SIZE, 0);
+     const divisions = new Set(fallbackFetch.records.map((r: any) => r.divisionname));
+     return Array.from(divisions).sort() as string[];
   }
-  
-  total = initialFetch.total;
+
+  totalAvailable = initialFetch.total;
 
   do {
     const { records } = await fetchFromAPI({ 'statename': state }, BATCH_SIZE, offset);
     if (!records || records.length === 0) break;
     
     allRecords = allRecords.concat(records);
+    totalFetched = allRecords.length;
     offset += records.length;
 
-  } while (allRecords.length < total);
+  } while (totalFetched < totalAvailable);
 
   if (!allRecords.length) return [];
   
@@ -118,20 +119,36 @@ export async function findPostOffices(filters: {
   if (filters.state) apiFilters['statename'] = filters.state;
   if (filters.division) apiFilters['divisionname'] = filters.division;
   
-  // Start with a larger limit to get more results initially
-  let { records } = await fetchFromAPI(apiFilters, 2000);
-  if (!records) return [];
+  const BATCH_SIZE = 1000;
+  let allRecords: any[] = [];
+
+  const initialFetch = await fetchFromAPI(apiFilters, BATCH_SIZE);
+  if (!initialFetch || !initialFetch.records) return [];
+
+  allRecords = initialFetch.records;
+
+  if (initialFetch.total && initialFetch.total > BATCH_SIZE) {
+      const totalAvailable = initialFetch.total;
+      let offset = allRecords.length;
+      while(offset < totalAvailable) {
+        const subsequentFetch = await fetchFromAPI(apiFilters, BATCH_SIZE, offset);
+        if (!subsequentFetch.records || subsequentFetch.records.length === 0) break;
+        allRecords = allRecords.concat(subsequentFetch.records);
+        offset += subsequentFetch.records.length;
+      }
+  }
+
 
   // Client-side filtering
   if (filters.searchTerm) {
-    records = records.filter((r: any) => r.officename.toLowerCase().includes(filters.searchTerm!.toLowerCase()));
+    allRecords = allRecords.filter((r: any) => r.officename.toLowerCase().includes(filters.searchTerm!.toLowerCase()));
   }
 
   if (filters.letter) {
-      records = records.filter((r: any) => r.officename.toLowerCase().startsWith(filters.letter!.toLowerCase()));
+      allRecords = allRecords.filter((r: any) => r.officename.toLowerCase().startsWith(filters.letter!.toLowerCase()));
   }
 
-  return records.map((r: any) => ({
+  return allRecords.map((r: any) => ({
       officename: r.officename,
       pincode: r.pincode,
       officetype: r.officetype,

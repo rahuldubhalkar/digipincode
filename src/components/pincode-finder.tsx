@@ -46,7 +46,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
   
   const [isLoadingDivisions, setIsLoadingDivisions] = useState(false);
 
-  const performSearch = useCallback((state = selectedState, division = selectedDivision) => {
+  const performSearch = useCallback((state = selectedState, division = selectedDivision, term = searchTerm, letter = selectedLetter) => {
     if (!state || !division) {
       setPostOffices([]);
       return;
@@ -56,8 +56,8 @@ export function PincodeFinder({ states }: { states: string[] }) {
       findPostOffices({
         state,
         division,
-        searchTerm,
-        letter: selectedLetter,
+        searchTerm: term,
+        letter: letter,
       }).then(offices => {
         const sortedOffices = offices.sort((a, b) => a.officename.localeCompare(b.officename));
         setPostOffices(sortedOffices);
@@ -68,33 +68,36 @@ export function PincodeFinder({ states }: { states: string[] }) {
   
   useEffect(() => {
     if (selectedState && selectedDivision) {
-      performSearch();
+      performSearch(selectedState, selectedDivision, searchTerm, selectedLetter);
     }
-  }, [searchTerm, selectedLetter, performSearch, selectedState, selectedDivision]);
+  // This is intentionally not including all dependencies to avoid rapid refiring.
+  // We only want this to fire when the user actively changes these filters.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm, selectedLetter]);
 
 
   useEffect(() => {
     if (selectedState) {
       setIsLoadingDivisions(true);
       setSelectedDivision('');
+      setPostOffices([]);
       getDivisions(selectedState).then(d => {
         setDivisions(d);
         setIsLoadingDivisions(false);
         if (d.length > 0) {
-            // Automatically select the first division and trigger search
             const firstDivision = d[0];
             setSelectedDivision(firstDivision);
-            performSearch(selectedState, firstDivision);
+            performSearch(selectedState, firstDivision, searchTerm, selectedLetter);
         }
       });
     } else {
       setDivisions([]);
       setSelectedDivision('');
     }
-  }, [selectedState, performSearch]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedState]);
 
   useEffect(() => {
-    // On initial load, set a default state to show some data.
     if (states.length > 0 && !selectedState) {
         const defaultState = "ANDAMAN AND NICOBAR ISLANDS";
         setSelectedState(defaultState);
@@ -104,14 +107,16 @@ export function PincodeFinder({ states }: { states: string[] }) {
 
 
   const handleStateChange = (state: string) => {
-    setSelectedState(state);
     setSearchTerm('');
     setSelectedLetter('');
-    setPostOffices([]);
+    setSelectedState(state);
   };
 
   const handleDivisionChange = (division: string) => {
+    setSearchTerm('');
+    setSelectedLetter('');
     setSelectedDivision(division);
+    performSearch(selectedState, division, '', '');
   };
 
   const handleLetterChange = (letter: string) => {
