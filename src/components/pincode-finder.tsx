@@ -30,35 +30,6 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, X } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
-
-function FaqSection() {
-    return (
-        <div className="mt-8">
-            <h3 className="text-xl font-semibold mb-4 text-center">Frequently Asked Questions</h3>
-            <Accordion type="single" collapsible className="w-full max-w-2xl mx-auto">
-                <AccordionItem value="item-1">
-                    <AccordionTrigger>What is a PIN Code?</AccordionTrigger>
-                    <AccordionContent>
-                        A Postal Index Number (PIN) or PIN Code is a 6-digit code used by India Post for sorting mail. Each digit has a specific geographical meaning, helping to route mail efficiently across the country.
-                    </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-2">
-                    <AccordionTrigger>What is DIGIPIN?</AccordionTrigger>
-                    <AccordionContent>
-                        DIGIPIN is a modern digital addressing system. It provides a unique, short, and easy-to-share code for any precise location, making it simpler to communicate addresses than with traditional, often complex, street names and building numbers.
-                    </AccordionContent>
-                </AccordionItem>
-                 <AccordionItem value="item-3">
-                    <AccordionTrigger>How is this website useful?</AccordionTrigger>
-                    <AccordionContent>
-                        Our website allows you to easily find information about any post office in India. You can search by state, division, or even by the name of the post office branch. It's a quick and convenient tool for both personal and business needs.
-                    </AccordionContent>
-                </AccordionItem>
-            </Accordion>
-        </div>
-    );
-}
 
 export function PincodeFinder({ states }: { states: string[] }) {
   const [isPending, startTransition] = useTransition();
@@ -66,19 +37,20 @@ export function PincodeFinder({ states }: { states: string[] }) {
   const [divisions, setDivisions] = useState<string[]>([]);
   const [postOffices, setPostOffices] = useState<PostOffice[]>([]);
 
-  const [selectedState, setSelectedState] = useState('');
-  const [selectedDivision, setSelectedDivision] = useState('');
+  const [selectedState, setSelectedState] = useState('MAHARASHTRA');
+  const [selectedDivision, setSelectedDivision] = useState('Nagpur City');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('');
   
-  const [isLoadingDivisions, setIsLoadingDivisions] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [isLoadingDivisions, setIsLoadingDivisions] = useState(true);
 
   useEffect(() => {
     if (selectedState) {
       setIsLoadingDivisions(true);
       setDivisions([]);
-      setSelectedDivision('');
+      if(selectedState !== 'MAHARASHTRA') {
+        setSelectedDivision('');
+      }
       getDivisions(selectedState).then(d => {
         setDivisions(d);
         setIsLoadingDivisions(false);
@@ -86,13 +58,13 @@ export function PincodeFinder({ states }: { states: string[] }) {
     } else {
       setDivisions([]);
       setSelectedDivision('');
+      setIsLoadingDivisions(false);
     }
   }, [selectedState]);
 
   useEffect(() => {
     const isSearching = selectedState || selectedDivision || searchTerm || selectedLetter;
     if (isSearching) {
-        setHasSearched(true);
         startTransition(() => {
             findPostOffices({
                 state: selectedState,
@@ -102,7 +74,6 @@ export function PincodeFinder({ states }: { states: string[] }) {
             }).then(setPostOffices);
         });
     } else {
-        setHasSearched(false);
         setPostOffices([]);
     }
   }, [selectedState, selectedDivision, searchTerm, selectedLetter]);
