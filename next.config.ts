@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
     ],
   },
   env: {
-    NEXT_PUBLIC_DIGIPIN_API_KEY: "sk_live_1234abcd5678efgh9012ijkl3456mnop",
+    NEXT_PUBLIC_DIGIPIN_API_KEY: "hklmgbwzrxncdyavtsuojqpiefrbhqplnm",
   }
 };
 
