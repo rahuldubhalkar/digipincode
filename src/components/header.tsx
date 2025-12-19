@@ -4,11 +4,8 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import LanguageSwitcher from "./language-switcher";
-import { useTranslation } from "@/lib/i18n/use-translation";
 
 const Logo = () => {
-  const { t } = useTranslation();
   return (
     <div className="flex items-center gap-3">
       <svg
@@ -30,7 +27,7 @@ const Logo = () => {
           DIGI-PINCODE
         </span>
         <span className="text-xs text-muted-foreground -mt-1">
-          {t('header.tagline')}
+          An elegant way to find any post office across India
         </span>
       </div>
     </div>
@@ -39,8 +36,6 @@ const Logo = () => {
 
 
 export default function Header() {
-  const { t } = useTranslation();
-
   return (
     <header className="bg-card border-b shadow-sm sticky top-0 z-40">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -49,27 +44,22 @@ export default function Header() {
         </Link>
         <nav className="hidden md:flex items-center space-x-1">
           <Button variant="ghost" asChild>
-            <Link href="/">{t('nav.home')}</Link>
+            <Link href="/">Home</Link>
           </Button>
           <Button variant="ghost" asChild>
-            <Link href="/pincode">{t('nav.findByPincode')}</Link>
+            <Link href="/pincode">Find by Pincode</Link>
           </Button>
           <Button variant="ghost" asChild>
-            <Link href="/location">{t('nav.myLocation')}</Link>
+            <Link href="/about">About Us</Link>
           </Button>
           <Button variant="ghost" asChild>
-            <Link href="/about">{t('nav.about')}</Link>
+            <Link href="/privacy-policy">Privacy Policy</Link>
           </Button>
           <Button variant="ghost" asChild>
-            <Link href="/privacy-policy">{t('nav.privacyPolicy')}</Link>
+            <Link href="/contact">Contact Us</Link>
           </Button>
-          <Button variant="ghost" asChild>
-            <Link href="/contact">{t('nav.contact')}</Link>
-          </Button>
-          <LanguageSwitcher />
         </nav>
         <div className="md:hidden flex items-center gap-2">
-          <LanguageSwitcher />
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon">
@@ -80,22 +70,19 @@ export default function Header() {
             <SheetContent side="right">
               <nav className="grid gap-4 text-lg font-medium mt-8">
                 <Link href="/" className="py-2 hover:text-primary">
-                  {t('nav.home')}
+                  Home
                 </Link>
                 <Link href="/pincode" className="py-2 hover:text-primary">
-                  {t('nav.findByPincode')}
-                </Link>
-                 <Link href="/location" className="py-2 hover:text-primary">
-                  {t('nav.myLocation')}
+                  Find by Pincode
                 </Link>
                 <Link href="/about" className="py-2 hover:text-primary">
-                  {t('nav.about')}
+                  About Us
                 </Link>
                 <Link href="/privacy-policy" className="py-2 hover:text-primary">
-                  {t('nav.privacyPolicy')}
+                  Privacy Policy
                 </Link>
                 <Link href="/contact" className="py-2 hover:text-primary">
-                  {t('nav.contact')}
+                  Contact Us
                 </Link>
               </nav>
             </SheetContent>

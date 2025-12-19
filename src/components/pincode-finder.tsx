@@ -31,30 +31,28 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, X } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
-import { useTranslation } from '@/lib/i18n/use-translation';
 
 function FaqSection() {
-  const { t } = useTranslation();
     return (
         <div className="mt-8">
-            <h3 className="text-xl font-semibold mb-4 text-center">{t('faq.title')}</h3>
+            <h3 className="text-xl font-semibold mb-4 text-center">Frequently Asked Questions</h3>
             <Accordion type="single" collapsible className="w-full max-w-2xl mx-auto">
                 <AccordionItem value="item-1">
-                    <AccordionTrigger>{t('faq.q1.question')}</AccordionTrigger>
+                    <AccordionTrigger>What is a PIN Code?</AccordionTrigger>
                     <AccordionContent>
-                        {t('faq.q1.answer')}
+                        A Postal Index Number (PIN) or PIN Code is a 6-digit code used by India Post for sorting mail. Each digit has a specific geographical meaning, helping to route mail efficiently across the country.
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2">
-                    <AccordionTrigger>{t('faq.q2.question')}</AccordionTrigger>
+                    <AccordionTrigger>What is DIGIPIN?</AccordionTrigger>
                     <AccordionContent>
-                        {t('faq.q2.answer')}
+                        DIGIPIN is a modern digital addressing system. It provides a unique, short, and easy-to-share code for any precise location, making it simpler to communicate addresses than with traditional, often complex, street names and building numbers.
                     </AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-3">
-                    <AccordionTrigger>{t('faq.q3.question')}</AccordionTrigger>
+                    <AccordionTrigger>How is this website useful?</AccordionTrigger>
                     <AccordionContent>
-                        {t('faq.q3.answer')}
+                        Our website allows you to easily find information about any post office in India. You can search by state, division, or even by the name of the post office branch. It's a quick and convenient tool for both personal and business needs.
                     </AccordionContent>
                 </AccordionItem>
             </Accordion>
@@ -63,7 +61,6 @@ function FaqSection() {
 }
 
 export function PincodeFinder({ states }: { states: string[] }) {
-  const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
 
   const [divisions, setDivisions] = useState<string[]>([]);
@@ -135,15 +132,15 @@ export function PincodeFinder({ states }: { states: string[] }) {
   return (
     <Card className="w-full shadow-lg border-none">
       <CardHeader className="text-center">
-        <CardTitle className="text-3xl font-headline tracking-tight text-primary">{t('home.title')}</CardTitle>
-        <CardDescription>{t('header.tagline')}</CardDescription>
+        <CardTitle className="text-3xl font-headline tracking-tight text-primary">Welcome to digi-pincode</CardTitle>
+        <CardDescription>An elegant way to find any post office across India</CardDescription>
       </CardHeader>
       <CardContent className="space-y-8">
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Select onValueChange={handleStateChange} value={selectedState}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder={t('home.selectState')} />
+                <SelectValue placeholder="Select a State" />
               </SelectTrigger>
               <SelectContent>
                 <ScrollArea className="h-72">
@@ -155,7 +152,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
             </Select>
             <Select onValueChange={handleDivisionChange} value={selectedDivision} disabled={!selectedState || isLoadingDivisions}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder={isLoadingDivisions ? t('home.loading') : t('home.selectDivision')} />
+                <SelectValue placeholder={isLoadingDivisions ? "Loading..." : "Select a Division"} />
               </SelectTrigger>
               <SelectContent>
                 <ScrollArea className="h-72">
@@ -168,7 +165,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder={t('home.searchByBranch')}
+                placeholder="Search by Branch Name"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -176,10 +173,10 @@ export function PincodeFinder({ states }: { states: string[] }) {
             </div>
             <Select onValueChange={handleLetterChange} value={selectedLetter}>
                 <SelectTrigger className="w-full">
-                    <SelectValue placeholder={t('home.filterByLetter')} />
+                    <SelectValue placeholder="Filter by Letter" />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="all">{t('home.allLetters')}</SelectItem>
+                    <SelectItem value="all">All</SelectItem>
                     {alphabet.map(letter => (
                         <SelectItem key={letter} value={letter}>{letter}</SelectItem>
                     ))}
@@ -189,26 +186,25 @@ export function PincodeFinder({ states }: { states: string[] }) {
            <div className="flex justify-center pt-4">
             <Button variant="ghost" onClick={clearFilters} className="text-primary hover:text-primary">
               <X className="mr-2 h-4 w-4" />
-              {t('home.clearFilters')}
+              Clear All Filters
             </Button>
            </div>
         </div>
 
-        {hasSearched ? (
         <div className="w-full">
             <div className="hidden md:block">
               <ScrollArea className="h-[500px] border rounded-lg">
                 <Table>
                   <TableHeader className="sticky top-0 bg-card">
                     <TableRow>
-                      <TableHead>{t('table.officeName')}</TableHead>
-                      <TableHead>{t('table.pincode')}</TableHead>
-                      <TableHead>{t('table.officeType')}</TableHead>
-                      <TableHead>{t('table.taluka')}</TableHead>
-                      <TableHead>{t('table.state')}</TableHead>
-                      <TableHead>{t('table.division')}</TableHead>
-                      <TableHead>{t('table.region')}</TableHead>
-                      <TableHead>{t('table.circle')}</TableHead>
+                      <TableHead>Office Name</TableHead>
+                      <TableHead>Pincode</TableHead>
+                      <TableHead>Office Type</TableHead>
+                      <TableHead>Taluk</TableHead>
+                      <TableHead>State</TableHead>
+                      <TableHead>Division</TableHead>
+                      <TableHead>Region</TableHead>
+                      <TableHead>Circle</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -240,7 +236,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
                     ) : (
                       <TableRow>
                         <TableCell colSpan={8} className="h-24 text-center">
-                           {t('home.noResults')}
+                           No results found. Try adjusting your filters.
                         </TableCell>
                       </TableRow>
                     )}
@@ -263,41 +259,38 @@ export function PincodeFinder({ states }: { states: string[] }) {
                                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                                     <div className="font-semibold col-span-2 text-base">{po.officename}</div>
                                     
-                                    <div className="text-muted-foreground">{t('table.pincode')}</div>
+                                    <div className="text-muted-foreground">Pincode</div>
                                     <div>{po.pincode}</div>
                                     
-                                    <div className="text-muted-foreground">{t('table.officeType')}</div>
+                                    <div className="text-muted-foreground">Office Type</div>
                                     <div>{po.officetype}</div>
 
-                                    <div className="text-muted-foreground">{t('table.taluka')}</div>
+                                    <div className="text-muted-foreground">Taluk</div>
                                     <div>{po.Taluk}</div>
                                     
-                                    <div className="text-muted-foreground">{t('table.state')}</div>
+                                    <div className="text-muted-foreground">State</div>
                                     <div>{po.statename}</div>
 
-                                    <div className="text-muted-foreground">{t('table.division')}</div>
+                                    <div className="text-muted-foreground">Division</div>
                                     <div>{po.divisionname}</div>
 
-                                    <div className="text-muted-foreground">{t('table.region')}</div>
+                                    <div className="text-muted-foreground">Region</div>
                                     <div>{po.regionname}</div>
 
-                                    <div className="text-muted-foreground">{t('table.circle')}</div>
+                                    <div className="text-muted-foreground">Circle</div>
                                     <div>{po.circlename}</div>
                                 </div>
                             </Card>
                         ))
                     ) : (
                         <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
-                            {t('home.noResults')}
+                            No results found.
                         </div>
                     )}
                     </div>
                 </ScrollArea>
             </div>
         </div>
-        ) : (
-            <FaqSection />
-        )}
       </CardContent>
     </Card>
   );
