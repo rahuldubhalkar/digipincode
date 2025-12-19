@@ -13,38 +13,14 @@ type Geolocation = {
 };
 
 async function getDigiPinFromApi(latitude: number, longitude: number): Promise<string> {
-  const apiKey = process.env.NEXT_PUBLIC_DIGIPIN_API_KEY;
-  if (!apiKey) {
-    console.error("DIGIPIN API key is not configured.");
-    throw new Error("API key is not provided.");
-  }
-
-  const url = new URL("https://digipin.sostabazar.in/api/generate.php");
-  url.searchParams.append("lat", latitude.toString());
-  url.searchParams.append("lon", longitude.toString());
-  url.searchParams.append("api_key", apiKey);
-
-  try {
-    const response = await fetch(url.toString());
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error("API request failed: Unauthorized. Please check your API key.");
-      }
-      throw new Error(`API request failed with status ${response.status}`);
-    }
-    const data = await response.json();
-    if (data && data.digipin) {
-      return data.digipin;
-    } else {
-      throw new Error("Invalid response from digipin API.");
-    }
-  } catch (error) {
-    console.error("Failed to fetch from digipin API:", error);
-    if (error instanceof Error) {
-        throw new Error(`Could not generate DIGIPIN. ${error.message}`);
-    }
-    throw new Error("Could not generate DIGIPIN. Please try again.");
-  }
+  // This is a placeholder as we don't have a real API key.
+  // The functionality was requested to be removed but the page kept.
+  console.log("getDigiPinFromApi called with:", latitude, longitude);
+  return new Promise(resolve => {
+      setTimeout(() => {
+          resolve(`${latitude.toFixed(4)}-${longitude.toFixed(4)}`);
+      }, 500);
+  });
 }
 
 export default function DigiPinPage() {

@@ -30,6 +30,35 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, X } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
+
+function FaqSection() {
+    return (
+        <div className="mt-8">
+            <h3 className="text-xl font-semibold mb-4 text-center">Frequently Asked Questions</h3>
+            <Accordion type="single" collapsible className="w-full max-w-2xl mx-auto">
+                <AccordionItem value="item-1">
+                    <AccordionTrigger>What is a PIN Code?</AccordionTrigger>
+                    <AccordionContent>
+                        A Postal Index Number (PIN) or PIN Code is a 6-digit code used by India Post for sorting mail. Each digit has a specific geographical meaning, helping to route mail efficiently across the country.
+                    </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-2">
+                    <AccordionTrigger>What is DIGIPIN?</AccordionTrigger>
+                    <AccordionContent>
+                        DIGIPIN is a modern digital addressing system. It provides a unique, short, and easy-to-share code for any precise location, making it simpler to communicate addresses than with traditional, often complex, street names and building numbers.
+                    </AccordionContent>
+                </AccordionItem>
+                 <AccordionItem value="item-3">
+                    <AccordionTrigger>How is this website useful?</AccordionTrigger>
+                    <AccordionContent>
+                        Our website allows you to easily find information about any post office in India. You can search by state, division, or even by the name of the post office branch. It's a quick and convenient tool for both personal and business needs.
+                    </AccordionContent>
+                </AccordionItem>
+            </Accordion>
+        </div>
+    );
+}
 
 export function PincodeFinder({ states }: { states: string[] }) {
   const [isPending, startTransition] = useTransition();
@@ -43,6 +72,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
   const [selectedLetter, setSelectedLetter] = useState('');
   
   const [isLoadingDivisions, setIsLoadingDivisions] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
     if (selectedState) {
@@ -60,14 +90,21 @@ export function PincodeFinder({ states }: { states: string[] }) {
   }, [selectedState]);
 
   useEffect(() => {
-    startTransition(() => {
-      findPostOffices({
-        state: selectedState,
-        division: selectedDivision,
-        searchTerm,
-        letter: selectedLetter,
-      }).then(setPostOffices);
-    });
+    const isSearching = selectedState || selectedDivision || searchTerm || selectedLetter;
+    if (isSearching) {
+        setHasSearched(true);
+        startTransition(() => {
+            findPostOffices({
+                state: selectedState,
+                division: selectedDivision,
+                searchTerm,
+                letter: selectedLetter,
+            }).then(setPostOffices);
+        });
+    } else {
+        setHasSearched(false);
+        setPostOffices([]);
+    }
   }, [selectedState, selectedDivision, searchTerm, selectedLetter]);
 
   const handleStateChange = (state: string) => {
@@ -154,6 +191,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
            </div>
         </div>
 
+        {hasSearched ? (
         <div className="w-full">
             <div className="hidden md:block">
               <ScrollArea className="h-[500px] border rounded-lg">
@@ -254,6 +292,9 @@ export function PincodeFinder({ states }: { states: string[] }) {
                 </ScrollArea>
             </div>
         </div>
+        ) : (
+            <FaqSection />
+        )}
       </CardContent>
     </Card>
   );

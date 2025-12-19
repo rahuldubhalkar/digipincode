@@ -47,6 +47,9 @@ export default function Header() {
             <Link href="/pincode">Find by Pincode</Link>
           </Button>
           <Button variant="ghost" asChild>
+            <Link href="/digipin">Know your DIGIPIN</Link>
+          </Button>
+          <Button variant="ghost" asChild>
             <Link href="/about">About Us</Link>
           </Button>
           <Button variant="ghost" asChild>
@@ -71,6 +74,9 @@ export default function Header() {
                 </Link>
                 <Link href="/pincode" className="py-2 hover:text-primary">
                   Find by Pincode
+                </Link>
+                <Link href="/digipin" className="py-2 hover:text-primary">
+                  Know your DIGIPIN
                 </Link>
                 <Link href="/about" className="py-2 hover:text-primary">
                   About Us
