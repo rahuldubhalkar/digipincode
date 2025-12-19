@@ -19,7 +19,6 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState('en');
 
   useEffect(() => {
-    // This code now runs only on the client
     const savedLanguage = localStorage.getItem('language');
     if (savedLanguage && translations[savedLanguage]) {
       setLanguageState(savedLanguage);
@@ -30,14 +29,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     if (translations[lang]) {
       setLanguageState(lang);
       localStorage.setItem('language', lang);
-      // We need to force a re-render of the entire app for the new language to take effect
-      window.location.reload();
+      // Force a re-render to apply the new language by updating the state
+      // This is a bit of a hack, but avoids a full page reload.
+      setLanguageState(l => l === lang ? lang + ' ' : lang); // Force state update
+      setTimeout(() => setLanguageState(lang), 10);
     }
   };
 
   const t = useCallback((key: string): string => {
     const keys = key.split('.');
-    let result = translations[language];
+    let result = translations[language.trim()];
     for (const k of keys) {
       result = result?.[k];
     }
@@ -53,7 +54,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, [language]);
 
   return (
-    <I18nContext.Provider value={{ language, setLanguage, t }}>
+    <I18nContext.Provider value={{ language: language.trim(), setLanguage, t }}>
       {children}
     </I18nContext.Provider>
   );
