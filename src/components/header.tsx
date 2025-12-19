@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import Image from "next/image";
 
 const Logo = () => (
     <div className="flex items-center gap-3">
@@ -14,29 +13,17 @@ const Logo = () => (
         viewBox="0 0 40 40"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className="text-primary"
       >
-        <defs>
-          <linearGradient
-            id="logo-gradient"
-            x1="0"
-            y1="0"
-            x2="40"
-            y2="40"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="#6D28D9" />
-            <stop offset="1" stopColor="#4F46E5" />
-          </linearGradient>
-        </defs>
-        <rect width="40" height="40" rx="8" fill="url(#logo-gradient)" />
+        <rect width="40" height="40" rx="8" fill="currentColor" />
         <path
           d="M20 11C16.13 11 13 14.13 13 18C13 22.5 20 29 20 29C20 29 27 22.5 27 18C27 14.13 23.87 11 20 11ZM20 20.5C18.62 20.5 17.5 19.38 17.5 18C17.5 16.62 18.62 15.5 20 15.5C21.38 15.5 22.5 16.62 22.5 18C22.5 19.38 21.38 20.5 20 20.5Z"
-          fill="white"
+          fill="hsl(var(--primary-foreground))"
         />
       </svg>
       <div className="flex flex-col">
          <span className="text-xl font-bold tracking-wider text-foreground">DIGI-PINCODE</span>
-         <span className="text-xs text-red-500 -mt-1">An elegant way to find any post office across India</span>
+         <span className="text-xs text-muted-foreground -mt-1">An elegant way to find any post office across India</span>
       </div>
     </div>
   );
