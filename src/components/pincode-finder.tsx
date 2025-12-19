@@ -163,7 +163,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
                       <TableHead>Office Name</TableHead>
                       <TableHead>Pincode</TableHead>
                       <TableHead>Office Type</TableHead>
-                      <TableHead>Taluk</TableHead>
+                      <TableHead>Taluka</TableHead>
                       <TableHead>State</TableHead>
                       <TableHead>Division</TableHead>
                       <TableHead>Region</TableHead>
@@ -228,7 +228,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
                                     <div className="text-muted-foreground">Type</div>
                                     <div>{po.officetype}</div>
 
-                                    <div className="text-muted-foreground">Taluk</div>
+                                    <div className="text-muted-foreground">Taluka</div>
                                     <div>{po.Taluk}</div>
                                     
                                     <div className="text-muted-foreground">State</div>
