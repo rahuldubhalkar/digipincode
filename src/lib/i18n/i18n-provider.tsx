@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useState, ReactNode, useEffect, useCallback } from 'react';
+import { createContext, useState, ReactNode, useEffect } from 'react';
 import en from './locales/en.json';
 import mr from './locales/mr.json';
 import hi from './locales/hi.json';
@@ -29,16 +29,12 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     if (translations[lang]) {
       setLanguageState(lang);
       localStorage.setItem('language', lang);
-      // Force a re-render to apply the new language by updating the state
-      // This is a bit of a hack, but avoids a full page reload.
-      setLanguageState(l => l === lang ? lang + ' ' : lang); // Force state update
-      setTimeout(() => setLanguageState(lang), 10);
     }
   };
 
-  const t = useCallback((key: string): string => {
+  const t = (key: string): string => {
     const keys = key.split('.');
-    let result = translations[language.trim()];
+    let result = translations[language];
     for (const k of keys) {
       result = result?.[k];
     }
@@ -51,10 +47,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         fallbackResult = fallbackResult?.[k];
     }
     return fallbackResult || key;
-  }, [language]);
+  };
 
   return (
-    <I18nContext.Provider value={{ language: language.trim(), setLanguage, t }}>
+    <I18nContext.Provider value={{ language, setLanguage, t }}>
       {children}
     </I18nContext.Provider>
   );
