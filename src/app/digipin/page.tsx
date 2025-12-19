@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { LocateFixed, Copy, Check, KeyRound } from "lucide-react";
+import { LocateFixed, Copy, Check } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 
@@ -13,7 +12,8 @@ type Geolocation = {
   longitude: number;
 };
 
-async function getDigiPinFromApi(latitude: number, longitude: number, apiKey: string): Promise<string> {
+async function getDigiPinFromApi(latitude: number, longitude: number): Promise<string> {
+  const apiKey = process.env.NEXT_PUBLIC_DIGIPIN_API_KEY;
   if (!apiKey) {
     console.error("DIGIPIN API key is not configured.");
     throw new Error("API key is not provided.");
@@ -48,7 +48,6 @@ async function getDigiPinFromApi(latitude: number, longitude: number, apiKey: st
 }
 
 export default function DigiPinPage() {
-  const [apiKey, setApiKey] = useState("");
   const [location, setLocation] = useState<Geolocation | null>(null);
   const [digiPin, setDigiPin] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,16 +56,6 @@ export default function DigiPinPage() {
   const { toast } = useToast();
 
   const handleGetDigiPin = () => {
-    if (!apiKey) {
-      setError("Please enter your DIGIPIN API key.");
-      toast({
-        variant: "destructive",
-        title: "API Key Required",
-        description: "Please enter your DIGIPIN API key to continue.",
-      });
-      return;
-    }
-    
     setIsLoading(true);
     setError(null);
     setLocation(null);
@@ -92,7 +81,7 @@ export default function DigiPinPage() {
         };
         setLocation(coords);
         try {
-          const code = await getDigiPinFromApi(coords.latitude, coords.longitude, apiKey);
+          const code = await getDigiPinFromApi(coords.latitude, coords.longitude);
           setDigiPin(code);
         } catch (apiError: any) {
            setError(apiError.message);
@@ -151,22 +140,12 @@ export default function DigiPinPage() {
         <CardHeader>
           <CardTitle className="text-3xl">Know Your DIGIPIN</CardTitle>
           <CardDescription>
-            Enter your API key and get a precise, shareable digital address for your current location.
+            Get a precise, shareable digital address for your current location.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <div className="relative w-full max-w-sm">
-              <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="password"
-                placeholder="Enter your DIGIPIN API key"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Button onClick={handleGetDigiPin} disabled={isLoading || !apiKey}>
+          <div className="flex justify-center">
+            <Button onClick={handleGetDigiPin} disabled={isLoading}>
               <LocateFixed className="mr-2 h-4 w-4" />
               {isLoading ? "Getting Location..." : "Get my DIGIPIN"}
             </Button>
