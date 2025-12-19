@@ -3,14 +3,14 @@
 import type { PostOffice } from './types';
 import { unstable_noStore as noStore } from 'next/cache';
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = process.env.DATA_GOV_API_KEY;
 const API_URL = 'https://api.data.gov.in/resource/6176ee09-3d56-4a3b-8115-21841576b2f6';
 
 async function fetchFromAPI(filters: Record<string, string>, limit: number = 1000, offset: number = 0): Promise<any[]> {
   noStore();
   
   if (!API_KEY) {
-    console.error('API_KEY is not set. Please provide it as an environment variable.');
+    console.error('DATA_GOV_API_KEY is not set. Please provide it as an environment variable.');
     return [];
   }
 
