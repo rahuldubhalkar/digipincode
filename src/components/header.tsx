@@ -46,6 +46,9 @@ export default function Header() {
           <Button variant="ghost" asChild>
             <Link href="/about">About Us</Link>
           </Button>
+           <Button variant="ghost" asChild>
+            <Link href="/privacy-policy">Privacy Policy</Link>
+          </Button>
           <Button variant="ghost" asChild>
             <Link href="/contact">Contact Us</Link>
           </Button>
@@ -68,6 +71,9 @@ export default function Header() {
                 </Link>
                 <Link href="/about" className="py-2 hover:text-primary">
                   About Us
+                </Link>
+                 <Link href="/privacy-policy" className="py-2 hover:text-primary">
+                  Privacy Policy
                 </Link>
                 <Link href="/contact" className="py-2 hover:text-primary">
                   Contact Us
