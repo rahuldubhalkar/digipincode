@@ -7,12 +7,12 @@ import { unstable_noStore as noStore } from 'next/cache';
 const API_KEY = '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b';
 const API_URL = 'https://api.data.gov.in/resource/6176ee09-3d56-4a3b-8115-21841576b2f6';
 
-async function fetchFromAPI(filters: Record<string, string>, limit: number = 2000, offset: number = 0): Promise<any[]> {
+async function fetchFromAPI(filters: Record<string, string>, limit: number = 1000, offset: number = 0): Promise<any> {
   noStore();
   
   if (!API_KEY) {
     console.error('DATA_GOV_API_KEY is not set. Please provide it as an environment variable.');
-    return [];
+    return { records: [], total: 0 };
   }
 
   const params = new URLSearchParams({
@@ -34,13 +34,16 @@ async function fetchFromAPI(filters: Record<string, string>, limit: number = 200
       console.error('API request failed with status:', response.status);
       const errorBody = await response.text();
       console.error('Error body:', errorBody);
-      return [];
+      return { records: [], total: 0 };
     }
     const data = await response.json();
-    return data.records || [];
+    return {
+        records: data.records || [],
+        total: data.total || (data.records || []).length
+    };
   } catch (error) {
     console.error("Failed to fetch data from API:", error);
-    return [];
+    return { records: [], total: 0 };
   }
 }
 
@@ -59,15 +62,33 @@ export async function getStates(): Promise<string[]> {
 
 export async function getDivisions(state: string): Promise<string[]> {
   if (!state) return [];
-  const records = await fetchFromAPI({ 'statename': state }, 5000);
-  if (!records) return [];
-  const divisionSet = new Set(records.map((r: any) => r.divisionname));
+  
+  const BATCH_SIZE = 1000;
+  let offset = 0;
+  let total = 0;
+  let allRecords: any[] = [];
+
+  do {
+    const { records, total: batchTotal } = await fetchFromAPI({ 'statename': state }, BATCH_SIZE, offset);
+    if (!records || records.length === 0) break;
+    
+    allRecords = allRecords.concat(records);
+    if (total === 0) {
+      total = batchTotal;
+    }
+    offset += records.length;
+
+  } while (allRecords.length < total);
+
+  if (!allRecords.length) return [];
+  
+  const divisionSet = new Set(allRecords.map((r: any) => r.divisionname));
   return Array.from(divisionSet).sort() as string[];
 }
 
 export async function findPostOfficesByPincode(pincode: string): Promise<PostOffice[]> {
   if (!pincode) return [];
-  const records = await fetchFromAPI({ 'pincode': pincode }, 100);
+  const { records } = await fetchFromAPI({ 'pincode': pincode }, 100);
   if (!records) return [];
   return records.map((r: any) => ({
     officename: r.officename,
@@ -93,9 +114,11 @@ export async function findPostOffices(filters: {
   if (filters.state) apiFilters['statename'] = filters.state;
   if (filters.division) apiFilters['divisionname'] = filters.division;
   
-  let records = await fetchFromAPI(apiFilters, 5000);
+  // Start with a larger limit to get more results initially
+  let { records } = await fetchFromAPI(apiFilters, 2000);
   if (!records) return [];
 
+  // Client-side filtering
   if (filters.searchTerm) {
     records = records.filter((r: any) => r.officename.toLowerCase().includes(filters.searchTerm!.toLowerCase()));
   }
