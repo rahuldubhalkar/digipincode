@@ -1,191 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { LocateFixed, Copy, Check } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/hooks/use-toast";
-
-type Geolocation = {
-  latitude: number;
-  longitude: number;
-};
-
-async function getDigiPinFromApi(latitude: number, longitude: number): Promise<string> {
-  // This is a placeholder as we don't have a real API key.
-  // The functionality was requested to be removed but the page kept.
-  console.log("getDigiPinFromApi called with:", latitude, longitude);
-  return new Promise(resolve => {
-      setTimeout(() => {
-          resolve(`${latitude.toFixed(4)}-${longitude.toFixed(4)}`);
-      }, 500);
-  });
-}
 
 export default function DigiPinPage() {
-  const [location, setLocation] = useState<Geolocation | null>(null);
-  const [digiPin, setDigiPin] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isCopied, setIsCopied] = useState(false);
-  const { toast } = useToast();
-
-  const handleGetDigiPin = () => {
-    setIsLoading(true);
-    setError(null);
-    setLocation(null);
-    setDigiPin(null);
-    
-    if (!navigator.geolocation) {
-      const errorMessage = "Geolocation is not supported by your browser.";
-      setError(errorMessage);
-      toast({
-        variant: "destructive",
-        title: "Geolocation Error",
-        description: errorMessage,
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const coords = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-        setLocation(coords);
-        try {
-          const code = await getDigiPinFromApi(coords.latitude, coords.longitude);
-          setDigiPin(code);
-        } catch (apiError: any) {
-           setError(apiError.message);
-           toast({
-                variant: "destructive",
-                title: "API Error",
-                description: apiError.message,
-            });
-        } finally {
-            setIsLoading(false);
-        }
-      },
-      (err) => {
-        let errorMessage = "An unknown error occurred.";
-        switch (err.code) {
-          case err.PERMISSION_DENIED:
-            errorMessage = "You denied the request for Geolocation.";
-            break;
-          case err.POSITION_UNAVAILABLE:
-            errorMessage = "Location information is unavailable.";
-            break;
-          case err.TIMEOUT:
-            errorMessage = "The request to get user location timed out.";
-            break;
-        }
-        setError(errorMessage);
-        toast({
-            variant: "destructive",
-            title: "Geolocation Error",
-            description: errorMessage,
-        });
-        setIsLoading(false);
-      }
-    );
-  };
-  
-  const handleCopy = () => {
-    if (digiPin) {
-      navigator.clipboard.writeText(digiPin);
-      setIsCopied(true);
-      toast({
-        title: "Copied!",
-        description: "Your DIGIPIN has been copied to the clipboard.",
-      });
-      setTimeout(() => setIsCopied(false), 2000);
-    }
-  }
-
-  const mapSrc = location
-    ? `https://www.openstreetmap.org/export/embed.html?bbox=${location.longitude-0.01},${location.latitude-0.01},${location.longitude+0.01},${location.latitude+0.01}&layer=mapnik&marker=${location.latitude},${location.longitude}`
-    : `https://www.openstreetmap.org/export/embed.html?bbox=-13.25,29.3,27.1,51.85&layer=mapnik`;
+  const digipinUrl = "https://dac.indiapost.gov.in/mydigipin/home";
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <Card className="w-full max-w-4xl mx-auto">
+      <Card className="w-full max-w-6xl mx-auto">
         <CardHeader>
           <CardTitle className="text-3xl">Know Your DIGIPIN</CardTitle>
           <CardDescription>
-            Get a precise, shareable digital address for your current location.
+            Use the official India Post service below to find or create your DIGIPIN.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex justify-center">
-            <Button onClick={handleGetDigiPin} disabled={isLoading}>
-              <LocateFixed className="mr-2 h-4 w-4" />
-              {isLoading ? "Getting Location..." : "Get my DIGIPIN"}
-            </Button>
-          </div>
-
-          <div className="space-y-4 text-center">
-            {isLoading && (
-                <div className="flex flex-col items-center gap-4">
-                    <div className="flex justify-center gap-4">
-                        <div className="flex flex-col gap-2">
-                           <Skeleton className="h-4 w-20" />
-                           <Skeleton className="h-10 w-32" />
-                        </div>
-                         <div className="flex flex-col gap-2">
-                           <Skeleton className="h-4 w-24" />
-                           <Skeleton className="h-10 w-32" />
-                        </div>
-                    </div>
-                    <Skeleton className="h-12 w-80" />
-                </div>
-            )}
-            {error && !isLoading && <p className="text-destructive font-medium">{error}</p>}
-            {location && digiPin && !isLoading && (
-              <div className="flex flex-col items-center gap-4">
-                <div className="flex justify-center gap-4">
-                   <div>
-                       <p className="text-xs text-muted-foreground font-semibold">LATITUDE</p>
-                       <p className="font-mono p-2 border rounded-md bg-muted text-sm">{location.latitude.toFixed(6)}</p>
-                   </div>
-                    <div>
-                       <p className="text-xs text-muted-foreground font-semibold">LONGITUDE</p>
-                       <p className="font-mono p-2 border rounded-md bg-muted text-sm">{location.longitude.toFixed(6)}</p>
-                   </div>
-                </div>
-
-                <div className="w-full max-w-sm text-center">
-                    <p className="text-sm font-semibold text-muted-foreground">YOUR DIGIPIN</p>
-                    <div className="relative mt-1">
-                      <Button variant="secondary" size="lg" className="w-full text-xl font-bold text-primary tracking-widest font-mono pr-12" onClick={handleCopy}>
-                          {digiPin}
-                      </Button>
-                      <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground" onClick={handleCopy}>
-                          {isCopied ? <Check className="h-5 w-5 text-green-500"/> : <Copy className="h-5 w-5" />}
-                          <span className="sr-only">Copy</span>
-                      </Button>
-                    </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="w-full h-96 rounded-lg overflow-hidden border">
-            {isLoading ? (
-                <Skeleton className="w-full h-full" />
-            ) : (
-                <iframe
-                    width="100%"
-                    height="100%"
-                    frameBorder="0"
-                    scrolling="no"
-                    src={mapSrc}
-                    className="[&_a]:hidden"
-                ></iframe>
-            )}
+        <CardContent>
+          <div className="w-full h-[800px] rounded-lg overflow-hidden border">
+            <iframe
+              src={digipinUrl}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              title="India Post DIGIPIN"
+            ></iframe>
           </div>
         </CardContent>
       </Card>
