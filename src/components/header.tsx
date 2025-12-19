@@ -11,7 +11,7 @@ export default function Header() {
     <header className="bg-card border-b shadow-sm sticky top-0 z-40">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2 text-2xl font-bold text-foreground">
-          <Image src="/logo.png" alt="digi-pincode logo" width={180} height={40} />
+          <Image src="/logo.png" alt="digi-pincode logo" width={180} height={40} priority />
         </Link>
         <nav className="hidden md:flex items-center space-x-1">
           <Button variant="ghost" asChild>
