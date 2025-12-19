@@ -32,9 +32,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  env: {
-    NEXT_PUBLIC_DIGIPIN_API_KEY: "hklmgbwzrxncdyavtsuojqpiefrbhqplnm",
-  }
+  env: {}
 };
 
 export default nextConfig;
