@@ -28,6 +28,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, X } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
@@ -122,6 +128,21 @@ export function PincodeFinder({ states }: { states: string[] }) {
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  
+  const faqItems = [
+    {
+      question: "What is a PIN Code?",
+      answer: "A Postal Index Number (PIN) or PIN Code is a 6-digit code used by India Post for sorting mail. Each digit has a specific geographical meaning, helping to route mail efficiently across the country."
+    },
+    {
+      question: "What is DIGIPIN?",
+      answer: "DIGIPIN is a modern digital addressing system. It provides a unique, short, and easy-to-share code for any precise location, making it simpler to communicate addresses than with traditional, often complex, street names and building numbers."
+    },
+    {
+      question: "How is this website useful?",
+      answer: "Our website allows you to easily find information about any post office in India. You can search by state, division, or even by the name of the post office branch. It's a quick and convenient tool for both personal and business needs."
+    }
+  ];
 
   return (
     <Card className="w-full shadow-lg border-none">
@@ -187,102 +208,120 @@ export function PincodeFinder({ states }: { states: string[] }) {
         </div>
 
         <div className="w-full">
-            <div className="hidden md:block">
-              <ScrollArea className="h-[500px] border rounded-lg">
-                <Table>
-                  <TableHeader className="sticky top-0 bg-card">
-                    <TableRow>
-                      <TableHead>Office Name</TableHead>
-                      <TableHead>Pincode</TableHead>
-                      <TableHead>Office Type</TableHead>
-                      <TableHead>Taluk</TableHead>
-                      <TableHead>State</TableHead>
-                      <TableHead>Division</TableHead>
-                      <TableHead>Region</TableHead>
-                      <TableHead>Circle</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {isPending ? (
-                      <TableRow>
-                        <TableCell colSpan={8}>
-                          <div className="space-y-2 p-4">
-                            <Skeleton className="h-8 w-full" />
-                            <Skeleton className="h-8 w-full" />
-                            <Skeleton className="h-8 w-full" />
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ) : postOffices.length > 0 ? (
-                      postOffices.map((po, index) => (
-                        <TableRow key={`${po.officename}-${po.pincode}-${index}`}>
-                          <TableCell className="font-medium">{po.officename}</TableCell>
-                          <TableCell>{po.pincode}</TableCell>
-                          <TableCell>{po.officetype}</TableCell>
-                          <TableCell>{po.Taluk}</TableCell>
-                          <TableCell>{po.statename}</TableCell>
-                          <TableCell>{po.divisionname}</TableCell>
-                          <TableCell>{po.regionname}</TableCell>
-                          <TableCell>{po.circlename}</TableCell>
+            { !searched && postOffices.length === 0 ? (
+                <div className="max-w-3xl mx-auto border rounded-lg p-6">
+                    <h3 className="text-xl font-semibold mb-4 text-center">Frequently Asked Questions</h3>
+                    <Accordion type="single" collapsible className="w-full">
+                        {faqItems.map((item, index) => (
+                            <AccordionItem value={`item-${index}`} key={index}>
+                                <AccordionTrigger>{item.question}</AccordionTrigger>
+                                <AccordionContent>
+                                    {item.answer}
+                                </AccordionContent>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
+                </div>
+            ) : (
+                <>
+                <div className="hidden md:block">
+                <ScrollArea className="h-[500px] border rounded-lg">
+                    <Table>
+                    <TableHeader className="sticky top-0 bg-card">
+                        <TableRow>
+                        <TableHead>Office Name</TableHead>
+                        <TableHead>Pincode</TableHead>
+                        <TableHead>Office Type</TableHead>
+                        <TableHead>Taluk</TableHead>
+                        <TableHead>State</TableHead>
+                        <TableHead>Division</TableHead>
+                        <TableHead>Region</TableHead>
+                        <TableHead>Circle</TableHead>
                         </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={8} className="h-24 text-center">
-                           {searched ? 'No results found. Try adjusting your filters.' : 'Please select a state and division to see results.'}
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </ScrollArea>
-            </div>
-            <div className="block md:hidden">
-                <ScrollArea className="h-[500px]">
-                    <div className="space-y-4">
-                    {isPending ? (
-                        <div className='space-y-4'>
-                            <Skeleton className="h-32 w-full" />
-                            <Skeleton className="h-32 w-full" />
-                            <Skeleton className="h-32 w-full" />
-                        </div>
-                    ) : postOffices.length > 0 ? (
+                    </TableHeader>
+                    <TableBody>
+                        {isPending ? (
+                        <TableRow>
+                            <TableCell colSpan={8}>
+                            <div className="space-y-2 p-4">
+                                <Skeleton className="h-8 w-full" />
+                                <Skeleton className="h-8 w-full" />
+                                <Skeleton className="h-8 w-full" />
+                            </div>
+                            </TableCell>
+                        </TableRow>
+                        ) : postOffices.length > 0 ? (
                         postOffices.map((po, index) => (
-                            <Card key={`${po.officename}-${po.pincode}-${index}`} className="border rounded-lg p-4">
-                                <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                                    <div className="font-semibold col-span-2 text-base">{po.officename}</div>
-                                    
-                                    <div className="text-muted-foreground">Pincode</div>
-                                    <div>{po.pincode}</div>
-                                    
-                                    <div className="text-muted-foreground">Office Type</div>
-                                    <div>{po.officetype}</div>
-
-                                    <div className="text-muted-foreground">Taluk</div>
-                                    <div>{po.Taluk}</div>
-                                    
-                                    <div className="text-muted-foreground">State</div>
-                                    <div>{po.statename}</div>
-
-                                    <div className="text-muted-foreground">Division</div>
-                                    <div>{po.divisionname}</div>
-
-                                    <div className="text-muted-foreground">Region</div>
-                                    <div>{po.regionname}</div>
-
-                                    <div className="text-muted-foreground">Circle</div>
-                                    <div>{po.circlename}</div>
-                                </div>
-                            </Card>
+                            <TableRow key={`${po.officename}-${po.pincode}-${index}`}>
+                            <TableCell className="font-medium">{po.officename}</TableCell>
+                            <TableCell>{po.pincode}</TableCell>
+                            <TableCell>{po.officetype}</TableCell>
+                            <TableCell>{po.Taluk}</TableCell>
+                            <TableCell>{po.statename}</TableCell>
+                            <TableCell>{po.divisionname}</TableCell>
+                            <TableCell>{po.regionname}</TableCell>
+                            <TableCell>{po.circlename}</TableCell>
+                            </TableRow>
                         ))
-                    ) : (
-                        <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
-                            {searched ? 'No results found.' : 'Please select filters to see results.'}
-                        </div>
-                    )}
-                    </div>
+                        ) : (
+                        <TableRow>
+                            <TableCell colSpan={8} className="h-24 text-center">
+                                {'No results found. Try adjusting your filters.'}
+                            </TableCell>
+                        </TableRow>
+                        )}
+                    </TableBody>
+                    </Table>
                 </ScrollArea>
-            </div>
+                </div>
+                <div className="block md:hidden">
+                    <ScrollArea className="h-[500px]">
+                        <div className="space-y-4">
+                        {isPending ? (
+                            <div className='space-y-4'>
+                                <Skeleton className="h-32 w-full" />
+                                <Skeleton className="h-32 w-full" />
+                                <Skeleton className="h-32 w-full" />
+                            </div>
+                        ) : postOffices.length > 0 ? (
+                            postOffices.map((po, index) => (
+                                <Card key={`${po.officename}-${po.pincode}-${index}`} className="border rounded-lg p-4">
+                                    <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                                        <div className="font-semibold col-span-2 text-base">{po.officename}</div>
+                                        
+                                        <div className="text-muted-foreground">Pincode</div>
+                                        <div>{po.pincode}</div>
+                                        
+                                        <div className="text-muted-foreground">Office Type</div>
+                                        <div>{po.officetype}</div>
+
+                                        <div className="text-muted-foreground">Taluk</div>
+                                        <div>{po.Taluk}</div>
+                                        
+                                        <div className="text-muted-foreground">State</div>
+                                        <div>{po.statename}</div>
+
+                                        <div className="text-muted-foreground">Division</div>
+                                        <div>{po.divisionname}</div>
+
+                                        <div className="text-muted-foreground">Region</div>
+                                        <div>{po.regionname}</div>
+
+                                        <div className="text-muted-foreground">Circle</div>
+                                        <div>{po.circlename}</div>
+                                    </div>
+                                </Card>
+                            ))
+                        ) : (
+                            <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
+                                {'No results found.'}
+                            </div>
+                        )}
+                        </div>
+                    </ScrollArea>
+                </div>
+                </>
+            )}
         </div>
       </CardContent>
     </Card>
