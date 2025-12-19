@@ -76,11 +76,9 @@ export function PincodeFinder({ states }: { states: string[] }) {
   useEffect(() => {
     if (selectedState) {
       setIsLoadingDivisions(true);
+      setSelectedDivision('');
       getDivisions(selectedState).then(d => {
         setDivisions(d);
-        if (!d.includes(selectedDivision)) {
-            setSelectedDivision('');
-        }
         setIsLoadingDivisions(false);
       });
     } else {
@@ -92,7 +90,6 @@ export function PincodeFinder({ states }: { states: string[] }) {
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
-    setSelectedDivision('');
   };
 
   const handleDivisionChange = (division: string) => {
@@ -154,9 +151,10 @@ export function PincodeFinder({ states }: { states: string[] }) {
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className="pl-10"
+                disabled={!selectedDivision}
               />
             </div>
-            <Select onValueChange={handleLetterChange} value={selectedLetter}>
+            <Select onValueChange={handleLetterChange} value={selectedLetter} disabled={!selectedDivision}>
                 <SelectTrigger className="w-full">
                     <SelectValue placeholder="Filter by Letter" />
                 </SelectTrigger>
@@ -195,8 +193,12 @@ export function PincodeFinder({ states }: { states: string[] }) {
                   <TableBody>
                     {isPending ? (
                       <TableRow>
-                        <TableCell colSpan={8} className="h-24 text-center">
-                          Loading data...
+                        <TableCell colSpan={8}>
+                          <div className="space-y-2 p-4">
+                            <Skeleton className="h-8 w-full" />
+                            <Skeleton className="h-8 w-full" />
+                            <Skeleton className="h-8 w-full" />
+                          </div>
                         </TableCell>
                       </TableRow>
                     ) : postOffices.length > 0 ? (

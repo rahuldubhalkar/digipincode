@@ -10,11 +10,6 @@ const API_URL = 'https://api.data.gov.in/resource/6176ee09-3d56-4a3b-8115-218415
 async function fetchFromAPI(filters: Record<string, string>, limit: number = 1000, offset: number = 0): Promise<any> {
   noStore();
   
-  if (!API_KEY) {
-    console.error('DATA_GOV_API_KEY is not set. Please provide it as an environment variable.');
-    return { records: [], total: 0 };
-  }
-
   const params = new URLSearchParams({
     'api-key': API_KEY,
     'format': 'json',
@@ -67,15 +62,24 @@ export async function getDivisions(state: string): Promise<string[]> {
   let offset = 0;
   let total = 0;
   let allRecords: any[] = [];
+  
+  // The API is inconsistent. Sometimes `total` is not returned on the first request.
+  // We make one request to get the total, then paginate through the rest.
+  const initialFetch = await fetchFromAPI({ 'statename': state }, 1, 0);
+  if (!initialFetch || !initialFetch.total) {
+    // Fallback if total is missing
+    const fallbackFetch = await fetchFromAPI({ 'statename': state }, BATCH_SIZE, 0);
+    const divisions = new Set(fallbackFetch.records.map((r: any) => r.divisionname));
+    return Array.from(divisions).sort() as string[];
+  }
+  
+  total = initialFetch.total;
 
   do {
-    const { records, total: batchTotal } = await fetchFromAPI({ 'statename': state }, BATCH_SIZE, offset);
+    const { records } = await fetchFromAPI({ 'statename': state }, BATCH_SIZE, offset);
     if (!records || records.length === 0) break;
     
     allRecords = allRecords.concat(records);
-    if (total === 0) {
-      total = batchTotal;
-    }
     offset += records.length;
 
   } while (allRecords.length < total);
