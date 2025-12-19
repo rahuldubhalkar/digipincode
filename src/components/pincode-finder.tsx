@@ -38,10 +38,11 @@ export function PincodeFinder({ states }: { states: string[] }) {
   const [divisions, setDivisions] = useState<string[]>([]);
   const [postOffices, setPostOffices] = useState<PostOffice[]>([]);
 
-  const [selectedState, setSelectedState] = useState('MAHARASHTRA');
-  const [selectedDivision, setSelectedDivision] = useState('Nagpur City');
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedDivision, setSelectedDivision] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('');
+  const [searched, setSearched] = useState(false);
   
   const [isLoadingDivisions, setIsLoadingDivisions] = useState(false);
 
@@ -50,6 +51,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
       setPostOffices([]);
       return;
     };
+    setSearched(true);
     startTransition(() => {
       findPostOffices({
         state: selectedState,
@@ -62,8 +64,13 @@ export function PincodeFinder({ states }: { states: string[] }) {
 
   
   useEffect(() => {
-    performSearch();
-  }, [performSearch]);
+    if (selectedState && selectedDivision) {
+      performSearch();
+    } else {
+        setPostOffices([]);
+        setSearched(false);
+    }
+  }, [selectedState, selectedDivision, searchTerm, selectedLetter, performSearch]);
 
 
   useEffect(() => {
@@ -71,10 +78,8 @@ export function PincodeFinder({ states }: { states: string[] }) {
       setIsLoadingDivisions(true);
       getDivisions(selectedState).then(d => {
         setDivisions(d);
-        if (selectedState === 'MAHARASHTRA') {
-            setSelectedDivision('Nagpur City');
-        } else if (!d.includes(selectedDivision)) {
-            setSelectedDivision(d[0] || '');
+        if (!d.includes(selectedDivision)) {
+            setSelectedDivision('');
         }
         setIsLoadingDivisions(false);
       });
@@ -87,7 +92,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
-    // Division will be set in the useEffect above
+    setSelectedDivision('');
   };
 
   const handleDivisionChange = (division: string) => {
@@ -99,10 +104,12 @@ export function PincodeFinder({ states }: { states: string[] }) {
   };
   
   const clearFilters = () => {
-    setSelectedState('MAHARASHTRA');
-    setSelectedDivision('Nagpur City');
+    setSelectedState('');
+    setSelectedDivision('');
     setSearchTerm('');
     setSelectedLetter('');
+    setPostOffices([]);
+    setSearched(false);
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -208,7 +215,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
                     ) : (
                       <TableRow>
                         <TableCell colSpan={8} className="h-24 text-center">
-                           No results found. Try adjusting your filters.
+                           {searched ? 'No results found. Try adjusting your filters.' : 'Please select a state and division to see results.'}
                         </TableCell>
                       </TableRow>
                     )}
@@ -256,7 +263,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
                         ))
                     ) : (
                         <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
-                            No results found.
+                            {searched ? 'No results found.' : 'Please select filters to see results.'}
                         </div>
                     )}
                     </div>
