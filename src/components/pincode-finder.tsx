@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useEffect, useTransition, useCallback } from 'react';
 import type { PostOffice } from '@/lib/types';
 import { getDivisions, findPostOffices } from '@/lib/data';
 import { Button } from '@/components/ui/button';
@@ -44,12 +45,29 @@ export function PincodeFinder({ states }: { states: string[] }) {
   
   const [isLoadingDivisions, setIsLoadingDivisions] = useState(true);
 
+  const performSearch = useCallback(() => {
+    startTransition(() => {
+      findPostOffices({
+        state: selectedState,
+        division: selectedDivision,
+        searchTerm,
+        letter: selectedLetter,
+      }).then(setPostOffices);
+    });
+  }, [selectedState, selectedDivision, searchTerm, selectedLetter]);
+
+  useEffect(() => {
+    performSearch();
+  }, [performSearch]);
+
   useEffect(() => {
     if (selectedState) {
       setIsLoadingDivisions(true);
       setDivisions([]);
       if(selectedState !== 'MAHARASHTRA') {
         setSelectedDivision('');
+      } else {
+        setSelectedDivision('Nagpur City');
       }
       getDivisions(selectedState).then(d => {
         setDivisions(d);
@@ -62,21 +80,6 @@ export function PincodeFinder({ states }: { states: string[] }) {
     }
   }, [selectedState]);
 
-  useEffect(() => {
-    const isSearching = selectedState || selectedDivision || searchTerm || selectedLetter;
-    if (isSearching) {
-        startTransition(() => {
-            findPostOffices({
-                state: selectedState,
-                division: selectedDivision,
-                searchTerm,
-                letter: selectedLetter,
-            }).then(setPostOffices);
-        });
-    } else {
-        setPostOffices([]);
-    }
-  }, [selectedState, selectedDivision, searchTerm, selectedLetter]);
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
