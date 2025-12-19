@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "findByPincode": "Find by Pincode",
+    "myLocation": "My Location",
     "about": "About Us",
     "privacyPolicy": "Privacy Policy",
     "contact": "Contact Us"
@@ -87,5 +88,22 @@
   },
   "languageSwitcher": {
     "tooltip": "Change language"
+  },
+  "location": {
+    "title": "Find My Location",
+    "description": "Click the button below to get your current geographic coordinates. You may need to grant location permissions in your browser.",
+    "button": "Get My Current Location",
+    "loading": "Fetching Location...",
+    "yourLocation": "Your Current Location",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "geolocationNotSupported": "Geolocation is not supported by your browser.",
+    "error": {
+      "title": "Location Error",
+      "permissionDenied": "Permission to access location was denied. Please check your browser settings.",
+      "positionUnavailable": "Location information is unavailable.",
+      "timeout": "The request to get user location timed out.",
+      "generic": "An unknown error occurred while trying to get your location."
+    }
   }
 }

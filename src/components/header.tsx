@@ -55,6 +55,9 @@ export default function Header() {
             <Link href="/pincode">{t('nav.findByPincode')}</Link>
           </Button>
           <Button variant="ghost" asChild>
+            <Link href="/location">{t('nav.myLocation')}</Link>
+          </Button>
+          <Button variant="ghost" asChild>
             <Link href="/about">{t('nav.about')}</Link>
           </Button>
           <Button variant="ghost" asChild>
@@ -81,6 +84,9 @@ export default function Header() {
                 </Link>
                 <Link href="/pincode" className="py-2 hover:text-primary">
                   {t('nav.findByPincode')}
+                </Link>
+                 <Link href="/location" className="py-2 hover:text-primary">
+                  {t('nav.myLocation')}
                 </Link>
                 <Link href="/about" className="py-2 hover:text-primary">
                   {t('nav.about')}
