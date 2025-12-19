@@ -19,6 +19,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState('en');
 
   useEffect(() => {
+    // This code now runs only on the client
     const savedLanguage = localStorage.getItem('language');
     if (savedLanguage && translations[savedLanguage]) {
       setLanguageState(savedLanguage);
