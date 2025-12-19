@@ -33,6 +33,8 @@ const Logo = () => (
 );
 
 export default function Header() {
+  const digipinUrl = "https://dac.indiapost.gov.in/mydigipin/home";
+
   return (
     <header className="bg-card border-b shadow-sm sticky top-0 z-40">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -47,7 +49,7 @@ export default function Header() {
             <Link href="/pincode">Find by Pincode</Link>
           </Button>
           <Button variant="ghost" asChild>
-            <Link href="/digipin">Know your DIGIPIN</Link>
+            <Link href={digipinUrl} target="_blank" rel="noopener noreferrer">Know your DIGIPIN</Link>
           </Button>
           <Button variant="ghost" asChild>
             <Link href="/about">About Us</Link>
@@ -75,7 +77,7 @@ export default function Header() {
                 <Link href="/pincode" className="py-2 hover:text-primary">
                   Find by Pincode
                 </Link>
-                <Link href="/digipin" className="py-2 hover:text-primary">
+                <Link href={digipinUrl} target="_blank" rel="noopener noreferrer" className="py-2 hover:text-primary">
                   Know your DIGIPIN
                 </Link>
                 <Link href="/about" className="py-2 hover:text-primary">
