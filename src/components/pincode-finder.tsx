@@ -43,9 +43,13 @@ export function PincodeFinder({ states }: { states: string[] }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('');
   
-  const [isLoadingDivisions, setIsLoadingDivisions] = useState(true);
+  const [isLoadingDivisions, setIsLoadingDivisions] = useState(false);
 
   const performSearch = useCallback(() => {
+    if (!selectedState || !selectedDivision) {
+      setPostOffices([]);
+      return;
+    };
     startTransition(() => {
       findPostOffices({
         state: selectedState,
@@ -71,6 +75,12 @@ export function PincodeFinder({ states }: { states: string[] }) {
       }
       getDivisions(selectedState).then(d => {
         setDivisions(d);
+        if (selectedState !== 'MAHARASHTRA') {
+          // auto select first division if not maharashtra
+          if (d.length > 0) {
+            setSelectedDivision(d[0]);
+          }
+        }
         setIsLoadingDivisions(false);
       });
     } else {
