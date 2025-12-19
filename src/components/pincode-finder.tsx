@@ -94,8 +94,8 @@ export function PincodeFinder({ states }: { states: string[] }) {
 
   return (
     <Card className="w-full shadow-lg border-none">
-      <CardHeader>
-        <CardTitle className="text-3xl font-headline tracking-tight text-primary">digi-pincode</CardTitle>
+      <CardHeader className="text-center">
+        <CardTitle className="text-3xl font-headline tracking-tight text-primary">Welcome to digi-pincode</CardTitle>
         <CardDescription>An elegant way to find any post office across India.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-8">
