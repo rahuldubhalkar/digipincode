@@ -3,7 +3,7 @@
 import type { PostOffice } from './types';
 import { unstable_noStore as noStore } from 'next/cache';
 
-const API_KEY = process.env.DATA_GOV_API_KEY || '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b';
+const API_KEY = '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b';
 const API_URL = 'https://api.data.gov.in/resource/6176ee09-3d56-4a3b-8115-21841576b2f6';
 
 async function fetchFromAPI(filters: Record<string, string>, limit: number = 1000, offset: number = 0): Promise<any[]> {
