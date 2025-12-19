@@ -1,6 +1,6 @@
 "use client";
 
-import { PincodeFinder } from '@/components/pincode-finder';
+import { PincodeFinderLoader } from '@/components/pincode-finder-loader';
 import { getStates } from '@/lib/data';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -25,7 +25,7 @@ export default function Home() {
           <Skeleton className="h-64 w-full" />
         </div>
       ) : (
-        <PincodeFinder states={states} />
+        <PincodeFinderLoader states={states} />
       )}
     </main>
   );

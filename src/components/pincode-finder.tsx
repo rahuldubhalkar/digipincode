@@ -38,7 +38,11 @@ import { Search, X } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useTranslation } from '@/lib/i18n/use-translation';
 
-export function PincodeFinder({ states }: { states: string[] }) {
+export interface PincodeFinderProps {
+  states: string[];
+}
+
+export function PincodeFinder({ states }: PincodeFinderProps) {
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
 

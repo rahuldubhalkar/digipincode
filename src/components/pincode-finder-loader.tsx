@@ -1,39 +1,38 @@
 "use client";
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getStates } from '@/lib/data';
+import type { PincodeFinderProps } from '@/components/pincode-finder';
 
 const PincodeFinder = dynamic(() => import('@/components/pincode-finder').then(mod => mod.PincodeFinder), { 
   ssr: false,
-  loading: () => <div className="space-y-4">
-    <Skeleton className="h-10 w-full" />
-    <Skeleton className="h-10 w-full" />
-    <Skeleton className="h-64 w-full" />
-  </div>
+  loading: () => <PincodeFinderSkeleton />
 });
 
-export function PincodeFinderLoader() {
-  const [states, setStates] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    getStates().then(states => {
-      setStates(states);
-      setIsLoading(false);
-    });
-  }, []);
-
-  if (isLoading) {
+function PincodeFinderSkeleton() {
     return (
-      <div className="space-y-4">
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-64 w-full" />
+        <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+            </div>
+            <div className="flex justify-center pt-4">
+                <Skeleton className="h-10 w-28" />
+            </div>
+            <div className="max-w-3xl mx-auto border rounded-lg p-6">
+                <Skeleton className="h-8 w-1/2 mx-auto mb-4" />
+                <div className="space-y-2">
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-12 w-full" />
+                </div>
+            </div>
       </div>
-    );
-  }
+    )
+}
 
-  return <PincodeFinder states={states} />;
+export function PincodeFinderLoader(props: PincodeFinderProps) {
+  return <PincodeFinder {...props} />;
 }
