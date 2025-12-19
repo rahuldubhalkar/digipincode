@@ -62,10 +62,8 @@ export function PincodeFinder({ states }: { states: string[] }) {
 
   
   useEffect(() => {
-    if (selectedState && selectedDivision) {
-      performSearch();
-    }
-  }, [selectedState, selectedDivision, searchTerm, selectedLetter]);
+    performSearch();
+  }, [performSearch]);
 
 
   useEffect(() => {
@@ -73,12 +71,9 @@ export function PincodeFinder({ states }: { states: string[] }) {
       setIsLoadingDivisions(true);
       getDivisions(selectedState).then(d => {
         setDivisions(d);
-        // If the current division is not in the new list of divisions, reset it.
-        // But for the initial load of MAHARASHTRA, we want to keep Nagpur City.
-        if (!d.includes(selectedDivision) && selectedState !== 'MAHARASHTRA') {
-            setSelectedDivision(d[0] || '');
-        } else if (selectedState === 'MAHARASHTRA' && !d.includes('Nagpur City')) {
-            // This handles case where Nagpur City might not be in the list for some reason
+        if (selectedState === 'MAHARASHTRA') {
+            setSelectedDivision('Nagpur City');
+        } else if (!d.includes(selectedDivision)) {
             setSelectedDivision(d[0] || '');
         }
         setIsLoadingDivisions(false);
@@ -86,18 +81,13 @@ export function PincodeFinder({ states }: { states: string[] }) {
     } else {
       setDivisions([]);
       setSelectedDivision('');
-      setIsLoadingDivisions(false);
     }
   }, [selectedState]);
 
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
-    if (state !== 'MAHARASHTRA') {
-        setSelectedDivision(''); // Reset division when state changes, unless it's the default
-    } else {
-        setSelectedDivision('Nagpur City');
-    }
+    // Division will be set in the useEffect above
   };
 
   const handleDivisionChange = (division: string) => {
@@ -109,12 +99,10 @@ export function PincodeFinder({ states }: { states: string[] }) {
   };
   
   const clearFilters = () => {
-    setSelectedState('');
-    setSelectedDivision('');
+    setSelectedState('MAHARASHTRA');
+    setSelectedDivision('Nagpur City');
     setSearchTerm('');
     setSelectedLetter('');
-    setDivisions([]);
-    setPostOffices([]);
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
