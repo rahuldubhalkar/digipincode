@@ -60,26 +60,26 @@ export function PincodeFinder({ states }: { states: string[] }) {
     });
   }, [selectedState, selectedDivision, searchTerm, selectedLetter]);
 
+  
   useEffect(() => {
-    performSearch();
-  }, [performSearch]);
+    if (selectedState && selectedDivision) {
+      performSearch();
+    }
+  }, [selectedState, selectedDivision, searchTerm, selectedLetter]);
+
 
   useEffect(() => {
     if (selectedState) {
       setIsLoadingDivisions(true);
-      setDivisions([]);
-      if(selectedState !== 'MAHARASHTRA') {
-        setSelectedDivision('');
-      } else {
-        setSelectedDivision('Nagpur City');
-      }
       getDivisions(selectedState).then(d => {
         setDivisions(d);
-        if (selectedState !== 'MAHARASHTRA') {
-          // auto select first division if not maharashtra
-          if (d.length > 0) {
-            setSelectedDivision(d[0]);
-          }
+        // If the current division is not in the new list of divisions, reset it.
+        // But for the initial load of MAHARASHTRA, we want to keep Nagpur City.
+        if (!d.includes(selectedDivision) && selectedState !== 'MAHARASHTRA') {
+            setSelectedDivision(d[0] || '');
+        } else if (selectedState === 'MAHARASHTRA' && !d.includes('Nagpur City')) {
+            // This handles case where Nagpur City might not be in the list for some reason
+            setSelectedDivision(d[0] || '');
         }
         setIsLoadingDivisions(false);
       });
@@ -93,6 +93,11 @@ export function PincodeFinder({ states }: { states: string[] }) {
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
+    if (state !== 'MAHARASHTRA') {
+        setSelectedDivision(''); // Reset division when state changes, unless it's the default
+    } else {
+        setSelectedDivision('Nagpur City');
+    }
   };
 
   const handleDivisionChange = (division: string) => {
@@ -109,6 +114,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
     setSearchTerm('');
     setSelectedLetter('');
     setDivisions([]);
+    setPostOffices([]);
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -194,14 +200,8 @@ export function PincodeFinder({ states }: { states: string[] }) {
                   <TableBody>
                     {isPending ? (
                       <TableRow>
-                        <TableCell colSpan={8}>
-                          <div className='space-y-2'>
-                            <Skeleton className="h-8 w-full" />
-                            <Skeleton className="h-8 w-full" />
-                            <Skeleton className="h-8 w-full" />
-                            <Skeleton className="h-8 w-full" />
-                            <Skeleton className="h-8 w-full" />
-                          </div>
+                        <TableCell colSpan={8} className="h-24 text-center">
+                          Loading data...
                         </TableCell>
                       </TableRow>
                     ) : postOffices.length > 0 ? (
