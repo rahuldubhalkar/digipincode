@@ -61,29 +61,27 @@ export async function getDivisions(state: string): Promise<string[]> {
   const BATCH_SIZE = 1000;
   let offset = 0;
   let allRecords: any[] = [];
-  let totalFetched = 0;
   let totalAvailable = 0;
 
   // First, get the total number of records
   const initialFetch = await fetchFromAPI({ 'statename': state }, 1, 0);
-  if (!initialFetch || !initialFetch.total) {
-    // Fallback if total is missing
+  if (initialFetch && initialFetch.total) {
+    totalAvailable = initialFetch.total;
+  } else {
+     // Fallback if total is missing, do one large fetch
      const fallbackFetch = await fetchFromAPI({ 'statename': state }, BATCH_SIZE, 0);
      const divisions = new Set(fallbackFetch.records.map((r: any) => r.divisionname));
      return Array.from(divisions).sort() as string[];
   }
-
-  totalAvailable = initialFetch.total;
 
   do {
     const { records } = await fetchFromAPI({ 'statename': state }, BATCH_SIZE, offset);
     if (!records || records.length === 0) break;
     
     allRecords = allRecords.concat(records);
-    totalFetched = allRecords.length;
     offset += records.length;
 
-  } while (totalFetched < totalAvailable);
+  } while (offset < totalAvailable);
 
   if (!allRecords.length) return [];
   
@@ -119,17 +117,22 @@ export async function findPostOffices(filters: {
   if (filters.state) apiFilters['statename'] = filters.state;
   if (filters.division) apiFilters['divisionname'] = filters.division;
   
+  // If no filters are provided, don't fetch anything.
+  if (!filters.state || !filters.division) {
+    return [];
+  }
+
   const BATCH_SIZE = 1000;
   let allRecords: any[] = [];
 
-  const initialFetch = await fetchFromAPI(apiFilters, BATCH_SIZE);
-  if (!initialFetch || !initialFetch.records) return [];
+  const initialFetch = await fetchFromAPI(apiFilters, 1, 0);
+  let totalAvailable = 0;
+  if (initialFetch && initialFetch.total) {
+    totalAvailable = initialFetch.total;
+  }
 
-  allRecords = initialFetch.records;
-
-  if (initialFetch.total && initialFetch.total > BATCH_SIZE) {
-      const totalAvailable = initialFetch.total;
-      let offset = allRecords.length;
+  if (totalAvailable > 0) {
+      let offset = 0;
       while(offset < totalAvailable) {
         const subsequentFetch = await fetchFromAPI(apiFilters, BATCH_SIZE, offset);
         if (!subsequentFetch.records || subsequentFetch.records.length === 0) break;

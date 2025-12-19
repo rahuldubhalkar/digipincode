@@ -67,44 +67,22 @@ export function PincodeFinder({ states }: { states: string[] }) {
 
   
   useEffect(() => {
-    if (selectedState && selectedDivision) {
-      performSearch(selectedState, selectedDivision, searchTerm, selectedLetter);
-    }
-  // This is intentionally not including all dependencies to avoid rapid refiring.
-  // We only want this to fire when the user actively changes these filters.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, selectedLetter]);
-
-
-  useEffect(() => {
     if (selectedState) {
       setIsLoadingDivisions(true);
+      setDivisions([]);
       setSelectedDivision('');
       setPostOffices([]);
       getDivisions(selectedState).then(d => {
         setDivisions(d);
         setIsLoadingDivisions(false);
-        if (d.length > 0) {
-            const firstDivision = d[0];
-            setSelectedDivision(firstDivision);
-            performSearch(selectedState, firstDivision, searchTerm, selectedLetter);
-        }
       });
     } else {
       setDivisions([]);
       setSelectedDivision('');
+      setPostOffices([]);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedState]);
-
-  useEffect(() => {
-    if (states.length > 0 && !selectedState) {
-        const defaultState = "ANDAMAN AND NICOBAR ISLANDS";
-        setSelectedState(defaultState);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [states]);
-
 
   const handleStateChange = (state: string) => {
     setSearchTerm('');
@@ -118,9 +96,20 @@ export function PincodeFinder({ states }: { states: string[] }) {
     setSelectedDivision(division);
     performSearch(selectedState, division, '', '');
   };
+  
+  const handleSearchTermChange = (term: string) => {
+    setSearchTerm(term);
+     if (selectedState && selectedDivision) {
+      performSearch(selectedState, selectedDivision, term, selectedLetter);
+    }
+  }
 
   const handleLetterChange = (letter: string) => {
-    setSelectedLetter(letter === 'all' ? '' : letter);
+    const newLetter = letter === 'all' ? '' : letter;
+    setSelectedLetter(newLetter);
+    if (selectedState && selectedDivision) {
+      performSearch(selectedState, selectedDivision, searchTerm, newLetter);
+    }
   };
   
   const clearFilters = () => {
@@ -160,7 +149,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
                 <SelectValue placeholder={isLoadingDivisions ? "Loading..." : "Select a Division"} />
               </SelectTrigger>
               <SelectContent>
-                <ScrollArea className="h-72">
+                 <ScrollArea className="h-72">
                   {divisions.map((division) => (
                     <SelectItem key={division} value={division}>{division}</SelectItem>
                   ))}
@@ -172,7 +161,7 @@ export function PincodeFinder({ states }: { states: string[] }) {
               <Input
                 placeholder="Search by Branch Name"
                 value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
+                onChange={e => handleSearchTermChange(e.target.value)}
                 className="pl-10"
                 disabled={!selectedDivision}
               />
