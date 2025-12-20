@@ -29,7 +29,7 @@ const Logo = () => {
         <span className="text-xl font-bold tracking-wider text-foreground">
           DIGI-PINCODE
         </span>
-        <span className="text-xs text-muted-foreground -mt-1">
+        <span className="text-xs text-muted-foreground mt-1">
           {t('header.tagline')}
         </span>
       </div>
