@@ -8,6 +8,9 @@ import { Providers } from './providers';
 export const metadata: Metadata = {
   title: 'digi-pincode',
   description: 'Find any post office in India.',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
