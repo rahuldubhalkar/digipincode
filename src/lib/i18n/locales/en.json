@@ -56,6 +56,14 @@
     "q3": {
       "question": "How is this website useful?",
       "answer": "Our website allows you to easily find information about any post office in India. You can search by state, division, or even by the name of the post office branch. It's a quick and convenient tool for both personal and business needs."
+    },
+    "q4": {
+      "question": "What details can I find about a post office?",
+      "answer": "You can find several key details, including the office name, pincode, office type (e.g., Head Post Office, Sub-Post Office), the taluka (sub-district), district, state, and the postal division, region, and circle it belongs to."
+    },
+    "q5": {
+      "question": "Can I find all post offices related to a single pincode?",
+      "answer": "Yes. A single pincode can sometimes cover multiple post offices, especially in urban areas. Our 'Find by Pincode' feature will list all post offices that share the same pincode you enter."
     }
   },
   "about": {

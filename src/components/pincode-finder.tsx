@@ -146,6 +146,14 @@ export function PincodeFinder({ states }: PincodeFinderProps) {
     {
       question: t('faq.q3.question'),
       answer: t('faq.q3.answer'),
+    },
+    {
+      question: t('faq.q4.question'),
+      answer: t('faq.q4.answer'),
+    },
+    {
+      question: t('faq.q5.question'),
+      answer: t('faq.q5.answer'),
     }
   ];
 
