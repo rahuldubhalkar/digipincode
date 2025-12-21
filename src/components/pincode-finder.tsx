@@ -82,7 +82,7 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
     if (searchTerm) {
       filtered = filtered.filter(po => po.officename.toLowerCase().includes(searchTerm.toLowerCase()));
     }
-    if (selectedLetter) {
+    if (selectedLetter && selectedLetter !== 'all') {
       filtered = filtered.filter(po => po.officename.toLowerCase().startsWith(selectedLetter.toLowerCase()));
     }
 
@@ -142,6 +142,14 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
     setSelectedDivision('');
     setSelectedDistrict(district);
   }
+  
+  const handleLetterChange = (letter: string) => {
+    if (letter === "all") {
+      setSelectedLetter("");
+    } else {
+      setSelectedLetter(letter);
+    }
+  };
   
   const clearFilters = () => {
     onClear();
@@ -232,12 +240,12 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
                 disabled={!selectedState}
               />
             </div>
-            <Select onValueChange={setSelectedLetter} value={selectedLetter} disabled={!selectedState}>
+            <Select onValueChange={handleLetterChange} value={selectedLetter} disabled={!selectedState}>
                 <SelectTrigger className="w-full">
                     <SelectValue placeholder={t('home.filterByLetter')} />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="">{t('home.allLetters')}</SelectItem>
+                    <SelectItem value="all">{t('home.allLetters')}</SelectItem>
                     {alphabet.map(letter => (
                         <SelectItem key={letter} value={letter}>{letter}</SelectItem>
                     ))}
