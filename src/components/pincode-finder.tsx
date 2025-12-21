@@ -60,7 +60,6 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('');
   
-  const [isLoadingDivisions, setIsLoadingDivisions] = useState(false);
   const [isLoadingStateData, setIsLoadingStateData] = useState(false);
 
   useEffect(() => {
@@ -92,7 +91,6 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
 
   useEffect(() => {
     if (selectedState) {
-      setIsLoadingDivisions(true);
       setIsLoadingStateData(true);
       
       setDivisions([]);
@@ -104,11 +102,6 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
       setSelectedLetter('');
 
       startTransition(() => {
-        getDivisions(selectedState).then(d => {
-          setDivisions(d);
-          setIsLoadingDivisions(false);
-        });
-
         getPostOfficesByState(selectedState).then(offices => {
           setAllPostOfficesForState(offices);
           setFilteredPostOffices(offices.sort((a, b) => a.officename.localeCompare(b.officename)));
@@ -135,12 +128,12 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
 
   const handleDivisionChange = (division: string) => {
     setSelectedDistrict('');
-    setSelectedDivision(division);
+    setSelectedDivision(division === selectedDivision ? '' : division);
   };
   
   const handleDistrictChange = (district: string) => {
     setSelectedDivision('');
-    setSelectedDistrict(district);
+    setSelectedDistrict(district === selectedDistrict ? '' : district);
   }
   
   const handleLetterChange = (letter: string) => {
@@ -218,18 +211,6 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
                 </ScrollArea>
               </SelectContent>
             </Select>
-            <Select onValueChange={handleDivisionChange} value={selectedDivision} disabled={!selectedState || isLoadingDivisions || !!selectedDistrict}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder={isLoadingDivisions ? t('home.loading') : t('home.selectDivision')} />
-              </SelectTrigger>
-              <SelectContent>
-                 <ScrollArea className="h-72">
-                  {divisions.map((division) => (
-                    <SelectItem key={division} value={division}>{division}</SelectItem>
-                  ))}
-                </ScrollArea>
-              </SelectContent>
-            </Select>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -251,13 +232,11 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
                     ))}
                 </SelectContent>
             </Select>
-          </div>
-           <div className="flex justify-center pt-4">
-            <Button variant="ghost" onClick={clearFilters} className="text-primary hover:text-primary">
+            <Button variant="outline" onClick={clearFilters} className="text-primary hover:text-primary">
               <X className="mr-2 h-4 w-4" />
               {t('home.clearFilters')}
             </Button>
-           </div>
+          </div>
         </div>
 
         <div className="w-full">
@@ -287,6 +266,8 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
                     allPostOffices={allPostOfficesForState}
                     onDistrictSelect={handleDistrictChange}
                     selectedDistrict={selectedDistrict}
+                    onDivisionSelect={handleDivisionChange}
+                    selectedDivision={selectedDivision}
                 />
                 <div className="mt-8 hidden md:block">
                 <ScrollArea className="h-[500px] border rounded-lg">

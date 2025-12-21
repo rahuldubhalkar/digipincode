@@ -131,6 +131,7 @@
   },
   "stateDetails": {
     "districtsTitle": "{{state}} मधील {{count}} जिल्हे",
-    "gpoTitle": "{{state}} मध्ये {{count}} GPO"
+    "gpoTitle": "{{state}} मध्ये {{count}} GPO",
+    "divisionsTitle": "{{state}} मधील {{count}} विभाग"
   }
 }

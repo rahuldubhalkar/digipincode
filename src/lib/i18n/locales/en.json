@@ -131,6 +131,7 @@
   },
   "stateDetails": {
     "districtsTitle": "{{count}} Districts in {{state}}",
-    "gpoTitle": "{{count}} GPO in {{state}}"
+    "gpoTitle": "{{count}} GPO in {{state}}",
+    "divisionsTitle": "{{count}} Divisions in {{state}}"
   }
 }
