@@ -29,7 +29,6 @@ export default function LocationPage() {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [mapKey, setMapKey] = useState(Date.now());
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -47,7 +46,6 @@ export default function LocationPage() {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
-        setMapKey(Date.now()); // Force re-mount of map component
         setIsLoading(false);
       },
       (err) => {
@@ -119,7 +117,6 @@ export default function LocationPage() {
                 </div>
               </div>
               <MapDisplay
-                key={mapKey}
                 latitude={location.latitude}
                 longitude={location.longitude}
               />
