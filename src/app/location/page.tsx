@@ -16,7 +16,8 @@ import { Loader } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const MapDisplay = dynamic(() => import("@/components/map-display"), {
+// Dynamically import the new map component
+const LocationMap = dynamic(() => import("@/components/location-map"), {
   ssr: false,
   loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />,
 });
@@ -29,6 +30,7 @@ export default function LocationPage() {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [mapKey, setMapKey] = useState<number | null>(null);
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -39,6 +41,7 @@ export default function LocationPage() {
     setIsLoading(true);
     setLocation(null);
     setError(null);
+    setMapKey(null); // Clear the map key to unmount the component
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -46,6 +49,7 @@ export default function LocationPage() {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
+        setMapKey(Date.now()); // Set a new unique key to force re-mount
         setIsLoading(false);
       },
       (err) => {
@@ -99,8 +103,8 @@ export default function LocationPage() {
             </Alert>
           )}
 
-          {location && (
-            <div className="space-y-4">
+          {location && mapKey && (
+             <div className="space-y-4">
               <div className="text-center p-6 bg-muted rounded-lg">
                 <h3 className="text-lg font-semibold mb-2">
                   {t("location.yourLocation")}
@@ -116,7 +120,8 @@ export default function LocationPage() {
                   </p>
                 </div>
               </div>
-              <MapDisplay
+              <LocationMap
+                key={mapKey}
                 latitude={location.latitude}
                 longitude={location.longitude}
               />

@@ -18,14 +18,18 @@ const icon = L.icon({
   shadowSize: [41, 41],
 });
 
-interface MapDisplayProps {
+interface LocationMapProps {
   latitude: number;
   longitude: number;
 }
 
-export default function MapDisplay({ latitude, longitude }: MapDisplayProps) {
+export default function LocationMap({ latitude, longitude }: LocationMapProps) {
   const { t } = useTranslation();
   const position: [number, number] = [latitude, longitude];
+
+  if (typeof window === "undefined") {
+    return null;
+  }
 
   return (
     <MapContainer
