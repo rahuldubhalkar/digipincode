@@ -1,6 +1,6 @@
+
 "use client";
 
-import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -26,18 +26,9 @@ interface MapDisplayProps {
 export default function MapDisplay({ latitude, longitude }: MapDisplayProps) {
   const { t } = useTranslation();
   const position: [number, number] = [latitude, longitude];
-  
-  // By changing the key, we force React to unmount the old MapContainer and mount a new one.
-  // This is the correct way to handle re-initialization with react-leaflet.
-  const [mapKey, setMapKey] = useState(Date.now());
-
-  useEffect(() => {
-    setMapKey(Date.now());
-  }, [latitude, longitude]);
 
   return (
     <MapContainer
-      key={mapKey}
       center={position}
       zoom={13}
       scrollWheelZoom={false}
