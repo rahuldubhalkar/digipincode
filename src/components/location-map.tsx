@@ -1,9 +1,9 @@
 
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
+import { useEffect, useRef } from "react";
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { useTranslation } from "@/lib/i18n/use-translation";
 
 // Fix for default marker icon issue with webpack
@@ -25,26 +25,41 @@ interface LocationMapProps {
 
 export default function LocationMap({ latitude, longitude }: LocationMapProps) {
   const { t } = useTranslation();
-  const position: [number, number] = [latitude, longitude];
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<L.Map | null>(null);
 
-  if (typeof window === "undefined") {
-    return null;
-  }
+  useEffect(() => {
+    // Only initialize map if the ref is available and no map instance exists
+    if (mapRef.current && !mapInstance.current) {
+      mapInstance.current = L.map(mapRef.current).setView(
+        [latitude, longitude],
+        13
+      );
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(mapInstance.current);
+
+      L.marker([latitude, longitude], { icon: icon })
+        .addTo(mapInstance.current)
+        .bindPopup(t("location.yourLocation"))
+        .openPopup();
+    }
+
+    // Cleanup function to remove the map instance
+    return () => {
+      if (mapInstance.current) {
+        mapInstance.current.remove();
+        mapInstance.current = null;
+      }
+    };
+  }, [latitude, longitude, t]);
 
   return (
-    <MapContainer
-      center={position}
-      zoom={13}
-      scrollWheelZoom={false}
+    <div
+      ref={mapRef}
       style={{ height: "400px", width: "100%", borderRadius: "0.5rem" }}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Marker position={position} icon={icon}>
-        <Popup>{t("location.yourLocation")}</Popup>
-      </Marker>
-    </MapContainer>
+    />
   );
 }

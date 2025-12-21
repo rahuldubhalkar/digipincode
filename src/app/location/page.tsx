@@ -30,7 +30,7 @@ export default function LocationPage() {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [mapKey, setMapKey] = useState<number | null>(null);
+  const [mapKey, setMapKey] = useState<number>(Date.now());
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -41,7 +41,7 @@ export default function LocationPage() {
     setIsLoading(true);
     setLocation(null); // Clear previous location
     setError(null);
-    setMapKey(null); // Force map to unmount
+    setMapKey(Date.now()); // Set a new unique key to force re-render
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -49,7 +49,6 @@ export default function LocationPage() {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
-        setMapKey(Date.now()); // Set a new unique key to force re-mount
         setIsLoading(false);
       },
       (err) => {
@@ -103,7 +102,7 @@ export default function LocationPage() {
             </Alert>
           )}
 
-          {location && mapKey && (
+          {location && (
              <div className="space-y-4">
               <div className="text-center p-6 bg-muted rounded-lg">
                 <h3 className="text-lg font-semibold mb-2">
