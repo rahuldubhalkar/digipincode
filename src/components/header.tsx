@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -27,7 +28,7 @@ const Logo = () => {
       </svg>
       <div className="flex flex-col">
         <span className="text-xl font-bold tracking-wider text-foreground">
-          DIGI-PINCODE
+          DIGI PINCODE
         </span>
         <span className="text-xs text-muted-foreground mt-1">
           {t('header.tagline')}
