@@ -54,35 +54,66 @@ export async function getStates(): Promise<string[]> {
     ].sort();
 }
 
+async function getAllRecordsForState(state: string): Promise<any[]> {
+    const BATCH_SIZE = 1000;
+    let offset = 0;
+    let allRecords: any[] = [];
+    let totalAvailable = 0;
+
+    const initialFetch = await fetchFromAPI({ 'statename': state }, 1, 0);
+    if (initialFetch && initialFetch.total) {
+        totalAvailable = initialFetch.total;
+    } else {
+        return [];
+    }
+
+    const fetchPromises: Promise<any>[] = [];
+    while (offset < totalAvailable) {
+        fetchPromises.push(fetchFromAPI({ 'statename': state }, BATCH_SIZE, offset));
+        offset += BATCH_SIZE;
+    }
+
+    const results = await Promise.all(fetchPromises);
+    for (const result of results) {
+        if (result.records) {
+            allRecords = allRecords.concat(result.records);
+        }
+    }
+
+    return allRecords;
+}
+
+export async function getDistricts(state: string): Promise<string[]> {
+    if (!state) return [];
+    const allRecords = await getAllRecordsForState(state);
+    if (!allRecords.length) return [];
+    const districtSet = new Set(allRecords.map((r: any) => r.district));
+    return Array.from(districtSet).sort() as string[];
+}
+
+export async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
+    if (!state) return [];
+    const allRecords = await getAllRecordsForState(state);
+
+    return allRecords.map((r: any) => ({
+        officename: r.officename,
+        pincode: r.pincode,
+        officetype: r.officetype,
+        deliverystatus: r.deliverystatus,
+        district: r.district,
+        statename: r.statename,
+        regionname: r.regionname,
+        circlename: r.circlename,
+        divisionname: r.divisionname,
+        Taluk: r.taluk
+    }));
+}
+
 
 export async function getDivisions(state: string): Promise<string[]> {
   if (!state) return [];
   
-  const BATCH_SIZE = 1000;
-  let offset = 0;
-  let allRecords: any[] = [];
-  let totalAvailable = 0;
-
-  // First, get the total number of records
-  const initialFetch = await fetchFromAPI({ 'statename': state }, 1, 0);
-  if (initialFetch && initialFetch.total) {
-    totalAvailable = initialFetch.total;
-  } else {
-     // Fallback if total is missing, do one large fetch
-     const fallbackFetch = await fetchFromAPI({ 'statename': state }, BATCH_SIZE, 0);
-     const divisions = new Set(fallbackFetch.records.map((r: any) => r.divisionname));
-     return Array.from(divisions).sort() as string[];
-  }
-
-  do {
-    const { records } = await fetchFromAPI({ 'statename': state }, BATCH_SIZE, offset);
-    if (!records || records.length === 0) break;
-    
-    allRecords = allRecords.concat(records);
-    offset += records.length;
-
-  } while (offset < totalAvailable);
-
+  const allRecords = await getAllRecordsForState(state);
   if (!allRecords.length) return [];
   
   const divisionSet = new Set(allRecords.map((r: any) => r.divisionname));
@@ -117,30 +148,33 @@ export async function findPostOffices(filters: {
   if (filters.state) apiFilters['statename'] = filters.state;
   if (filters.division) apiFilters['divisionname'] = filters.division;
   
-  // If no filters are provided, don't fetch anything.
-  if (!filters.state || !filters.division) {
+  if (!filters.state) {
     return [];
   }
-
-  const BATCH_SIZE = 1000;
+  
   let allRecords: any[] = [];
-
-  const initialFetch = await fetchFromAPI(apiFilters, 1, 0);
-  let totalAvailable = 0;
-  if (initialFetch && initialFetch.total) {
-    totalAvailable = initialFetch.total;
-  }
-
-  if (totalAvailable > 0) {
+  
+  if (filters.division) {
+      const BATCH_SIZE = 1000;
       let offset = 0;
-      while(offset < totalAvailable) {
-        const subsequentFetch = await fetchFromAPI(apiFilters, BATCH_SIZE, offset);
-        if (!subsequentFetch.records || subsequentFetch.records.length === 0) break;
-        allRecords = allRecords.concat(subsequentFetch.records);
-        offset += subsequentFetch.records.length;
+      let totalAvailable = 0;
+      const initialFetch = await fetchFromAPI(apiFilters, 1, 0);
+      if (initialFetch && initialFetch.total) {
+        totalAvailable = initialFetch.total;
       }
+  
+      if (totalAvailable > 0) {
+          while(offset < totalAvailable) {
+            const subsequentFetch = await fetchFromAPI(apiFilters, BATCH_SIZE, offset);
+            if (!subsequentFetch.records || subsequentFetch.records.length === 0) break;
+            allRecords = allRecords.concat(subsequentFetch.records);
+            offset += subsequentFetch.records.length;
+          }
+      }
+  } else {
+    // If only state is provided, fetch all records for that state
+    allRecords = await getAllRecordsForState(filters.state);
   }
-
 
   // Client-side filtering
   if (filters.searchTerm) {

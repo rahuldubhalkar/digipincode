@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PincodeFinderLoader } from '@/components/pincode-finder-loader';
@@ -25,6 +26,10 @@ export default function Home() {
       finderRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
+  
+  const handleClear = () => {
+    setSelectedStateFromZone('');
+  }
 
   return (
     <main className="container mx-auto px-4 py-8 space-y-12">
@@ -36,7 +41,7 @@ export default function Home() {
             <Skeleton className="h-64 w-full" />
           </div>
         ) : (
-          <PincodeFinderLoader states={states} selectedStateFromZone={selectedStateFromZone} />
+          <PincodeFinderLoader states={states} selectedStateFromZone={selectedStateFromZone} onClear={handleClear} />
         )}
       </div>
       

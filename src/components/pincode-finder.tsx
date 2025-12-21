@@ -1,8 +1,9 @@
+
 "use client";
 
-import { useState, useEffect, useTransition, useCallback } from 'react';
+import { useState, useEffect, useTransition, useCallback, useMemo } from 'react';
 import type { PostOffice } from '@/lib/types';
-import { getDivisions, findPostOffices } from '@/lib/data';
+import { getDivisions, findPostOffices, getPostOfficesByState } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -37,26 +38,30 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, X } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useTranslation } from '@/lib/i18n/use-translation';
+import { StateDetails } from './state-details';
 
 export interface PincodeFinderProps {
   states: string[];
   selectedStateFromZone?: string;
+  onClear: () => void;
 }
 
-export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderProps) {
+export function PincodeFinder({ states, selectedStateFromZone, onClear }: PincodeFinderProps) {
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
 
   const [divisions, setDivisions] = useState<string[]>([]);
-  const [postOffices, setPostOffices] = useState<PostOffice[]>([]);
+  const [allPostOfficesForState, setAllPostOfficesForState] = useState<PostOffice[]>([]);
+  const [filteredPostOffices, setFilteredPostOffices] = useState<PostOffice[]>([]);
 
   const [selectedState, setSelectedState] = useState('');
   const [selectedDivision, setSelectedDivision] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('');
-  const [searched, setSearched] = useState(false);
   
   const [isLoadingDivisions, setIsLoadingDivisions] = useState(false);
+  const [isLoadingStateData, setIsLoadingStateData] = useState(false);
 
   useEffect(() => {
     if (selectedStateFromZone) {
@@ -65,85 +70,93 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStateFromZone]);
 
+  const applyFilters = useCallback((offices: PostOffice[]) => {
+    let filtered = offices;
 
-  const performSearch = useCallback((state = selectedState, division = selectedDivision, term = searchTerm, letter = selectedLetter) => {
-    if (!state || !division) {
-      setPostOffices([]);
-      return;
-    };
-    setSearched(true);
-    startTransition(() => {
-      findPostOffices({
-        state,
-        division,
-        searchTerm: term,
-        letter: letter,
-      }).then(offices => {
-        const sortedOffices = offices.sort((a, b) => a.officename.localeCompare(b.officename));
-        setPostOffices(sortedOffices);
-      });
-    });
-  }, [selectedState, selectedDivision, searchTerm, selectedLetter]);
+    if (selectedDivision) {
+      filtered = filtered.filter(po => po.divisionname === selectedDivision);
+    }
+    if (selectedDistrict) {
+      filtered = filtered.filter(po => po.district === selectedDistrict);
+    }
+    if (searchTerm) {
+      filtered = filtered.filter(po => po.officename.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
+    if (selectedLetter) {
+      filtered = filtered.filter(po => po.officename.toLowerCase().startsWith(selectedLetter.toLowerCase()));
+    }
 
-  
+    const sortedOffices = filtered.sort((a, b) => a.officename.localeCompare(b.officename));
+    setFilteredPostOffices(sortedOffices);
+  }, [selectedDivision, selectedDistrict, searchTerm, selectedLetter]);
+
   useEffect(() => {
     if (selectedState) {
       setIsLoadingDivisions(true);
+      setIsLoadingStateData(true);
+      
       setDivisions([]);
+      setAllPostOfficesForState([]);
+      setFilteredPostOffices([]);
       setSelectedDivision('');
-      setPostOffices([]);
-      getDivisions(selectedState).then(d => {
-        setDivisions(d);
-        setIsLoadingDivisions(false);
+      setSelectedDistrict('');
+      setSearchTerm('');
+      setSelectedLetter('');
+
+      startTransition(() => {
+        getDivisions(selectedState).then(d => {
+          setDivisions(d);
+          setIsLoadingDivisions(false);
+        });
+
+        getPostOfficesByState(selectedState).then(offices => {
+          setAllPostOfficesForState(offices);
+          setFilteredPostOffices(offices.sort((a, b) => a.officename.localeCompare(b.officename)));
+          setIsLoadingStateData(false);
+        });
       });
+
     } else {
       setDivisions([]);
-      setSelectedDivision('');
-      setPostOffices([]);
+      setAllPostOfficesForState([]);
+      setFilteredPostOffices([]);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedState]);
 
+  useEffect(() => {
+    startTransition(() => {
+      applyFilters(allPostOfficesForState);
+    });
+  }, [allPostOfficesForState, selectedDivision, selectedDistrict, searchTerm, selectedLetter, applyFilters]);
+
   const handleStateChange = (state: string) => {
-    setSearchTerm('');
-    setSelectedLetter('');
     setSelectedState(state);
   };
 
   const handleDivisionChange = (division: string) => {
-    setSearchTerm('');
-    setSelectedLetter('');
+    setSelectedDistrict('');
     setSelectedDivision(division);
-    performSearch(selectedState, division, '', '');
   };
   
-  const handleSearchTermChange = (term: string) => {
-    setSearchTerm(term);
-     if (selectedState && selectedDivision) {
-      performSearch(selectedState, selectedDivision, term, selectedLetter);
-    }
+  const handleDistrictChange = (district: string) => {
+    setSelectedDivision('');
+    setSelectedDistrict(district);
   }
-
-  const handleLetterChange = (letter: string) => {
-    const newLetter = letter === 'all' ? '' : letter;
-    setSelectedLetter(newLetter);
-    if (selectedState && selectedDivision) {
-      performSearch(selectedState, selectedDivision, searchTerm, newLetter);
-    }
-  };
   
   const clearFilters = () => {
+    onClear();
     setSelectedState('');
     setSelectedDivision('');
+    setSelectedDistrict('');
     setSearchTerm('');
     setSelectedLetter('');
-    setPostOffices([]);
-    setSearched(false);
+    setAllPostOfficesForState([]);
+    setFilteredPostOffices([]);
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   
-  const faqItems = [
+  const faqItems = useMemo(() => [
     {
       question: t('faq.q1.question'),
       answer: t('faq.q1.answer'),
@@ -172,7 +185,9 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
       question: t('faq.q7.question'),
       answer: t('faq.q7.answer'),
     },
-  ];
+  ], [t]);
+
+  const isAnyFilterActive = selectedDivision || selectedDistrict || searchTerm || selectedLetter;
 
   return (
     <Card className="w-full shadow-lg border-none">
@@ -195,7 +210,7 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
                 </ScrollArea>
               </SelectContent>
             </Select>
-            <Select onValueChange={handleDivisionChange} value={selectedDivision} disabled={!selectedState || isLoadingDivisions}>
+            <Select onValueChange={handleDivisionChange} value={selectedDivision} disabled={!selectedState || isLoadingDivisions || !!selectedDistrict}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder={isLoadingDivisions ? t('home.loading') : t('home.selectDivision')} />
               </SelectTrigger>
@@ -212,17 +227,17 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
               <Input
                 placeholder={t('home.searchByBranch')}
                 value={searchTerm}
-                onChange={e => handleSearchTermChange(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
                 className="pl-10"
-                disabled={!selectedDivision}
+                disabled={!selectedState}
               />
             </div>
-            <Select onValueChange={handleLetterChange} value={selectedLetter} disabled={!selectedDivision}>
+            <Select onValueChange={setSelectedLetter} value={selectedLetter} disabled={!selectedState}>
                 <SelectTrigger className="w-full">
                     <SelectValue placeholder={t('home.filterByLetter')} />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="all">{t('home.allLetters')}</SelectItem>
+                    <SelectItem value="">{t('home.allLetters')}</SelectItem>
                     {alphabet.map(letter => (
                         <SelectItem key={letter} value={letter}>{letter}</SelectItem>
                     ))}
@@ -238,7 +253,7 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
         </div>
 
         <div className="w-full">
-            { !searched && postOffices.length === 0 ? (
+            { !selectedState ? (
                 <div className="max-w-3xl mx-auto border rounded-lg p-6">
                     <h3 className="text-xl font-semibold mb-4 text-center">{t('faq.title')}</h3>
                     <Accordion type="single" collapsible className="w-full">
@@ -252,18 +267,28 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
                         ))}
                     </Accordion>
                 </div>
+            ) : isLoadingStateData ? (
+                 <div className="space-y-4">
+                    <Skeleton className="h-32 w-full" />
+                    <Skeleton className="h-[500px] w-full" />
+                 </div>
             ) : (
                 <>
-                <div className="hidden md:block">
+                <StateDetails 
+                    selectedState={selectedState} 
+                    allPostOffices={allPostOfficesForState}
+                    onDistrictSelect={handleDistrictChange}
+                    selectedDistrict={selectedDistrict}
+                />
+                <div className="mt-8 hidden md:block">
                 <ScrollArea className="h-[500px] border rounded-lg">
                     <Table>
-                    <TableHeader className="sticky top-0 bg-card">
+                    <TableHeader className="sticky top-0 bg-card z-10">
                         <TableRow>
                         <TableHead>{t('table.officeName')}</TableHead>
                         <TableHead>{t('table.pincode')}</TableHead>
                         <TableHead>{t('table.officeType')}</TableHead>
-                        <TableHead>{t('table.taluka')}</TableHead>
-                        <TableHead>{t('table.state')}</TableHead>
+                        <TableHead>{t('table.district')}</TableHead>
                         <TableHead>{t('table.division')}</TableHead>
                         <TableHead>{t('table.region')}</TableHead>
                         <TableHead>{t('table.circle')}</TableHead>
@@ -272,7 +297,7 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
                     <TableBody>
                         {isPending ? (
                         <TableRow>
-                            <TableCell colSpan={8}>
+                            <TableCell colSpan={7}>
                             <div className="space-y-2 p-4">
                                 <Skeleton className="h-8 w-full" />
                                 <Skeleton className="h-8 w-full" />
@@ -280,14 +305,13 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
                             </div>
                             </TableCell>
                         </TableRow>
-                        ) : postOffices.length > 0 ? (
-                        postOffices.map((po, index) => (
+                        ) : filteredPostOffices.length > 0 ? (
+                        filteredPostOffices.map((po, index) => (
                             <TableRow key={`${po.officename}-${po.pincode}-${index}`}>
                             <TableCell className="font-medium">{po.officename}</TableCell>
                             <TableCell>{po.pincode}</TableCell>
                             <TableCell>{po.officetype}</TableCell>
-                            <TableCell>{po.Taluk}</TableCell>
-                            <TableCell>{po.statename}</TableCell>
+                            <TableCell>{po.district}</TableCell>
                             <TableCell>{po.divisionname}</TableCell>
                             <TableCell>{po.regionname}</TableCell>
                             <TableCell>{po.circlename}</TableCell>
@@ -295,8 +319,8 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
                         ))
                         ) : (
                         <TableRow>
-                            <TableCell colSpan={8} className="h-24 text-center">
-                                {t('home.noResults')}
+                            <TableCell colSpan={7} className="h-24 text-center">
+                                {isAnyFilterActive ? t('home.noResults') : t('home.selectFilter')}
                             </TableCell>
                         </TableRow>
                         )}
@@ -304,7 +328,7 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
                     </Table>
                 </ScrollArea>
                 </div>
-                <div className="block md:hidden">
+                <div className="mt-8 block md:hidden">
                     <ScrollArea className="h-[500px]">
                         <div className="space-y-4">
                         {isPending ? (
@@ -313,8 +337,8 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
                                 <Skeleton className="h-32 w-full" />
                                 <Skeleton className="h-32 w-full" />
                             </div>
-                        ) : postOffices.length > 0 ? (
-                            postOffices.map((po, index) => (
+                        ) : filteredPostOffices.length > 0 ? (
+                            filteredPostOffices.map((po, index) => (
                                 <Card key={`${po.officename}-${po.pincode}-${index}`} className="border rounded-lg p-4">
                                     <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                                         <div className="font-semibold col-span-2 text-base">{po.officename}</div>
@@ -325,12 +349,9 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
                                         <div className="text-muted-foreground">{t('table.officeType')}</div>
                                         <div>{po.officetype}</div>
 
-                                        <div className="text-muted-foreground">{t('table.taluka')}</div>
-                                        <div>{po.Taluk}</div>
+                                        <div className="text-muted-foreground">{t('table.district')}</div>
+                                        <div>{po.district}</div>
                                         
-                                        <div className="text-muted-foreground">{t('table.state')}</div>
-                                        <div>{po.statename}</div>
-
                                         <div className="text-muted-foreground">{t('table.division')}</div>
                                         <div>{po.divisionname}</div>
 
@@ -344,7 +365,7 @@ export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderPr
                             ))
                         ) : (
                             <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
-                                {t('home.noResults')}
+                                {isAnyFilterActive ? t('home.noResults') : t('home.selectFilter')}
                             </div>
                         )}
                         </div>

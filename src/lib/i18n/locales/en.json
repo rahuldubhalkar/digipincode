@@ -1,3 +1,4 @@
+
 {
   "nav": {
     "home": "Home",
@@ -22,7 +23,8 @@
     "filterByLetter": "Filter by Letter",
     "allLetters": "All",
     "clearFilters": "Clear All Filters",
-    "noResults": "No results found. Try adjusting your filters."
+    "noResults": "No results found. Try adjusting your filters.",
+    "selectFilter": "Select filters to see results or click a district above."
   },
   "pincodePage": {
     "title": "Find Post Office by PIN Code",
@@ -41,7 +43,8 @@
     "state": "State",
     "division": "Division",
     "region": "Region",
-    "circle": "Circle"
+    "circle": "Circle",
+    "district": "District"
   },
   "faq": {
     "title": "Post Office Search - Frequently Asked Questions",
@@ -55,22 +58,22 @@
     },
     "q3": {
       "question": "What post office details can I find?",
-      "answer": "Our Indian Post Office database provides comprehensive details for each branch, including the office name, pincode, office type (Head Post Office or Branch Post Office), taluka, district, state, and the postal division, region, and circle it belongs to."
+      "answer": "Our Indian Post Office database provides comprehensive details for each branch, including the office name, pincode, office type (Head Post Office or Branch Post Office), district, state, and the postal division, region, and circle it belongs to."
     },
     "q4": {
       "question": "Can I get a post office list by state?",
-      "answer": "Yes. Simply select a state from the first dropdown on our homepage. You can then select a specific postal division to see the complete list of post offices in that area. This allows you to explore the India post office PIN code directory for any state."
+      "answer": "Yes. Simply select a state from the first dropdown on our homepage. You can then see all post offices in that state, and further filter by a specific postal division or district to see a complete list of post offices in that area. This allows you to explore the India post office PIN code directory for any state."
     },
     "q5": {
       "question": "What is the difference between a Head Post Office and a Branch Post Office?",
-      "answer": "A Head Post Office (H.O.) is the main post office in a district, which controls and manages the smaller Branch Post Offices (B.O.) and Sub-Post Offices (S.O.) in its jurisdiction. Our tool provides Branch Post Office details as well as Head Post Office information."
+      "answer": "A Head Post Office (H.O.) or General Post Office (G.P.O) is the main post office in a district, which controls and manages the smaller Branch Post Offices (B.O.) and Sub-Post Offices (S.O.) in its jurisdiction. Our tool provides Branch Post Office details as well as Head Post Office India information."
     },
     "q6": {
       "question": "How accurate is the Indian Post Office database?",
       "answer": "We use the official, publicly available data from the Government of India. This ensures our post office search online provides the most accurate and up-to-date post office details India has on record."
     },
     "q7": {
-      "question": "How do I find post office details using a PIN code?",
+      "question": "How do I find post office details using PIN code?",
       "answer": "Navigate to the 'Find by Pincode' page using the main menu. Enter the complete 6-digit Indian Postal PIN Code into the search bar and click 'Search'. You will receive a list of all post offices, including their names, types, and districts, that fall under that specific PIN code."
     }
   },
@@ -125,5 +128,9 @@
   "zoneList": {
     "title": "1st 2 Digits of PINcode, Postal Circle",
     "searchFor": "Search for"
+  },
+  "stateDetails": {
+    "districtsTitle": "{{count}} Districts in {{state}}",
+    "gpoTitle": "{{count}} GPO in {{state}}"
   }
 }
