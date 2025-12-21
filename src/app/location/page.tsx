@@ -16,7 +16,7 @@ import { Loader } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Dynamically import the new map component
+// Dynamically import the map component to prevent SSR issues
 const LocationMap = dynamic(() => import("@/components/location-map"), {
   ssr: false,
   loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />,
@@ -39,9 +39,9 @@ export default function LocationPage() {
     }
 
     setIsLoading(true);
-    setLocation(null);
+    setLocation(null); // Clear previous location
     setError(null);
-    setMapKey(null); // Clear the map key to unmount the component
+    setMapKey(null); // Force map to unmount
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
