@@ -45,43 +45,37 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
     return (
         <Card className="border-none shadow-none">
             <CardContent className="p-0 space-y-4">
-                <div>
-                    <p className="font-bold mb-2">Districts:</p>
-                    <div className="flex flex-wrap gap-x-4 gap-y-2">
-                        {districts.map(district => (
-                            <Button
-                                key={district}
-                                variant="link"
-                                className={cn(
-                                    "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
-                                    selectedDistrict === district && "text-primary font-bold"
-                                )}
-                                onClick={() => onDistrictSelect(district)}
-                            >
-                                {district}
-                            </Button>
-                        ))}
-                    </div>
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
+                    {districts.map(district => (
+                        <Button
+                            key={district}
+                            variant="link"
+                            className={cn(
+                                "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
+                                selectedDistrict === district && "text-primary font-bold"
+                            )}
+                            onClick={() => onDistrictSelect(district)}
+                        >
+                            {district}
+                        </Button>
+                    ))}
                 </div>
 
                 {divisions.length > 0 && (
-                    <div>
-                         <p className="font-bold mb-2">Divisions:</p>
-                        <div className="flex flex-wrap gap-x-4 gap-y-2">
-                            {divisions.map(division => (
-                               <Button
-                                key={division}
-                                variant="link"
-                                className={cn(
-                                    "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
-                                    selectedDivision === division && "text-primary font-bold"
-                                )}
-                                onClick={() => onDivisionSelect(division)}
-                            >
-                                {division}
-                            </Button>
-                            ))}
-                        </div>
+                    <div className="flex flex-wrap gap-x-4 gap-y-2">
+                        {divisions.map(division => (
+                           <Button
+                            key={division}
+                            variant="link"
+                            className={cn(
+                                "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
+                                selectedDivision === division && "text-primary font-bold"
+                            )}
+                            onClick={() => onDivisionSelect(division)}
+                        >
+                            {division}
+                        </Button>
+                        ))}
                     </div>
                 )}
             </CardContent>
