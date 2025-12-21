@@ -277,7 +277,6 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
                         <TableHead>{t('table.officeName')}</TableHead>
                         <TableHead>{t('table.pincode')}</TableHead>
                         <TableHead>{t('table.officeType')}</TableHead>
-                        <TableHead>{t('table.district')}</TableHead>
                         <TableHead>{t('table.division')}</TableHead>
                         <TableHead>{t('table.region')}</TableHead>
                         <TableHead>{t('table.circle')}</TableHead>
@@ -286,7 +285,7 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
                     <TableBody>
                         {isPending ? (
                         <TableRow>
-                            <TableCell colSpan={7}>
+                            <TableCell colSpan={6}>
                             <div className="space-y-2 p-4">
                                 <Skeleton className="h-8 w-full" />
                                 <Skeleton className="h-8 w-full" />
@@ -300,7 +299,6 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
                             <TableCell className="font-medium">{po.officename}</TableCell>
                             <TableCell>{po.pincode}</TableCell>
                             <TableCell>{po.officetype}</TableCell>
-                            <TableCell>{po.district}</TableCell>
                             <TableCell>{po.divisionname}</TableCell>
                             <TableCell>{po.regionname}</TableCell>
                             <TableCell>{po.circlename}</TableCell>
@@ -308,7 +306,7 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
                         ))
                         ) : (
                         <TableRow>
-                            <TableCell colSpan={7} className="h-24 text-center">
+                            <TableCell colSpan={6} className="h-24 text-center">
                                 {isAnyFilterActive ? t('home.noResults') : t('home.selectFilter')}
                             </TableCell>
                         </TableRow>
@@ -337,9 +335,6 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
                                         
                                         <div className="text-muted-foreground">{t('table.officeType')}</div>
                                         <div>{po.officetype}</div>
-
-                                        <div className="text-muted-foreground">{t('table.district')}</div>
-                                        <div>{po.district}</div>
                                         
                                         <div className="text-muted-foreground">{t('table.division')}</div>
                                         <div>{po.divisionname}</div>
@@ -367,3 +362,5 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
     </Card>
   );
 }
+
+    
