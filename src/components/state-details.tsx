@@ -44,11 +44,9 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
 
     return (
         <Card className="border-none shadow-none">
-            <CardContent className="p-0 space-y-6">
+            <CardContent className="p-0 space-y-4">
                 <div>
-                    <h3 className="text-lg font-bold text-primary mb-2">
-                        {t('stateDetails.districtsTitle', { count: districts.length, state: selectedState })}
-                    </h3>
+                    <p className="font-bold mb-2">Districts:</p>
                     <div className="flex flex-wrap gap-x-4 gap-y-2">
                         {districts.map(district => (
                             <Button
@@ -68,9 +66,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
 
                 {divisions.length > 0 && (
                     <div>
-                         <h3 className="text-lg font-bold text-primary mb-2">
-                            {t('stateDetails.divisionsTitle', { count: divisions.length, state: selectedState })}
-                        </h3>
+                         <p className="font-bold mb-2">Divisions:</p>
                         <div className="flex flex-wrap gap-x-4 gap-y-2">
                             {divisions.map(division => (
                                <Button
