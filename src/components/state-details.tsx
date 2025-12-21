@@ -55,7 +55,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                                 key={district}
                                 variant="link"
                                 className={cn(
-                                    "p-0 h-auto text-muted-foreground hover:text-primary",
+                                    "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
                                     selectedDistrict === district && "text-primary font-bold"
                                 )}
                                 onClick={() => onDistrictSelect(district === selectedDistrict ? '' : district)}
@@ -73,7 +73,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                         </h3>
                         <div className="flex flex-wrap gap-x-4 gap-y-2">
                             {gpos.map(gpo => (
-                                <span key={gpo.officename} className="text-sm">
+                                <span key={gpo.officename} className="text-sm text-muted-foreground">
                                     {gpo.officename} - {gpo.pincode}
                                 </span>
                             ))}
