@@ -10,7 +10,7 @@ const translations: Record<string, any> = { en, mr, hi };
 type I18nContextType = {
   language: string;
   setLanguage: (language: string) => void;
-  t: (key: string) => string;
+  t: (key: string, values?: Record<string, string | number>) => string;
 };
 
 export const I18nContext = createContext<I18nContextType | undefined>(undefined);
@@ -32,21 +32,33 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const t = (key: string): string => {
+  const t = (key: string, values?: Record<string, string | number>): string => {
     const keys = key.split('.');
     let result = translations[language];
     for (const k of keys) {
       result = result?.[k];
     }
+
+    let template: string;
+
     if (typeof result === 'string') {
-        return result;
+        template = result;
+    } else {
+        // Fallback to English if translation is missing
+        let fallbackResult = translations['en'];
+        for (const k of keys) {
+            fallbackResult = fallbackResult?.[k];
+        }
+        template = fallbackResult || key;
     }
-    // Fallback to English if translation is missing
-    let fallbackResult = translations['en'];
-    for (const k of keys) {
-        fallbackResult = fallbackResult?.[k];
+
+    if (values) {
+      return template.replace(/\{\{(\w+)\}\}/g, (placeholder, placeholderKey) => {
+        return values[placeholderKey] !== undefined ? String(values[placeholderKey]) : placeholder;
+      });
     }
-    return fallbackResult || key;
+
+    return template;
   };
 
   return (
