@@ -40,9 +40,10 @@ import { useTranslation } from '@/lib/i18n/use-translation';
 
 export interface PincodeFinderProps {
   states: string[];
+  selectedStateFromZone?: string;
 }
 
-export function PincodeFinder({ states }: PincodeFinderProps) {
+export function PincodeFinder({ states, selectedStateFromZone }: PincodeFinderProps) {
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
 
@@ -56,6 +57,14 @@ export function PincodeFinder({ states }: PincodeFinderProps) {
   const [searched, setSearched] = useState(false);
   
   const [isLoadingDivisions, setIsLoadingDivisions] = useState(false);
+
+  useEffect(() => {
+    if (selectedStateFromZone) {
+      handleStateChange(selectedStateFromZone);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedStateFromZone]);
+
 
   const performSearch = useCallback((state = selectedState, division = selectedDivision, term = searchTerm, letter = selectedLetter) => {
     if (!state || !division) {

@@ -121,5 +121,9 @@
       "timeout": "The request to get user location timed out.",
       "generic": "An unknown error occurred while trying to get your location."
     }
+  },
+  "zoneList": {
+    "title": "1st 2 Digits of PINcode, Postal Circle",
+    "searchFor": "Search for"
   }
 }
