@@ -8,13 +8,13 @@
     "contact": "Contact Us"
   },
   "header": {
-    "tagline": "An elegant way to find any post office across India"
+    "tagline": "Your complete India PIN Code Search directory."
   },
   "footer": {
     "rights": "All rights reserved."
   },
   "home": {
-    "title": "Welcome to digi-pincode",
+    "title": "India Post Office PIN Code Finder",
     "selectState": "Select a State",
     "loading": "Loading...",
     "selectDivision": "Select a Division",
@@ -25,13 +25,13 @@
     "noResults": "No results found. Try adjusting your filters."
   },
   "pincodePage": {
-    "title": "Find by Pincode",
-    "description": "Enter a 6-digit pincode to find post office details.",
+    "title": "Find Post Office by PIN Code",
+    "description": "Enter a 6-digit Indian Postal PIN Code to find Post Office details online.",
     "placeholder": "Enter 6-digit pincode",
     "search": "Search",
     "searching": "Searching...",
     "noResults": "No results found for this pincode.",
-    "startSearch": "Enter a pincode to start a search."
+    "startSearch": "Enter a pincode to start an India PIN Code search."
   },
   "table": {
     "officeName": "Office Name",
@@ -44,26 +44,34 @@
     "circle": "Circle"
   },
   "faq": {
-    "title": "Frequently Asked Questions",
+    "title": "Post Office Search - Frequently Asked Questions",
     "q1": {
-      "question": "What is a PIN Code?",
-      "answer": "A Postal Index Number (PIN) or PIN Code is a 6-digit code used by India Post for sorting mail. Each digit has a specific geographical meaning, helping to route mail efficiently across the country."
+      "question": "What is an Indian Postal PIN Code?",
+      "answer": "A Postal Index Number (PIN) or PIN Code is a 6-digit code used by India Post for sorting mail. Each digit has a specific geographical meaning, helping to route mail efficiently. This PIN code finder for India helps you get details for any code."
     },
     "q2": {
-      "question": "What is DIGIPIN?",
-      "answer": "DIGIPIN is a modern digital addressing system. It provides a unique, short, and easy-to-share code for any precise location, making it simpler to communicate addresses than with traditional, often complex, street names and building numbers."
+      "question": "How do I perform an India PIN code search?",
+      "answer": "You can use our 'Find by Pincode' page and enter the 6-digit code to see a list of post offices associated with it. Alternatively, on the home page, you can search Indian post office by district or state and division to narrow down the results."
     },
     "q3": {
-      "question": "How is this website useful?",
-      "answer": "Our website allows you to easily find information about any post office in India. You can search by state, division, or even by the name of the post office branch. It's a quick and convenient tool for both personal and business needs."
+      "question": "What post office details can I find?",
+      "answer": "Our Indian Post Office database provides comprehensive details for each branch, including the office name, pincode, office type (Head Post Office or Branch Post Office), taluka, district, state, and the postal division, region, and circle it belongs to."
     },
     "q4": {
-      "question": "What details can I find about a post office?",
-      "answer": "You can find several key details, including the office name, pincode, office type (e.g., Head Post Office, Sub-Post Office), the taluka (sub-district), district, state, and the postal division, region, and circle it belongs to."
+      "question": "Can I get a post office list by state?",
+      "answer": "Yes. Simply select a state from the first dropdown on our homepage. You can then select a specific postal division to see the complete list of post offices in that area. This allows you to explore the India post office PIN code directory for any state."
     },
     "q5": {
-      "question": "Can I find all post offices related to a single pincode?",
-      "answer": "Yes. A single pincode can sometimes cover multiple post offices, especially in urban areas. Our 'Find by Pincode' feature will list all post offices that share the same pincode you enter."
+      "question": "What is the difference between a Head Post Office and a Branch Post Office?",
+      "answer": "A Head Post Office (H.O.) is the main post office in a district, which controls and manages the smaller Branch Post Offices (B.O.) and Sub-Post Offices (S.O.) in its jurisdiction. Our tool provides Branch Post Office details as well as Head Post Office information."
+    },
+    "q6": {
+      "question": "How accurate is the Indian Post Office database?",
+      "answer": "We use the official, publicly available data from the Government of India. This ensures our post office search online provides the most accurate and up-to-date post office details India has on record."
+    },
+    "q7": {
+      "question": "How do I find post office details using a PIN code?",
+      "answer": "Navigate to the 'Find by Pincode' page using the main menu. Enter the complete 6-digit Indian Postal PIN Code into the search bar and click 'Search'. You will receive a list of all post offices, including their names, types, and districts, that fall under that specific PIN code."
     }
   },
   "about": {
