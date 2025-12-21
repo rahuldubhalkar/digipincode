@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,6 +13,12 @@ import {
 import { useTranslation } from "@/lib/i18n/use-translation";
 import { Loader } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const MapDisplay = dynamic(() => import("@/components/map-display"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />,
+});
 
 export default function LocationPage() {
   const { t } = useTranslation();
@@ -92,20 +99,26 @@ export default function LocationPage() {
           )}
 
           {location && (
-            <div className="text-center p-6 bg-muted rounded-lg">
-              <h3 className="text-lg font-semibold mb-2">
-                {t("location.yourLocation")}
-              </h3>
-              <div className="font-mono text-lg space-y-2">
-                <p>
-                  <span className="font-semibold">{t("location.latitude")}:</span>{" "}
-                  {location.latitude.toFixed(6)}
-                </p>
-                <p>
-                  <span className="font-semibold">{t("location.longitude")}:</span>{" "}
-                  {location.longitude.toFixed(6)}
-                </p>
+            <div className="space-y-4">
+              <div className="text-center p-6 bg-muted rounded-lg">
+                <h3 className="text-lg font-semibold mb-2">
+                  {t("location.yourLocation")}
+                </h3>
+                <div className="font-mono text-lg space-y-2">
+                  <p>
+                    <span className="font-semibold">{t("location.latitude")}:</span>{" "}
+                    {location.latitude.toFixed(6)}
+                  </p>
+                  <p>
+                    <span className="font-semibold">{t("location.longitude")}:</span>{" "}
+                    {location.longitude.toFixed(6)}
+                  </p>
+                </div>
               </div>
+              <MapDisplay
+                latitude={location.latitude}
+                longitude={location.longitude}
+              />
             </div>
           )}
         </CardContent>
