@@ -34,7 +34,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
         
         return {
             districts: Array.from(districtSet).sort(),
-            gpos: gpoList
+            gpos: gpoList.sort((a, b) => a.officename.localeCompare(b.officename))
         };
     }, [allPostOffices]);
     
