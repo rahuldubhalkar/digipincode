@@ -21,8 +21,8 @@ export default function ContactPage() {
               <Mail className="h-6 w-6 text-primary" />
               <div>
                 <h3 className="font-semibold">{t('contact.email')}</h3>
-                <a href="mailto:rdubhalkar10@gmail.com" className="text-muted-foreground hover:text-primary">
-                  rdubhalkar10@gmail.com
+                <a href="mailto:rahuldubhalkar@digi-pincode.com" className="text-muted-foreground hover:text-primary">
+                  rahuldubhalkar@digi-pincode.com
                 </a>
               </div>
             </div>
