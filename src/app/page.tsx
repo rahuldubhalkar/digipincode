@@ -4,7 +4,7 @@
 import { PincodeFinderLoader } from '@/components/pincode-finder-loader';
 import { PincodeZoneList } from '@/components/pincode-zone-list';
 import { getStates } from '@/lib/data';
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,16 +24,16 @@ export default function Home() {
     });
   }, []);
 
-  const handleZoneSelect = (state: string) => {
+  const handleZoneSelect = useCallback((state: string) => {
     setSelectedStateFromZone(state);
     if (finderRef.current) {
       finderRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
   
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     setSelectedStateFromZone('');
-  }
+  }, []);
 
   const faqItems = useMemo(() => [
     {

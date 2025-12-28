@@ -1,9 +1,9 @@
 
 "use client";
 
-import { useState, useEffect, useTransition, useCallback, useMemo } from 'react';
+import { useState, useEffect, useTransition, useCallback, memo } from 'react';
 import type { PostOffice } from '@/lib/types';
-import { getDivisions, findPostOffices, getPostOfficesByState } from '@/lib/data';
+import { getPostOfficesByState } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -28,12 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, X } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
@@ -46,11 +40,10 @@ export interface PincodeFinderProps {
   onClear: () => void;
 }
 
-export function PincodeFinder({ states, selectedStateFromZone, onClear }: PincodeFinderProps) {
+function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: PincodeFinderProps) {
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
 
-  const [divisions, setDivisions] = useState<string[]>([]);
   const [allPostOfficesForState, setAllPostOfficesForState] = useState<PostOffice[]>([]);
   const [filteredPostOffices, setFilteredPostOffices] = useState<PostOffice[]>([]);
 
@@ -93,7 +86,6 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
     if (selectedState) {
       setIsLoadingStateData(true);
       
-      setDivisions([]);
       setAllPostOfficesForState([]);
       setFilteredPostOffices([]);
       setSelectedDivision('');
@@ -110,7 +102,6 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
       });
 
     } else {
-      setDivisions([]);
       setAllPostOfficesForState([]);
       setFilteredPostOffices([]);
     }
@@ -151,8 +142,6 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
     setSelectedDistrict('');
     setSearchTerm('');
     setSelectedLetter('');
-    setAllPostOfficesForState([]);
-    setFilteredPostOffices([]);
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -163,7 +152,7 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
     <Card className="w-full shadow-lg border-none">
       <CardHeader className="text-center">
         <CardTitle className="text-3xl font-headline tracking-tight text-primary">{t('home.title')}</CardTitle>
-        <CardDescription>{t('header.tagline')}</CardDescription>
+        <CardDescription>{t('home.description')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-8">
         <div className="space-y-4">
@@ -242,7 +231,7 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {isPending ? (
+                        {(isPending || isLoadingStateData) ? (
                         <TableRow>
                             <TableCell colSpan={6}>
                             <div className="space-y-2 p-4">
@@ -277,7 +266,7 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
                 <div className="mt-8 block md:hidden">
                     <ScrollArea className="h-[500px]">
                         <div className="space-y-4">
-                        {isPending ? (
+                        {(isPending || isLoadingStateData) ? (
                             <div className='space-y-4'>
                                 <Skeleton className="h-32 w-full" />
                                 <Skeleton className="h-32 w-full" />
@@ -322,4 +311,5 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
   );
 }
 
+export const PincodeFinder = memo(PincodeFinderComponent);
     

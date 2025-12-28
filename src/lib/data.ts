@@ -58,22 +58,23 @@ async function getAllRecordsForState(state: string): Promise<any[]> {
     const BATCH_SIZE = 1000;
     let offset = 0;
     let allRecords: any[] = [];
-    let totalAvailable = 0;
-
+    
+    // First, get the total count of records.
     const initialFetch = await fetchFromAPI({ 'statename': state }, 1, 0);
-    if (initialFetch && initialFetch.total) {
-        totalAvailable = initialFetch.total;
-    } else {
+    const totalAvailable = initialFetch.total || 0;
+
+    if (totalAvailable === 0) {
         return [];
     }
 
+    // Create all fetch promises to run in parallel.
     const fetchPromises: Promise<any>[] = [];
-    while (offset < totalAvailable) {
+    for (offset = 0; offset < totalAvailable; offset += BATCH_SIZE) {
         fetchPromises.push(fetchFromAPI({ 'statename': state }, BATCH_SIZE, offset));
-        offset += BATCH_SIZE;
     }
 
     const results = await Promise.all(fetchPromises);
+    
     for (const result of results) {
         if (result.records) {
             allRecords = allRecords.concat(result.records);
@@ -154,26 +155,28 @@ export async function findPostOffices(filters: {
   
   let allRecords: any[] = [];
   
-  if (filters.division) {
+  // If only state is provided, fetch all records for that state more efficiently
+  if (filters.state && !filters.division) {
+    allRecords = await getAllRecordsForState(filters.state);
+  } else {
       const BATCH_SIZE = 1000;
       let offset = 0;
-      let totalAvailable = 0;
+      
       const initialFetch = await fetchFromAPI(apiFilters, 1, 0);
-      if (initialFetch && initialFetch.total) {
-        totalAvailable = initialFetch.total;
-      }
+      const totalAvailable = initialFetch.total || 0;
   
       if (totalAvailable > 0) {
-          while(offset < totalAvailable) {
-            const subsequentFetch = await fetchFromAPI(apiFilters, BATCH_SIZE, offset);
-            if (!subsequentFetch.records || subsequentFetch.records.length === 0) break;
-            allRecords = allRecords.concat(subsequentFetch.records);
-            offset += subsequentFetch.records.length;
+          const fetchPromises: Promise<any>[] = [];
+          for (offset = 0; offset < totalAvailable; offset += BATCH_SIZE) {
+            fetchPromises.push(fetchFromAPI(apiFilters, BATCH_SIZE, offset));
+          }
+          const results = await Promise.all(fetchPromises);
+          for (const result of results) {
+              if (result.records) {
+                  allRecords = allRecords.concat(result.records);
+              }
           }
       }
-  } else {
-    // If only state is provided, fetch all records for that state
-    allRecords = await getAllRecordsForState(filters.state);
   }
 
   // Client-side filtering

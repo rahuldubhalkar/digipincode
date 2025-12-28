@@ -1,3 +1,4 @@
+
 {
   "nav": {
     "home": "Home",
@@ -15,6 +16,7 @@
   },
   "home": {
     "title": "India Post Office PIN Code Finder",
+    "description": "Search for any India Post Office Pincode. Find postal codes by State, District, or Post Office name.",
     "selectState": "Select a State to Find Pincode",
     "loading": "Loading...",
     "selectDivision": "Select a Division",
