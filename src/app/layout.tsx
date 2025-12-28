@@ -8,9 +8,20 @@ import { Providers } from './providers';
 export const metadata: Metadata = {
   title: 'digi-pincode | India PIN Code Finder, Post Office Search Online',
   description: 'Find any India Post Office PIN code with our fast and accurate search tool. Search by Pincode, State, or District. Get complete Post Office details, including postal codes, addresses, and more. The most reliable Indian Pincode directory.',
+  manifest: "/site.webmanifest",
   icons: {
-    icon: '/favicon.svg',
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
+      { url: '/favicon.ico', rel: 'shortcut icon' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180' },
+    ],
   },
+  appleWebApp: {
+    title: 'digi-pincode',
+  }
 };
 
 export default function RootLayout({
