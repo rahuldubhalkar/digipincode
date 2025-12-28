@@ -156,37 +156,6 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-  
-  const faqItems = useMemo(() => [
-    {
-      question: t('faq.q1.question'),
-      answer: t('faq.q1.answer'),
-    },
-    {
-      question: t('faq.q2.question'),
-      answer: t('faq.q2.answer'),
-    },
-    {
-      question: t('faq.q3.question'),
-      answer: t('faq.q3.answer'),
-    },
-    {
-      question: t('faq.q4.question'),
-      answer: t('faq.q4.answer'),
-    },
-    {
-      question: t('faq.q5.question'),
-      answer: t('faq.q5.answer'),
-    },
-    {
-      question: t('faq.q6.question'),
-      answer: t('faq.q6.answer'),
-    },
-    {
-      question: t('faq.q7.question'),
-      answer: t('faq.q7.answer'),
-    },
-  ], [t]);
 
   const isAnyFilterActive = selectedDivision || selectedDistrict || searchTerm || selectedLetter;
 
@@ -241,18 +210,8 @@ export function PincodeFinder({ states, selectedStateFromZone, onClear }: Pincod
 
         <div className="w-full">
             { !selectedState ? (
-                <div className="max-w-3xl mx-auto border rounded-lg p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-center">{t('faq.title')}</h3>
-                    <Accordion type="single" collapsible className="w-full">
-                        {faqItems.map((item, index) => (
-                            <AccordionItem value={`item-${index}`} key={index}>
-                                <AccordionTrigger>{item.question}</AccordionTrigger>
-                                <AccordionContent>
-                                    {item.answer}
-                                </AccordionContent>
-                            </AccordionItem>
-                        ))}
-                    </Accordion>
+                <div className="text-center p-8 text-muted-foreground">
+                    <p>{t('home.selectFilter')}</p>
                 </div>
             ) : isLoadingStateData ? (
                  <div className="space-y-4">
