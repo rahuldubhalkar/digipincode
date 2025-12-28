@@ -69,8 +69,6 @@ export default function Home() {
 
   return (
     <main className="container mx-auto px-4 py-8 space-y-12">
-      {!isLoading && <PincodeZoneList onZoneSelect={handleZoneSelect} />}
-      
       <div ref={finderRef}>
         {isLoading ? (
           <div className="space-y-4">
@@ -82,6 +80,8 @@ export default function Home() {
           <PincodeFinderLoader states={states} selectedStateFromZone={selectedStateFromZone} onClear={handleClear} />
         )}
       </div>
+
+      {!isLoading && <PincodeZoneList onZoneSelect={handleZoneSelect} />}
       
       {!isLoading && (
         <Card className="w-full shadow-lg border-none">
