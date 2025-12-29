@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useTransition, useCallback, memo } from 'react';
@@ -81,7 +82,9 @@ function PincodeFinderComponent({ states, allStatesData, selectedStateFromZone, 
     setFilteredPostOffices(sortedOffices);
   }, [selectedDivision, selectedDistrict, searchTerm, selectedLetter]);
 
-  useEffect(() => {
+  const handleStateChange = (state: string) => {
+    setSelectedState(state);
+    
     setIsLoadingStateData(true);
     setFilteredPostOffices([]);
     setSelectedDivision('');
@@ -89,26 +92,24 @@ function PincodeFinderComponent({ states, allStatesData, selectedStateFromZone, 
     setSearchTerm('');
     setSelectedLetter('');
 
-    if (selectedState && allStatesData[selectedState]) {
-      const offices = allStatesData[selectedState];
-      setAllPostOfficesForState(offices);
-      setFilteredPostOffices(offices.sort((a, b) => a.officename.localeCompare(b.officename)));
-    } else {
-      setAllPostOfficesForState([]);
-      setFilteredPostOffices([]);
-    }
-    setIsLoadingStateData(false);
-  }, [selectedState, allStatesData]);
+    startTransition(() => {
+        if (state && allStatesData[state]) {
+            const offices = allStatesData[state];
+            setAllPostOfficesForState(offices);
+            applyFilters(offices);
+        } else {
+            setAllPostOfficesForState([]);
+            setFilteredPostOffices([]);
+        }
+        setIsLoadingStateData(false);
+    });
+  };
 
   useEffect(() => {
     startTransition(() => {
       applyFilters(allPostOfficesForState);
     });
   }, [allPostOfficesForState, selectedDivision, selectedDistrict, searchTerm, selectedLetter, applyFilters]);
-
-  const handleStateChange = (state: string) => {
-    setSelectedState(state);
-  };
 
   const handleDivisionChange = (division: string) => {
     setSelectedDistrict('');
@@ -135,6 +136,8 @@ function PincodeFinderComponent({ states, allStatesData, selectedStateFromZone, 
     setSelectedDistrict('');
     setSearchTerm('');
     setSelectedLetter('');
+    setAllPostOfficesForState([]);
+    setFilteredPostOffices([]);
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');

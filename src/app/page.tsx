@@ -1,12 +1,15 @@
+
 import { PincodeFinderWrapper } from '@/components/pincode-finder-wrapper';
 import { PincodeZoneList } from '@/components/pincode-zone-list';
 import { getStates, getPostOfficesByState } from '@/lib/data';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { PostOffice } from '@/lib/types';
-import { PincodeFinder } from '@/components/pincode-finder';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { promises as fs } from 'fs';
+import path from 'path';
+
 
 function PincodeFinderSkeleton() {
     return (
@@ -85,11 +88,20 @@ export default async function Home() {
   
   // Pre-fetch data for all states at build time
   const allStatesData: StateData = {};
+  let allPostOffices: PostOffice[] = [];
+
   const allStatesPromises = states.map(async (state) => {
     const postOffices = await getPostOfficesByState(state);
     allStatesData[state] = postOffices;
+    allPostOffices = allPostOffices.concat(postOffices);
   });
   await Promise.all(allStatesPromises);
+
+  // Write all post offices to a static JSON file in the public directory
+  const publicDir = path.join(process.cwd(), 'public');
+  await fs.mkdir(publicDir, { recursive: true });
+  await fs.writeFile(path.join(publicDir, 'all_post_offices.json'), JSON.stringify(allPostOffices));
+
 
   return (
     <main className="container mx-auto px-4 py-8 space-y-12">

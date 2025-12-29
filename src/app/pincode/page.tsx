@@ -1,7 +1,7 @@
+
 "use client";
 
-import { useState, useTransition } from "react";
-import { findPostOfficesByPincode } from "@/lib/data";
+import { useState, useTransition, useEffect } from "react";
 import type { PostOffice } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,21 +25,40 @@ import { Search } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "@/lib/i18n/use-translation";
 
+async function findPostOfficesByPincode(pincode: string, allData: PostOffice[]): Promise<PostOffice[]> {
+  if (!pincode) return [];
+  return allData.filter(po => po.pincode === pincode);
+}
+
 export default function PincodePage() {
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
   const [pincode, setPincode] = useState("");
   const [postOffices, setPostOffices] = useState<PostOffice[]>([]);
   const [searched, setSearched] = useState(false);
+  const [allPostOfficeData, setAllPostOfficeData] = useState<PostOffice[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+
+  useEffect(() => {
+    fetch('/all_post_offices.json')
+      .then(res => res.json())
+      .then(data => {
+        setAllPostOfficeData(data);
+        setIsLoadingData(false);
+      })
+      .catch(err => {
+        console.error("Failed to load post office data", err);
+        setIsLoadingData(false);
+      });
+  }, []);
 
   const handleSearch = () => {
-    if (pincode.trim().length !== 6) {
-        // Maybe show a toast notification for invalid pincode
+    if (pincode.trim().length !== 6 || isLoadingData) {
         return;
     }
     startTransition(() => {
         setSearched(true);
-        findPostOfficesByPincode(pincode).then(setPostOffices);
+        findPostOfficesByPincode(pincode, allPostOfficeData).then(setPostOffices);
     });
   };
 
@@ -60,8 +79,9 @@ export default function PincodePage() {
               value={pincode}
               onChange={(e) => setPincode(e.target.value)}
               maxLength={6}
+              disabled={isLoadingData}
             />
-            <Button type="button" onClick={handleSearch} disabled={isPending}>
+            <Button type="button" onClick={handleSearch} disabled={isPending || isLoadingData}>
               <Search className="mr-2 h-4 w-4" />
               {isPending ? t('pincodePage.searching') : t('pincodePage.search')}
             </Button>
@@ -84,7 +104,7 @@ export default function PincodePage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {isPending ? (
+                    {isPending || isLoadingData ? (
                       <TableRow>
                         <TableCell colSpan={8}>
                           <div className="space-y-2">
@@ -125,7 +145,7 @@ export default function PincodePage() {
              <div className="block md:hidden">
                 <ScrollArea className="h-[500px]">
                     <div className="space-y-4">
-                    {isPending ? (
+                    {isPending || isLoadingData ? (
                         <div className='space-y-4'>
                             <Skeleton className="h-32 w-full" />
                             <Skeleton className="h-32 w-full" />
