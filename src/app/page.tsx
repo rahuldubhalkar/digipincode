@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslation } from '@/lib/i18n/use-translation';
+import { PincodeFinderLoader } from '@/components/pincode-finder-loader';
 
 function PincodeFinderSkeleton() {
     return (
@@ -94,13 +95,12 @@ export default function Home() {
   return (
     <main className="container mx-auto px-4 py-8 space-y-12">
       <div ref={finderRef}>
-        {isLoading ? <PincodeFinderSkeleton /> : <PincodeFinder states={states} selectedStateFromZone={selectedStateFromZone} onClear={handleClear} />}
+        {isLoading ? <PincodeFinderSkeleton /> : <PincodeFinderLoader states={states} selectedStateFromZone={selectedStateFromZone} onClear={handleClear} />}
       </div>
 
-      {!isLoading && <PincodeZoneList onZoneSelect={handleZoneSelect} />}
+      <PincodeZoneList onZoneSelect={handleZoneSelect} />
       
-      {!isLoading && (
-        <Card className="w-full shadow-lg border-none">
+      <Card className="w-full shadow-lg border-none">
           <CardHeader>
             <CardTitle className="text-2xl font-headline tracking-tight text-center">{t('faq.title')}</CardTitle>
           </CardHeader>
@@ -117,7 +117,6 @@ export default function Home() {
             </Accordion>
           </CardContent>
         </Card>
-      )}
     </main>
   );
 }
