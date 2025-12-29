@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
  // IMPORTANT: Set output to 'export' for static hosting
  output: 'export',
+ assetPrefix: './',
 
  // You can keep these if you really want, but they may hide real errors:
  typescript: {

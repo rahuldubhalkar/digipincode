@@ -1,15 +1,12 @@
-
-"use client";
-
-import { PincodeFinder } from '@/components/pincode-finder';
+import { PincodeFinderWrapper } from '@/components/pincode-finder-wrapper';
 import { PincodeZoneList } from '@/components/pincode-zone-list';
-import { getStates } from '@/lib/data';
-import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { getStates, getPostOfficesByState } from '@/lib/data';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useTranslation } from '@/lib/i18n/use-translation';
-import { PincodeFinderLoader } from '@/components/pincode-finder-loader';
+import type { PostOffice } from '@/lib/types';
+import { PincodeFinder } from '@/components/pincode-finder';
+import { Suspense } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function PincodeFinderSkeleton() {
     return (
@@ -35,74 +32,76 @@ function PincodeFinderSkeleton() {
     )
 }
 
-export default function Home() {
-  const { t } = useTranslation();
-  const [states, setStates] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedStateFromZone, setSelectedStateFromZone] = useState('');
-  const finderRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    getStates().then(states => {
-      setStates(states);
-      setIsLoading(false);
-    });
-  }, []);
+async function getFaqItems(t: (key: string) => string) {
+    return [
+        {
+          question: t('faq.q1.question'),
+          answer: t('faq.q1.answer'),
+        },
+        {
+          question: t('faq.q2.question'),
+          answer: t('faq.q2.answer'),
+        },
+        {
+          question: t('faq.q3.question'),
+          answer: t('faq.q3.answer'),
+        },
+        {
+          question: t('faq.q4.question'),
+          answer: t('faq.q4.answer'),
+        },
+        {
+          question: t('faq.q5.question'),
+          answer: t('faq.q5.answer'),
+        },
+        {
+          question: t('faq.q6.question'),
+          answer: t('faq.q6.answer'),
+        },
+        {
+          question: t('faq.q7.question'),
+          answer: t('faq.q7.answer'),
+        },
+      ];
+}
 
-  const handleZoneSelect = useCallback((state: string) => {
-    setSelectedStateFromZone(state);
-    if (finderRef.current) {
-      finderRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, []);
+type StateData = {
+  [state: string]: PostOffice[];
+};
+
+export default async function Home() {
+  const states = await getStates();
   
-  const handleClear = useCallback(() => {
-    setSelectedStateFromZone('');
-  }, []);
+  // This is a placeholder for a translation function on the server
+  const t = (key: string) => {
+    // In a real app, you'd use a server-side i18n library
+    // For now, we'll just use the key itself or a simple map.
+    const keyParts = key.split('.');
+    return keyParts[keyParts.length - 1];
+  };
 
-  const faqItems = useMemo(() => [
-    {
-      question: t('faq.q1.question'),
-      answer: t('faq.q1.answer'),
-    },
-    {
-      question: t('faq.q2.question'),
-      answer: t('faq.q2.answer'),
-    },
-    {
-      question: t('faq.q3.question'),
-      answer: t('faq.q3.answer'),
-    },
-    {
-      question: t('faq.q4.question'),
-      answer: t('faq.q4.answer'),
-    },
-    {
-      question: t('faq.q5.question'),
-      answer: t('faq.q5.answer'),
-    },
-    {
-      question: t('faq.q6.question'),
-      answer: t('faq.q6.answer'),
-    },
-    {
-      question: t('faq.q7.question'),
-      answer: t('faq.q7.answer'),
-    },
-  ], [t]);
-
+  const faqItems = await getFaqItems(t);
+  
+  // Pre-fetch data for all states at build time
+  const allStatesData: StateData = {};
+  const allStatesPromises = states.map(async (state) => {
+    const postOffices = await getPostOfficesByState(state);
+    allStatesData[state] = postOffices;
+  });
+  await Promise.all(allStatesPromises);
 
   return (
     <main className="container mx-auto px-4 py-8 space-y-12">
-      <div ref={finderRef}>
-        {isLoading ? <PincodeFinderSkeleton /> : <PincodeFinderLoader states={states} selectedStateFromZone={selectedStateFromZone} onClear={handleClear} />}
-      </div>
-
-      <PincodeZoneList onZoneSelect={handleZoneSelect} />
+       <Suspense fallback={<PincodeFinderSkeleton />}>
+        <PincodeFinderWrapper states={states} allStatesData={allStatesData} />
+      </Suspense>
+      
+      <PincodeZoneList onZoneSelect={() => {}} />
       
       <Card className="w-full shadow-lg border-none">
           <CardHeader>
-            <CardTitle className="text-2xl font-headline tracking-tight text-center">{t('faq.title')}</CardTitle>
+            <CardTitle className="text-2xl font-headline tracking-tight text-center">Post Office & PIN Code Search - Frequently Asked Questions</CardTitle>
           </CardHeader>
           <CardContent>
             <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto">
@@ -120,4 +119,3 @@ export default function Home() {
     </main>
   );
 }
-

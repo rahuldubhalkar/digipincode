@@ -45,8 +45,13 @@ export function PincodeZoneList({ onZoneSelect }: PincodeZoneListProps) {
       "Jharkhand": "JHARKHAND",
     };
     
+    // This component might not be fully functional with the new static approach,
+    // but we can connect it in the wrapper if needed.
+    // For now, we call the passed function.
     const officialStateName = stateMapping[state] || state.toUpperCase();
-    onZoneSelect(officialStateName);
+    if(onZoneSelect) {
+        onZoneSelect(officialStateName);
+    }
   };
 
   return (

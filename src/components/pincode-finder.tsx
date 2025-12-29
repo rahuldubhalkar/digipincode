@@ -1,9 +1,7 @@
-
 "use client";
 
 import { useState, useEffect, useTransition, useCallback, memo } from 'react';
 import type { PostOffice } from '@/lib/types';
-import { getPostOfficesByState } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -36,11 +34,12 @@ import { StateDetails } from './state-details';
 
 export interface PincodeFinderProps {
   states: string[];
+  allStatesData: { [state: string]: PostOffice[] };
   selectedStateFromZone?: string;
   onClear: () => void;
 }
 
-function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: PincodeFinderProps) {
+function PincodeFinderComponent({ states, allStatesData, selectedStateFromZone, onClear }: PincodeFinderProps) {
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
 
@@ -83,29 +82,23 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
   }, [selectedDivision, selectedDistrict, searchTerm, selectedLetter]);
 
   useEffect(() => {
-    if (selectedState) {
-      setIsLoadingStateData(true);
-      
-      setAllPostOfficesForState([]);
-      setFilteredPostOffices([]);
-      setSelectedDivision('');
-      setSelectedDistrict('');
-      setSearchTerm('');
-      setSelectedLetter('');
+    setIsLoadingStateData(true);
+    setFilteredPostOffices([]);
+    setSelectedDivision('');
+    setSelectedDistrict('');
+    setSearchTerm('');
+    setSelectedLetter('');
 
-      startTransition(() => {
-        getPostOfficesByState(selectedState).then(offices => {
-          setAllPostOfficesForState(offices);
-          setFilteredPostOffices(offices.sort((a, b) => a.officename.localeCompare(b.officename)));
-          setIsLoadingStateData(false);
-        });
-      });
-
+    if (selectedState && allStatesData[selectedState]) {
+      const offices = allStatesData[selectedState];
+      setAllPostOfficesForState(offices);
+      setFilteredPostOffices(offices.sort((a, b) => a.officename.localeCompare(b.officename)));
     } else {
       setAllPostOfficesForState([]);
       setFilteredPostOffices([]);
     }
-  }, [selectedState]);
+    setIsLoadingStateData(false);
+  }, [selectedState, allStatesData]);
 
   useEffect(() => {
     startTransition(() => {
@@ -312,5 +305,3 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
 }
 
 export const PincodeFinder = memo(PincodeFinderComponent);
-    
-    
