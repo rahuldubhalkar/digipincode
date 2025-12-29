@@ -1,6 +1,5 @@
 
 import { PincodeFinderWrapper } from '@/components/pincode-finder-wrapper';
-import { PincodeZoneList } from '@/components/pincode-zone-list';
 import { getStates, getPostOfficesByState } from '@/lib/data';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,7 +8,6 @@ import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { promises as fs } from 'fs';
 import path from 'path';
-
 
 function PincodeFinderSkeleton() {
     return (
@@ -34,7 +32,6 @@ function PincodeFinderSkeleton() {
       </div>
     )
 }
-
 
 async function getFaqItems(t: (key: string) => string) {
     return [
@@ -69,10 +66,6 @@ async function getFaqItems(t: (key: string) => string) {
       ];
 }
 
-type StateData = {
-  [state: string]: PostOffice[];
-};
-
 export default async function Home() {
   const states = await getStates();
   
@@ -86,30 +79,33 @@ export default async function Home() {
 
   const faqItems = await getFaqItems(t);
   
-  // Pre-fetch data for all states at build time
-  const allStatesData: StateData = {};
-  let allPostOffices: PostOffice[] = [];
+  // Pre-fetch data for all states and create individual JSON files at build time
+  const publicDataDir = path.join(process.cwd(), 'public', 'data');
+  try {
+    await fs.mkdir(publicDataDir, { recursive: true });
 
-  const allStatesPromises = states.map(async (state) => {
-    const postOffices = await getPostOfficesByState(state);
-    allStatesData[state] = postOffices;
-    allPostOffices = allPostOffices.concat(postOffices);
-  });
-  await Promise.all(allStatesPromises);
+    let allPostOffices: PostOffice[] = [];
 
-  // Write all post offices to a static JSON file in the public directory
-  const publicDir = path.join(process.cwd(), 'public');
-  await fs.mkdir(publicDir, { recursive: true });
-  await fs.writeFile(path.join(publicDir, 'all_post_offices.json'), JSON.stringify(allPostOffices));
+    const allStatesPromises = states.map(async (state) => {
+      const postOffices = await getPostOfficesByState(state);
+      allPostOffices = allPostOffices.concat(postOffices);
+      // Write a JSON file for each state
+      await fs.writeFile(path.join(publicDataDir, `${state}.json`), JSON.stringify(postOffices));
+    });
+    await Promise.all(allStatesPromises);
+
+    // Write a single file with all post offices for the pincode search page
+    await fs.writeFile(path.join(publicDataDir, 'all_post_offices.json'), JSON.stringify(allPostOffices));
+  } catch (error) {
+    console.error("Error during build-time data fetching:", error);
+  }
 
 
   return (
     <main className="container mx-auto px-4 py-8 space-y-12">
        <Suspense fallback={<PincodeFinderSkeleton />}>
-        <PincodeFinderWrapper states={states} allStatesData={allStatesData} />
+        <PincodeFinderWrapper states={states} />
       </Suspense>
-      
-      <PincodeZoneList onZoneSelect={() => {}} />
       
       <Card className="w-full shadow-lg border-none">
           <CardHeader>

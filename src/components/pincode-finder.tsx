@@ -35,12 +35,11 @@ import { StateDetails } from './state-details';
 
 export interface PincodeFinderProps {
   states: string[];
-  allStatesData: { [state: string]: PostOffice[] };
   selectedStateFromZone?: string;
   onClear: () => void;
 }
 
-function PincodeFinderComponent({ states, allStatesData, selectedStateFromZone, onClear }: PincodeFinderProps) {
+function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: PincodeFinderProps) {
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
 
@@ -92,16 +91,26 @@ function PincodeFinderComponent({ states, allStatesData, selectedStateFromZone, 
     setSearchTerm('');
     setSelectedLetter('');
 
-    startTransition(() => {
-        if (state && allStatesData[state]) {
-            const offices = allStatesData[state];
+    if (!state) {
+        setAllPostOfficesForState([]);
+        setFilteredPostOffices([]);
+        setIsLoadingStateData(false);
+        return;
+    }
+
+    startTransition(async () => {
+        try {
+            const res = await fetch(`/data/${state}.json`);
+            const offices = await res.json();
             setAllPostOfficesForState(offices);
             applyFilters(offices);
-        } else {
+        } catch (error) {
+            console.error(`Failed to load data for state: ${state}`, error);
             setAllPostOfficesForState([]);
             setFilteredPostOffices([]);
+        } finally {
+            setIsLoadingStateData(false);
         }
-        setIsLoadingStateData(false);
     });
   };
 

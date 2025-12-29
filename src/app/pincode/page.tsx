@@ -40,7 +40,7 @@ export default function PincodePage() {
   const [isLoadingData, setIsLoadingData] = useState(true);
 
   useEffect(() => {
-    fetch('/all_post_offices.json')
+    fetch('/data/all_post_offices.json')
       .then(res => res.json())
       .then(data => {
         setAllPostOfficeData(data);

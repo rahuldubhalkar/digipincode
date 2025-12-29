@@ -2,16 +2,14 @@
 "use client";
 
 import { PincodeFinder } from '@/components/pincode-finder';
+import { PincodeZoneList } from '@/components/pincode-zone-list';
 import { useCallback, useRef, useState } from 'react';
-import type { PostOffice } from '@/lib/types';
-
 
 interface PincodeFinderWrapperProps {
     states: string[];
-    allStatesData: { [state: string]: PostOffice[] };
 }
 
-export function PincodeFinderWrapper({ states, allStatesData }: PincodeFinderWrapperProps) {
+export function PincodeFinderWrapper({ states }: PincodeFinderWrapperProps) {
     const [selectedStateFromZone, setSelectedStateFromZone] = useState('');
     const finderRef = useRef<HTMLDivElement>(null);
 
@@ -22,18 +20,20 @@ export function PincodeFinderWrapper({ states, allStatesData }: PincodeFinderWra
         }
       }, []);
       
-      const handleClear = useCallback(() => {
+    const handleClear = useCallback(() => {
         setSelectedStateFromZone('');
-      }, []);
+    }, []);
 
     return (
-        <div ref={finderRef}>
-            <PincodeFinder 
-                states={states} 
-                allStatesData={allStatesData}
-                selectedStateFromZone={selectedStateFromZone} 
-                onClear={handleClear} 
-            />
+        <div className='space-y-12'>
+            <div ref={finderRef}>
+                <PincodeFinder 
+                    states={states}
+                    selectedStateFromZone={selectedStateFromZone} 
+                    onClear={handleClear} 
+                />
+            </div>
+            <PincodeZoneList onZoneSelect={handleZoneSelect} />
         </div>
     )
 }
