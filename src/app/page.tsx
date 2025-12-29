@@ -1,7 +1,7 @@
 
 "use client";
 
-import { PincodeFinderLoader } from '@/components/pincode-finder-loader';
+import { PincodeFinder } from '@/components/pincode-finder';
 import { PincodeZoneList } from '@/components/pincode-zone-list';
 import { getStates } from '@/lib/data';
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
@@ -9,6 +9,30 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslation } from '@/lib/i18n/use-translation';
+
+function PincodeFinderSkeleton() {
+    return (
+        <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+            </div>
+            <div className="flex justify-center pt-4">
+                <Skeleton className="h-10 w-28" />
+            </div>
+            <div className="max-w-3xl mx-auto border rounded-lg p-6">
+                <Skeleton className="h-8 w-1/2 mx-auto mb-4" />
+                <div className="space-y-2">
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-12 w-full" />
+                </div>
+            </div>
+      </div>
+    )
+}
 
 export default function Home() {
   const { t } = useTranslation();
@@ -70,15 +94,7 @@ export default function Home() {
   return (
     <main className="container mx-auto px-4 py-8 space-y-12">
       <div ref={finderRef}>
-        {isLoading ? (
-          <div className="space-y-4">
-            <Skeleton className="h-12 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-64 w-full" />
-          </div>
-        ) : (
-          <PincodeFinderLoader states={states} selectedStateFromZone={selectedStateFromZone} onClear={handleClear} />
-        )}
+        {isLoading ? <PincodeFinderSkeleton /> : <PincodeFinder states={states} selectedStateFromZone={selectedStateFromZone} onClear={handleClear} />}
       </div>
 
       {!isLoading && <PincodeZoneList onZoneSelect={handleZoneSelect} />}
