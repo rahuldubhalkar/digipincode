@@ -145,7 +145,8 @@ export default async function Home() {
         <PincodeFinderWrapper states={states} />
       </Suspense>
       
-      <Articles />
+      <Articles type="image" />
+      <Articles type="text" />
 
       <Card className="w-full shadow-lg border-none">
           <CardHeader>

@@ -8,7 +8,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { User, Calendar } from "lucide-react";
 
-export default function Articles() {
+interface ArticlesProps {
+  type: 'text' | 'image';
+}
+
+export default function Articles({ type }: ArticlesProps) {
   const { t } = useTranslation();
 
   const textArticles = [
@@ -49,62 +53,76 @@ export default function Articles() {
     }
   ]
 
-  return (
-    <div className="space-y-8" id="articles">
-      <Card className="w-full shadow-lg border-none">
+  if (type === 'text') {
+    return (
+      <div className="space-y-8" id="text-articles">
+        <Card className="w-full shadow-lg border-none">
           <CardHeader>
-              <CardTitle className="text-2xl font-headline tracking-tight text-center">
-                  Informative Articles & Updates
-              </CardTitle>
+            <CardTitle className="text-2xl font-headline tracking-tight text-center">
+              Informative Articles & Updates
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                <div className="space-y-6">
-                    {textArticles.map((article, index) => (
-                        <div key={index}>
-                        <h3 className="text-xl font-semibold tracking-tight text-primary mb-2">{article.title}</h3>
-                        <p className="prose max-w-none text-muted-foreground text-justify text-sm">
-                            {article.content}
-                        </p>
-                        </div>
-                    ))}
-                </div>
-                <div className="flex flex-col gap-8 justify-center items-start pt-6">
-                    {imageArticles.map((article, index) => (
-                        <Link href={article.href} key={index} className="group cursor-pointer block w-full max-w-md">
-                            <div className="flex items-start gap-4">
-                                <div className="w-32 flex-shrink-0">
-                                    <div className="overflow-hidden rounded-lg border shadow-md aspect-square relative">
-                                        <Image
-                                            src={article.image.imageUrl}
-                                            alt={article.title}
-                                            fill
-                                            data-ai-hint={article.image.imageHint}
-                                            className="object-cover transform transition-transform duration-300 group-hover:scale-105"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="flex-grow">
-                                    <h3 className="text-lg font-semibold tracking-tight text-primary mb-2">{article.title}</h3>
-                                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-                                        <div className="flex items-center gap-1">
-                                            <User className="w-4 h-4" />
-                                            <span>Admin</span>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <Calendar className="w-4 h-4" />
-                                            <span>Tuesday, December 30, 2025</span>
-                                        </div>
-                                    </div>
-                                    <p className="text-sm text-muted-foreground group-hover:text-primary">Click to view details</p>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            </div>
+          <CardContent className="space-y-6 max-w-4xl mx-auto">
+            {textArticles.map((article, index) => (
+              <div key={index}>
+                <h3 className="text-xl font-semibold tracking-tight text-primary mb-2">{article.title}</h3>
+                <p className="prose max-w-none text-muted-foreground text-justify text-sm">
+                  {article.content}
+                </p>
+              </div>
+            ))}
           </CardContent>
-      </Card>
-    </div>
-  );
+        </Card>
+      </div>
+    );
+  }
+
+  if (type === 'image') {
+    return (
+      <div className="space-y-8" id="image-articles">
+        <Card className="w-full shadow-lg border-none">
+          <CardHeader>
+            <CardTitle className="text-2xl font-headline tracking-tight text-center">
+              Latest News & Announcements
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start max-w-6xl mx-auto">
+            {imageArticles.map((article, index) => (
+              <Link href={article.href} key={index} className="group cursor-pointer block w-full">
+                <div className="flex items-start gap-4">
+                  <div className="w-32 flex-shrink-0">
+                    <div className="overflow-hidden rounded-lg border shadow-md aspect-square relative">
+                      <Image
+                        src={article.image.imageUrl}
+                        alt={article.title}
+                        fill
+                        data-ai-hint={article.image.imageHint}
+                        className="object-cover transform transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex-grow">
+                    <h3 className="text-lg font-semibold tracking-tight text-primary mb-2 group-hover:underline">{article.title}</h3>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
+                      <div className="flex items-center gap-1">
+                        <User className="w-4 h-4" />
+                        <span>Admin</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" />
+                        <span>Tuesday, December 30, 2025</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground group-hover:text-primary">Click to view details</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return null;
 }
