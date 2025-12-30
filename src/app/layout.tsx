@@ -6,8 +6,8 @@ import Footer from '@/components/footer';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: 'digi-pincode | India PIN Code Finder, Post Office Search Online',
-  description: 'Find any India Post Office PIN code with our fast and accurate search tool. Search by Pincode, State, or District. Get complete Post Office details, including postal codes, addresses, and more. The most reliable Indian Pincode directory.',
+  title: 'digi-pincode | All India PIN Code Finder, Postal Code Search, Post Office Directory',
+  description: 'The complete India Post Office PIN code directory. Use our fast and accurate postal code search tool. Search by Pincode, State, or District to get a complete post office list with addresses and details for all India pincodes.',
   manifest: "/site.webmanifest",
   icons: {
     icon: [
