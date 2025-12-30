@@ -54,14 +54,13 @@ export default function Articles() {
                 <div className="flex justify-center">
                     <Link href={imageArticle.href} className="group cursor-pointer block">
                         <h3 className="text-xl font-semibold tracking-tight text-primary mb-2 text-center">{imageArticle.title}</h3>
-                        <div className="overflow-hidden rounded-lg border shadow-md">
+                        <div className="overflow-hidden rounded-lg border shadow-md aspect-[4/3] relative">
                         <Image
                             src={imageArticle.image.imageUrl}
                             alt={imageArticle.title}
-                            width={600}
-                            height={600}
+                            fill
                             data-ai-hint={imageArticle.image.imageHint}
-                            className="w-full h-auto object-cover aspect-[4/3] transform transition-transform duration-300 group-hover:scale-105"
+                            className="object-cover transform transition-transform duration-300 group-hover:scale-105"
                         />
                         </div>
                         <p className="text-center mt-2 text-sm text-muted-foreground group-hover:text-primary">Click to view details</p>
