@@ -12,6 +12,7 @@ import path from 'path';
 import { getTranslation } from '@/lib/i18n/get-translation';
 import { PincodeZoneList } from '@/components/pincode-zone-list';
 import Articles from '@/components/articles';
+import Gallery from '@/components/gallery';
 
 function PincodeFinderSkeleton() {
     return (
@@ -105,6 +106,7 @@ export default async function Home() {
         <PincodeFinderWrapper states={states} />
       </Suspense>
       
+      <Gallery />
       <Articles />
 
       <Card className="w-full shadow-lg border-none">

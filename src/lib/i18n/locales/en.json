@@ -16,7 +16,7 @@
   },
   "home": {
     "title": "All India Post Office PIN Code Finder",
-    "description": "The ultimate tool for your India PIN code search. Find any postal code by State, District, or Post Office name from our complete directory.",
+    "description": "Your complete guide to the Indian postal code system. Use our comprehensive All India PIN Code Finder to search for any postal code or Post Office details by State, District, or Post Office name.",
     "selectState": "Select a State to Find Pincode",
     "loading": "Loading...",
     "selectDivision": "Select a Division",
@@ -64,32 +64,32 @@
   "faq": {
     "title": "Post Office & PIN Code Search - Frequently Asked Questions",
     "q1": {
-      "question": "What is an Indian Postal PIN Code and why is it important?",
-      "answer": "A Postal Index Number (PIN), or more commonly known as a Pincode, is a 6-digit numerical code used by the Indian postal service (India Post) to precisely identify delivery post offices across the country. Each digit in the PIN code has a specific geographical meaning, starting from the postal zone down to the specific post office, which ensures that mail and packages are sorted and delivered with maximum efficiency and accuracy. Using the correct Pincode is crucial for timely delivery."
+      "question": "What is an Indian Postal PIN Code and why is it important for mail delivery?",
+      "answer": "A Postal Index Number (PIN), commonly known as a Pincode, is a unique 6-digit code assigned by the Indian postal service (India Post) to every delivery post office in the country. This code is the backbone of the mail sorting and delivery process. Each digit has a specific geographical meaning: the first digit indicates the postal zone, the second for the sub-zone, the third for the sorting district, and the last three for the specific delivery post office. Using the correct Pincode from our all India post office PIN code directory is crucial because it ensures that mail and packages are routed through the correct channels, minimizing delays and preventing misdelivery. An accurate PIN code search guarantees that your correspondence reaches its destination swiftly."
     },
     "q2": {
-      "question": "How can I find a PIN code for a specific area or post office?",
-      "answer": "Our website offers multiple ways to conduct an India PIN code search. You can navigate to the 'Search by Pincode' page and enter a 6-digit code to see a complete list of all post offices associated with it. Alternatively, our homepage allows you to browse the entire post office directory by selecting a state and then filtering by district or division. This method is perfect if you know the general area but not the exact postal code, making our tool the most comprehensive online postal code finder."
+      "question": "How can I find a PIN code for a specific area, post office, or postal code?",
+      "answer": "Our website provides a powerful and flexible India PIN code search engine. If you know the 6-digit code, you can use the 'Search by Pincode' feature to get a complete list of all post offices associated with that postal code. If you only know the general location, our homepage allows you to explore the entire post office directory. Simply select a state from the dropdown menu, and you can then filter the results by district or postal division. This feature is perfect for finding PIN code details even if you don't know the exact code, making our tool a comprehensive online postal code finder for all of India."
     },
     "q3": {
-      "question": "What kind of post office details can I find using this tool?",
-      "answer": "Our all India PIN code directory provides a wealth of information for every listed post office. For any given PIN code or location search, you will get the official Post Office name, its 6-digit Pincode, the office type (e.g., Head Post Office, Sub-Office, or Branch Office), taluka, district, and state. Additionally, we provide higher-level administrative details such as the postal Division, Region, and Circle the office belongs to, giving you a complete overview."
+      "question": "What kind of post office details can I find when I perform a search?",
+      "answer": "Our all India PIN code directory offers comprehensive information for every listed post office. When you conduct a search by PIN code or location, our tool provides the official Post Office name, its 6-digit Pincode, the office type (e.g., Head Post Office, Sub-Office, or Branch Office), taluka (sub-district), district, and state. We also provide higher-level administrative details like the postal Division, Region, and Circle, giving you a complete overview of the post office's place within the Indian postal network."
     },
     "q4": {
-      "question": "Is it possible to get a complete list of post offices for an entire state?",
-      "answer": "Absolutely. To get a post office list by state, simply select your desired state from the dropdown menu on our homepage. This will initially load all post offices within that state. For easier navigation, you can then use the filters to narrow down the results by a specific postal division or district. This feature allows you to explore the entire India post office PIN code directory for any state, district by district."
+      "question": "Is it possible to get a complete post office list for an entire state?",
+      "answer": "Yes, absolutely. To get a detailed post office list by state, simply choose your desired state from the dropdown menu on our homepage. This will load all the post offices within that state. To make navigation easier, you can then use the filters to narrow down the list by a specific postal division or district. This feature allows you to explore the entire India post office PIN code directory for any state, making it easy to find the postal code details you need, district by district."
     },
     "q5": {
-      "question": "What are the different types of post offices like Head Post Office (H.O.) and Branch Post Office (B.O.)?",
-      "answer": "The Indian postal system has a hierarchical structure. A Head Post Office (H.O.) or General Post Office (G.P.O.) is the primary post office in a postal district, controlling and managing smaller offices within its jurisdiction. A Sub-Post Office (S.O.) is a smaller office located in towns, and a Branch Post Office (B.O.) is typically found in rural areas and offers basic postal services. Our directory includes details for all types, ensuring you can find any post office, big or small."
+      "question": "What are the different types of post offices, such as Head Post Office (H.O.) and Branch Post Office (B.O.)?",
+      "answer": "The Indian postal system is organized hierarchically to ensure efficient service delivery. A Head Post Office (H.O.) or General Post Office (G.P.O.) serves as the main post office in a postal district, managing the smaller offices within its jurisdiction. A Sub-Post Office (S.O.) is a smaller, mid-level office typically located in towns, and a Branch Post Office (B.O.) is usually found in rural areas, offering basic postal services. Our postal code directory includes detailed information for all office types, ensuring you can find any post office, from a major city G.P.O. to a small village B.O."
     },
     "q6": {
-      "question": "How can I be sure the post office database is accurate?",
-      "answer": "Our service is built upon the official All India Pincode Directory, a publicly available dataset provided by the Government of India. By using this authoritative source, we ensure that our online post office search provides the most accurate, reliable, and up-to-date post office and Pincode details that India has on record. We regularly sync our data to maintain its freshness and accuracy."
+      "question": "How can I be sure that your post office database and PIN code list are accurate?",
+      "answer": "Our service is built on the official All India Pincode Directory, a comprehensive dataset made publicly available by the Government of India. By using this authoritative source, we guarantee that our online post office search provides the most accurate, reliable, and up-to-date post office and Pincode details available on record for India. We regularly synchronize our data to maintain its freshness and ensure our India PIN code list remains the most dependable resource for your postal code search needs."
     },
     "q7": {
       "question": "How do I find specific post office details if I only know the PIN code?",
-      "answer": "If you already have a PIN code, finding the corresponding post office details is simple. Use the main navigation menu to go to the 'Search by Pincode' page. Enter the complete 6-digit Indian Postal PIN Code into the search field and click the 'Search' button. The page will then display a detailed list of all post offices that operate under that specific postal code, including their official names, types (B.O., S.O., H.O.), and the districts they serve."
+      "answer": "If you have a 6-digit PIN code and need to find the corresponding post office details, our tool makes it simple. Navigate to the 'Search by Pincode' page using the main menu. Enter the complete Indian Postal PIN Code into the search field and click the 'Search' button. The page will immediately display a detailed list of all post offices operating under that specific postal code, including their official names, office types (B.O., S.O., H.O.), and the districts they serve. It's the fastest way to get postal code details when you have the code."
     }
   },
   "about": {
@@ -148,5 +148,24 @@
     "districtsTitle": "{{count}} Districts in {{state}}",
     "gpoTitle": "{{count}} GPO in {{state}}",
     "divisionsTitle": "{{count}} Divisions in {{state}}"
+  },
+  "gallery": {
+    "title": "Postal Heritage Gallery",
+    "item1": {
+      "title": "First Indian Postage Stamp",
+      "description": "The first postage stamp of India, the 'Scinde Dawk', was issued in 1852. It was Asia's first adhesive stamp and was used in the Sindh province. This piece of Indian philately history marks the beginning of the modern postal system in the country."
+    },
+    "item2": {
+      "title": "Mumbai General Post Office",
+      "description": "The Mumbai GPO is a magnificent Indo-Saracenic heritage building. Opened in 1913, it serves as the main post office for the city and is a central hub in the Indian postal network. Its grand dome is a prominent feature of the city's skyline."
+    },
+    "item3": {
+      "title": "Kolkata General Post Office",
+      "description": "The Kolkata GPO, with its high-domed roof and Corinthian pillars, is another architectural marvel. Established at its current site in 1868, it stands where the original Fort William once was, a site of great historical significance in India."
+    },
+    "item4": {
+      "title": "Floating Post Office, Dal Lake",
+      "description": "Located on a houseboat in Dal Lake, Srinagar, this is the world's only floating post office. A unique part of the post office directory, it offers all regular postal services and has become a major tourist attraction, even having its own special pictorial cancellation seal."
+    }
   }
 }

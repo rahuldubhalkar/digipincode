@@ -1,0 +1,27 @@
+
+{
+    "stamp": {
+        "id": "gallery-stamp",
+        "description": "A close-up of the first postage stamp of India, the Scinde Dawk.",
+        "imageUrl": "https://picsum.photos/seed/101/600/400",
+        "imageHint": "vintage stamp"
+    },
+    "mumbaiGpo": {
+        "id": "gallery-mumbai-gpo",
+        "description": "The grand Indo-Saracenic architecture of the Mumbai General Post Office.",
+        "imageUrl": "https://picsum.photos/seed/102/600/400",
+        "imageHint": "historic building"
+    },
+    "kolkataGpo": {
+        "id": "gallery-kolkata-gpo",
+        "description": "The impressive dome and pillars of the Kolkata General Post Office at night.",
+        "imageUrl": "https://picsum.photos/seed/103/600/400",
+        "imageHint": "colonial architecture"
+    },
+    "floatingPo": {
+        "id": "gallery-floating-po",
+        "description": "The unique floating post office on a houseboat in Dal Lake, Srinagar.",
+        "imageUrl": "https://picsum.photos/seed/104/600/400",
+        "imageHint": "houseboat lake"
+    }
+}
