@@ -14,6 +14,7 @@ export interface AppPlaceholderImages {
     dreamAppUpdate: ImagePlaceholder;
     gdsToMtsResult: ImagePlaceholder;
     iposJagPromotion: ImagePlaceholder;
+    sgbGrowth: ImagePlaceholder;
 }
 
 export const placeholderImages: AppPlaceholderImages = data.placeholderImages;

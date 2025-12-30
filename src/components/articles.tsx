@@ -55,6 +55,11 @@ export default function Articles({ type }: ArticlesProps) {
       title: "Promotion & Posting of STS officers in JAG of IPoS, Group 'A' and Transfer-Posting in JAG - Directorate Order dtd 29/12/2025",
       image: placeholderImages.iposJagPromotion,
       href: "/articles/ipos-jag-promotion-posting"
+    },
+    {
+        title: "Growth of Sovereign Gold Bond (SGB)",
+        image: placeholderImages.sgbGrowth,
+        href: "/articles/sgb-growth"
     }
   ]
 
