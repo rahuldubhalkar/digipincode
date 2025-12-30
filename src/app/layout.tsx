@@ -10,13 +10,8 @@ export const metadata: Metadata = {
   description: 'The complete India Post Office PIN code directory. Use our fast and accurate postal code search tool. Search by Pincode, State, or District to get a complete post office list with addresses and details for all India pincodes.',
   manifest: "/site.webmanifest",
   icons: {
-    icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180' },
-    ],
+    icon: '/favicon.svg',
+    apple: '/apple-touch-icon.png',
   },
   appleWebApp: {
     title: 'digi-pincode',
