@@ -52,7 +52,7 @@ export default function Articles() {
                     ))}
                 </div>
                 <div className="flex justify-center">
-                    <Link href={imageArticle.href} className="group cursor-pointer block">
+                    <Link href={imageArticle.href} className="group cursor-pointer block max-w-md">
                         <h3 className="text-xl font-semibold tracking-tight text-primary mb-2 text-center">{imageArticle.title}</h3>
                         <div className="overflow-hidden rounded-lg border shadow-md aspect-[4/3] relative">
                         <Image
