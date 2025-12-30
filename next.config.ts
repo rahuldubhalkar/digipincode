@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
  // IMPORTANT: Set output to 'export' for static hosting
  output: 'export',
  assetPrefix: './',
+ experimental: {
+  allowedDevOrigins: ["https://6000-firebase-studio-1765984807570.cluster-sumfw3zmzzhzkx4mpvz3ogth4y.cloudworkstations.dev"],
+ },
 
  // You can keep these if you really want, but they may hide real errors:
  typescript: {
