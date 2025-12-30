@@ -13,6 +13,7 @@ export interface AppPlaceholderImages {
     centralPayCommission: ImagePlaceholder;
     dreamAppUpdate: ImagePlaceholder;
     gdsToMtsResult: ImagePlaceholder;
+    iposJagPromotion: ImagePlaceholder;
 }
 
 export const placeholderImages: AppPlaceholderImages = data.placeholderImages;

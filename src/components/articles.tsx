@@ -50,6 +50,11 @@ export default function Articles({ type }: ArticlesProps) {
       title: "Result of GDSs to Multi-Tasking Staff (MTS) Cadre, held on 31.08.2025 - AP Circle",
       image: placeholderImages.gdsToMtsResult,
       href: "/articles/gds-to-mts-result"
+    },
+    {
+      title: "Promotion & Posting of STS officers in JAG of IPoS, Group 'A' and Transfer-Posting in JAG - Directorate Order dtd 29/12/2025",
+      image: placeholderImages.iposJagPromotion,
+      href: "/articles/ipos-jag-promotion-posting"
     }
   ]
 
