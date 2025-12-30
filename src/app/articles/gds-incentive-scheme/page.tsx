@@ -26,12 +26,11 @@ export default function GdsIncentiveSchemePage() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <div className="overflow-hidden rounded-lg border">
+                    <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
                         <Image
                             src={articleImage.imageUrl}
                             alt={title}
-                            width={1200}
-                            height={1200}
+                            fill
                             data-ai-hint={articleImage.imageHint}
                             className="object-contain"
                         />
