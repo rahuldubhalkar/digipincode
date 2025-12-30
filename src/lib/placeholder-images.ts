@@ -9,6 +9,7 @@ export type ImagePlaceholder = {
 
 export interface AppPlaceholderImages {
     gdsIncentive: ImagePlaceholder;
+    centralPayCommission: ImagePlaceholder;
 }
 
 export const placeholderImages: AppPlaceholderImages = data.placeholderImages;

@@ -25,11 +25,18 @@ export default function Articles() {
     },
   ];
 
-  const imageArticle = {
+  const imageArticles = [
+    {
       title: "Incentive Structure for GDS Postal Staff (BPMs) on POSB Schemes",
       image: placeholderImages.gdsIncentive,
       href: "/articles/gds-incentive-scheme"
-  }
+    },
+    {
+      title: "Urgent operationalisation of the 8th Central Pay Commission – Immediate allotment of office space and commencement of work",
+      image: placeholderImages.centralPayCommission,
+      href: "/articles/central-pay-commission"
+    }
+  ]
 
   return (
     <div className="space-y-8" id="articles">
@@ -51,36 +58,38 @@ export default function Articles() {
                         </div>
                     ))}
                 </div>
-                <div className="flex justify-center items-start pt-6">
-                    <Link href={imageArticle.href} className="group cursor-pointer block w-full">
-                        <div className="flex items-start gap-4">
-                            <div className="w-32 flex-shrink-0">
-                                <div className="overflow-hidden rounded-lg border shadow-md aspect-square relative">
-                                <Image
-                                    src={imageArticle.image.imageUrl}
-                                    alt={imageArticle.title}
-                                    fill
-                                    data-ai-hint={imageArticle.image.imageHint}
-                                    className="object-cover transform transition-transform duration-300 group-hover:scale-105"
-                                />
-                                </div>
-                            </div>
-                            <div className="flex-grow">
-                                <h3 className="text-lg font-semibold tracking-tight text-primary mb-2">{imageArticle.title}</h3>
-                                <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-                                    <div className="flex items-center gap-1">
-                                        <User className="w-4 h-4" />
-                                        <span>Admin</span>
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <Calendar className="w-4 h-4" />
-                                        <span>Tuesday, December 30, 2025</span>
+                <div className="flex flex-col gap-8 justify-center items-start pt-6">
+                    {imageArticles.map((article, index) => (
+                        <Link href={article.href} key={index} className="group cursor-pointer block w-full max-w-md">
+                            <div className="flex items-start gap-4">
+                                <div className="w-32 flex-shrink-0">
+                                    <div className="overflow-hidden rounded-lg border shadow-md aspect-square relative">
+                                        <Image
+                                            src={article.image.imageUrl}
+                                            alt={article.title}
+                                            fill
+                                            data-ai-hint={article.image.imageHint}
+                                            className="object-cover transform transition-transform duration-300 group-hover:scale-105"
+                                        />
                                     </div>
                                 </div>
-                                <p className="text-sm text-muted-foreground group-hover:text-primary">Click to view details</p>
+                                <div className="flex-grow">
+                                    <h3 className="text-lg font-semibold tracking-tight text-primary mb-2">{article.title}</h3>
+                                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
+                                        <div className="flex items-center gap-1">
+                                            <User className="w-4 h-4" />
+                                            <span>Admin</span>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            <Calendar className="w-4 h-4" />
+                                            <span>Tuesday, December 30, 2025</span>
+                                        </div>
+                                    </div>
+                                    <p className="text-sm text-muted-foreground group-hover:text-primary">Click to view details</p>
+                                </div>
                             </div>
-                        </div>
-                    </Link>
+                        </Link>
+                    ))}
                 </div>
             </div>
           </CardContent>
