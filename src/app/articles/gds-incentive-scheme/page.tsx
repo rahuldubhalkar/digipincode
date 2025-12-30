@@ -33,7 +33,7 @@ export default function GdsIncentiveSchemePage() {
                             width={1200}
                             height={1200}
                             data-ai-hint={articleImage.imageHint}
-                            className="w-full h-auto object-contain"
+                            className="object-contain"
                         />
                     </div>
                 </CardContent>
