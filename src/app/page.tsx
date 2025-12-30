@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { getTranslation } from '@/lib/i18n/get-translation';
 
 function PincodeFinderSkeleton() {
     return (
@@ -68,16 +69,10 @@ async function getFaqItems(t: (key: string) => string) {
 
 export default async function Home() {
   const states = await getStates();
-  
-  // This is a placeholder for a translation function on the server
-  const t = (key: string) => {
-    // In a real app, you'd use a server-side i18n library
-    // For now, we'll just use the key itself or a simple map.
-    const keyParts = key.split('.');
-    return keyParts[keyParts.length - 1];
-  };
+  const t = await getTranslation('en'); // Defaulting to English for build time
 
   const faqItems = await getFaqItems(t);
+  const faqTitle = t('faq.title');
   
   // Pre-fetch data for all states and create individual JSON files at build time
   const publicDataDir = path.join(process.cwd(), 'public', 'data');
@@ -109,7 +104,7 @@ export default async function Home() {
       
       <Card className="w-full shadow-lg border-none">
           <CardHeader>
-            <CardTitle className="text-2xl font-headline tracking-tight text-center">Post Office & PIN Code Search - Frequently Asked Questions</CardTitle>
+            <CardTitle className="text-2xl font-headline tracking-tight text-center">{faqTitle}</CardTitle>
           </CardHeader>
           <CardContent>
             <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto">
