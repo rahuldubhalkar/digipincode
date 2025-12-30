@@ -1,3 +1,4 @@
+
 import data from './placeholder-images.json';
 
 export type ImagePlaceholder = {
@@ -10,6 +11,7 @@ export type ImagePlaceholder = {
 export interface AppPlaceholderImages {
     gdsIncentive: ImagePlaceholder;
     centralPayCommission: ImagePlaceholder;
+    dreamAppUpdate: ImagePlaceholder;
 }
 
 export const placeholderImages: AppPlaceholderImages = data.placeholderImages;

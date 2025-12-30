@@ -1,3 +1,4 @@
+
 {
   "placeholderImages": {
     "gdsIncentive": {
@@ -11,6 +12,12 @@
       "description": "An article about the urgent operationalisation of the 8th Central Pay Commission.",
       "imageUrl": "https://blogger.googleusercontent.com/img/a/AVvXsEgK2s-t_aXkgOSuT5uz2MI4OiR-tE3ZoXjg6BgiGUfhaHgJMO6VcLFhtTgMPQivXy73evD4aVGEuv1L5cVXc9CCGIYtc4Q3o6HIYyU62p6SSQsX9_KDfh99GwsvK4w0t-0XPVBhNPFQp6A5nXvMYV3mpSlRddMn12QiozoMECaHK28qHcyH8PGVA7tfVVyT=w591-h765",
       "imageHint": "government document"
+    },
+    "dreamAppUpdate": {
+      "id": "dream-app-update",
+      "description": "Ensuring Upgradation of DREAM App to Version 1.0.28 on all MDM Controlled Devices.",
+      "imageUrl": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgM16pA6jEH7KTgfzqWyqFM6iihrAqm8nJ3kjhb0fG8qJlUcy4uni6SANndgHtOUPWw7dvts04b5UGP6AyqstspfI8-lw1ht11VNdQ06LeOuykPGUnMmhl_m1CfXo_J1IOH5qnQDwLzDHs5UagSjYQCOvSQwkJaqHKoEr5jaldTB_HCNEORIPd2mCAGh1I/w552-h781/Ensuring_Upgradation_of_DREAM_App_to_Version_1_0_28_on_all_MDM_Controlled_001.jpg",
+      "imageHint": "mobile app"
     }
   }
 }

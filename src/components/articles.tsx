@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useTranslation } from "@/lib/i18n/use-translation";
@@ -35,6 +36,11 @@ export default function Articles() {
       title: "Urgent operationalisation of the 8th Central Pay Commission – Immediate allotment of office space and commencement of work",
       image: placeholderImages.centralPayCommission,
       href: "/articles/central-pay-commission"
+    },
+    {
+      title: "Ensuring Upgradation of DREAM App to Version 1.0.28 on all MDM Controlled Devices",
+      image: placeholderImages.dreamAppUpdate,
+      href: "/articles/dream-app-update"
     }
   ]
 
