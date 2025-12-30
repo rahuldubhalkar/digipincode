@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useTranslation } from "@/lib/i18n/use-translation";
@@ -6,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { placeholderImages } from "@/lib/placeholder-images";
 import Image from "next/image";
 import Link from "next/link";
+import { User, Calendar } from "lucide-react";
 
 export default function Articles() {
   const { t } = useTranslation();
@@ -51,19 +51,35 @@ export default function Articles() {
                         </div>
                     ))}
                 </div>
-                <div className="flex justify-center">
-                    <Link href={imageArticle.href} className="group cursor-pointer block max-w-md">
-                        <h3 className="text-xl font-semibold tracking-tight text-primary mb-2 text-center">{imageArticle.title}</h3>
-                        <div className="overflow-hidden rounded-lg border shadow-md aspect-[4/3] relative">
-                        <Image
-                            src={imageArticle.image.imageUrl}
-                            alt={imageArticle.title}
-                            fill
-                            data-ai-hint={imageArticle.image.imageHint}
-                            className="object-cover transform transition-transform duration-300 group-hover:scale-105"
-                        />
+                <div className="flex justify-center items-start pt-6">
+                    <Link href={imageArticle.href} className="group cursor-pointer block w-full">
+                        <div className="flex items-start gap-4">
+                            <div className="w-32 flex-shrink-0">
+                                <div className="overflow-hidden rounded-lg border shadow-md aspect-square relative">
+                                <Image
+                                    src={imageArticle.image.imageUrl}
+                                    alt={imageArticle.title}
+                                    fill
+                                    data-ai-hint={imageArticle.image.imageHint}
+                                    className="object-cover transform transition-transform duration-300 group-hover:scale-105"
+                                />
+                                </div>
+                            </div>
+                            <div className="flex-grow">
+                                <h3 className="text-lg font-semibold tracking-tight text-primary mb-2">{imageArticle.title}</h3>
+                                <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
+                                    <div className="flex items-center gap-1">
+                                        <User className="w-4 h-4" />
+                                        <span>Admin</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <Calendar className="w-4 h-4" />
+                                        <span>Tuesday, December 30, 2025</span>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-muted-foreground group-hover:text-primary">Click to view details</p>
+                            </div>
                         </div>
-                        <p className="text-center mt-2 text-sm text-muted-foreground group-hover:text-primary">Click to view details</p>
                     </Link>
                 </div>
             </div>
