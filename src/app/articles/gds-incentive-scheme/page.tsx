@@ -6,10 +6,21 @@ import { placeholderImages } from "@/lib/placeholder-images";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { Metadata } from 'next';
+
+const articleInfo = {
+    title: "Incentive Structure for GDS Postal Staff (BPMs) on POSB Schemes",
+    image: placeholderImages.gdsIncentive,
+};
+
+export function generateMetadata(): Metadata {
+  return {
+    title: articleInfo.title,
+    description: `Details on the incentive structure for Gramin Dak Sevaks (GDS) and Branch Post Masters (BPMs) related to Post Office Savings Bank (POSB) schemes.`,
+  };
+}
 
 export default function GdsIncentiveSchemePage() {
-    const articleImage = placeholderImages.gdsIncentive;
-    const title = "Incentive Structure for GDS Postal Staff (BPMs) on POSB Schemes";
 
     return (
         <main className="container mx-auto px-4 py-8">
@@ -17,20 +28,20 @@ export default function GdsIncentiveSchemePage() {
                 <CardHeader>
                     <div className="flex items-center gap-4 mb-4">
                         <Button variant="outline" size="icon" asChild>
-                            <Link href="/#articles">
+                            <Link href="/#image-articles">
                                 <ArrowLeft />
                                 <span className="sr-only">Back to articles</span>
                             </Link>
                         </Button>
-                        <CardTitle className="text-2xl md:text-3xl">{title}</CardTitle>
+                        <CardTitle className="text-2xl md:text-3xl">{articleInfo.title}</CardTitle>
                     </div>
                 </CardHeader>
                 <CardContent className="relative aspect-video w-full overflow-hidden rounded-lg border">
                     <Image
-                        src={articleImage.imageUrl}
-                        alt={title}
+                        src={articleInfo.image.imageUrl}
+                        alt={articleInfo.title}
                         fill
-                        data-ai-hint={articleImage.imageHint}
+                        data-ai-hint={articleInfo.image.imageHint}
                         className="object-contain"
                     />
                 </CardContent>

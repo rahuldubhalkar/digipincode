@@ -6,7 +6,10 @@ import Footer from '@/components/footer';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: 'digi-pincode | Indian Postal PIN Code Search',
+  title: {
+    default: 'digi-pincode | Indian Postal PIN Code Search',
+    template: '%s | digi-pincode',
+  },
   description: 'The complete India Post Office PIN code directory. Use our fast and accurate postal code search tool. Search by Pincode, State, or District to get a complete post office list with addresses and details for all India pincodes.',
   manifest: "/manifest.json",
   icons: {

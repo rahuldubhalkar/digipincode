@@ -2,6 +2,14 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslation } from "@/lib/i18n/use-translation";
+import type { Metadata } from "next";
+
+export function generateMetadata(): Metadata {
+  return {
+    title: 'About Us',
+    description: 'Learn more about digi-pincode, your one-stop solution for finding postal information across India, including pincodes, postal codes, and post office details.',
+  };
+}
 
 export default function AboutPage() {
   const { t } = useTranslation();
