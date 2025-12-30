@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
  output: 'export',
  assetPrefix: './',
  experimental: {
-  allowedDevOrigins: ["https://6000-firebase-studio-1765984807570.cluster-sumfw3zmzzhzkx4mpvz3ogth4y.cloudworkstations.dev"],
+  // allowedDevOrigins: ["https://6000-firebase-studio-1765984807570.cluster-sumfw3zmzzhzkx4mpvz3ogth4y.cloudworkstations.dev"],
  },
 
  // You can keep these if you really want, but they may hide real errors:
@@ -36,6 +36,12 @@ const nextConfig: NextConfig = {
  hostname: 'picsum.photos',
  port: '',
  pathname: '/**',
+ },
+ {
+  protocol: 'https',
+  hostname: 'blogger.googleusercontent.com',
+  port: '',
+  pathname: '/**',
  },
  ],
  },
