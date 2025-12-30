@@ -25,16 +25,14 @@ export default function GdsIncentiveSchemePage() {
                         <CardTitle className="text-2xl md:text-3xl">{title}</CardTitle>
                     </div>
                 </CardHeader>
-                <CardContent>
-                    <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
-                        <Image
-                            src={articleImage.imageUrl}
-                            alt={title}
-                            fill
-                            data-ai-hint={articleImage.imageHint}
-                            className="object-contain"
-                        />
-                    </div>
+                <CardContent className="relative aspect-video w-full overflow-hidden rounded-lg border">
+                    <Image
+                        src={articleImage.imageUrl}
+                        alt={title}
+                        fill
+                        data-ai-hint={articleImage.imageHint}
+                        className="object-contain"
+                    />
                 </CardContent>
             </Card>
         </main>
