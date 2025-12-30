@@ -1,6 +1,7 @@
 
+
 import { PincodeFinderWrapper } from '@/components/pincode-finder-wrapper';
-import { getStates, getPostOfficesByState } from '@/lib/data';
+import { getStates } from '@/lib/data';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { PostOffice } from '@/lib/types';
@@ -9,6 +10,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { getTranslation } from '@/lib/i18n/get-translation';
+import { PincodeZoneList } from '@/components/pincode-zone-list';
+import Articles from '@/components/articles';
 
 function PincodeFinderSkeleton() {
     return (
@@ -102,6 +105,8 @@ export default async function Home() {
         <PincodeFinderWrapper states={states} />
       </Suspense>
       
+      <Articles />
+
       <Card className="w-full shadow-lg border-none">
           <CardHeader>
             <CardTitle className="text-2xl font-headline tracking-tight text-center">{faqTitle}</CardTitle>
