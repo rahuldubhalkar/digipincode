@@ -4,12 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import type { Metadata } from 'next';
 
-export function generateMetadata(): Metadata {
-  return {
-    title: 'Privacy Policy',
-    description: 'Read the privacy policy for digi-pincode. We are committed to protecting your privacy and handling your data responsibly.',
-  };
-}
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: 'Read the privacy policy for digi-pincode. We are committed to protecting your privacy and handling your data responsibly.',
+};
 
 export default function PrivacyPolicyPage() {
   const { t } = useTranslation();

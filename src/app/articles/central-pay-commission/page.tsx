@@ -13,12 +13,10 @@ const articleInfo = {
     image: placeholderImages.centralPayCommission,
 };
 
-export function generateMetadata(): Metadata {
-  return {
-    title: articleInfo.title,
-    description: `Read the latest update on the 8th Central Pay Commission, concerning the immediate allotment of office space and commencement of work.`,
-  };
-}
+export const metadata: Metadata = {
+  title: articleInfo.title,
+  description: `Read the latest update on the 8th Central Pay Commission, concerning the immediate allotment of office space and commencement of work.`,
+};
 
 export default function CentralPayCommissionPage() {
     return (

@@ -14,12 +14,10 @@ const articleInfo = {
     image: placeholderImages.dreamAppUpdate,
 };
 
-export function generateMetadata(): Metadata {
-  return {
-    title: articleInfo.title,
-    description: `Information regarding the mandatory upgrade of the DREAM App to version 1.0.28 on all MDM controlled devices.`,
-  };
-}
+export const metadata: Metadata = {
+  title: articleInfo.title,
+  description: `Information regarding the mandatory upgrade of the DREAM App to version 1.0.28 on all MDM controlled devices.`,
+};
 
 export default function DreamAppUpdatePage() {
     return (

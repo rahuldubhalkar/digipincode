@@ -14,12 +14,10 @@ const articleInfo = {
     image: placeholderImages.gdsToMtsResult,
 };
 
-export function generateMetadata(): Metadata {
-  return {
-    title: articleInfo.title,
-    description: `Official results for the promotion of Gramin Dak Sevaks (GDS) to the Multi-Tasking Staff (MTS) cadre in the AP Circle, examination held on 31.08.2025.`,
-  };
-}
+export const metadata: Metadata = {
+  title: articleInfo.title,
+  description: `Official results for the promotion of Gramin Dak Sevaks (GDS) to the Multi-Tasking Staff (MTS) cadre in the AP Circle, examination held on 31.08.2025.`,
+};
 
 export default function GdsToMtsResultPage() {
     return (

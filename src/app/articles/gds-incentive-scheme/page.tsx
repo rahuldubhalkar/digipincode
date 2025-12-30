@@ -13,12 +13,10 @@ const articleInfo = {
     image: placeholderImages.gdsIncentive,
 };
 
-export function generateMetadata(): Metadata {
-  return {
-    title: articleInfo.title,
-    description: `Details on the incentive structure for Gramin Dak Sevaks (GDS) and Branch Post Masters (BPMs) related to Post Office Savings Bank (POSB) schemes.`,
-  };
-}
+export const metadata: Metadata = {
+  title: articleInfo.title,
+  description: `Details on the incentive structure for Gramin Dak Sevaks (GDS) and Branch Post Masters (BPMs) related to Post Office Savings Bank (POSB) schemes.`,
+};
 
 export default function GdsIncentiveSchemePage() {
 

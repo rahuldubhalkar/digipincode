@@ -17,12 +17,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Metadata } from 'next';
 
-export function generateMetadata(): Metadata {
-  return {
-    title: 'My Location',
-    description: 'Use the My Location feature to get your current geographic coordinates (latitude and longitude) instantly. Requires browser location permissions.',
-  };
-}
+export const metadata: Metadata = {
+  title: 'My Location',
+  description: 'Use the My Location feature to get your current geographic coordinates (latitude and longitude) instantly. Requires browser location permissions.',
+};
 
 // Dynamically import the map component to prevent SSR issues
 const LocationMap = dynamic(() => import("@/components/location-map"), {

@@ -14,12 +14,10 @@ const articleInfo = {
     image: placeholderImages.iposJagPromotion,
 };
 
-export function generateMetadata(): Metadata {
-  return {
-    title: articleInfo.title,
-    description: `Directorate order regarding the promotion and posting of STS officers to the JAG of IPoS, Group 'A' and other transfer-postings in the JAG.`,
-  };
-}
+export const metadata: Metadata = {
+  title: articleInfo.title,
+  description: `Directorate order regarding the promotion and posting of STS officers to the JAG of IPoS, Group 'A' and other transfer-postings in the JAG.`,
+};
 
 export default function IposJagPromotionPostingPage() {
     return (

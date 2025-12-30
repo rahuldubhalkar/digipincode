@@ -5,12 +5,10 @@ import { Mail, Phone } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import type { Metadata } from 'next';
 
-export function generateMetadata(): Metadata {
-  return {
-    title: 'Contact Us',
-    description: 'Get in touch with the digi-pincode team. We welcome your questions, feedback, and inquiries. Find our contact details here.',
-  };
-}
+export const metadata: Metadata = {
+  title: 'Contact Us',
+  description: 'Get in touch with the digi-pincode team. We welcome your questions, feedback, and inquiries. Find our contact details here.',
+};
 
 
 export default function ContactPage() {

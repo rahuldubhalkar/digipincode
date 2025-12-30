@@ -14,12 +14,10 @@ const articleInfo = {
     image: placeholderImages.sgbGrowth,
 };
 
-export function generateMetadata(): Metadata {
-  return {
-    title: articleInfo.title,
-    description: `Analysis and data on the growth of Sovereign Gold Bond (SGB) sales and performance.`,
-  };
-}
+export const metadata: Metadata = {
+  title: articleInfo.title,
+  description: `Analysis and data on the growth of Sovereign Gold Bond (SGB) sales and performance.`,
+};
 
 export default function SgbGrowthPage() {
     return (
