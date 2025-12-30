@@ -25,9 +25,32 @@ import { Search } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "@/lib/i18n/use-translation";
 
-async function findPostOfficesByPincode(pincode: string, allData: PostOffice[]): Promise<PostOffice[]> {
-  if (!pincode) return [];
-  return allData.filter(po => po.pincode === pincode);
+type PincodeToStateMap = {
+  [key: string]: string[];
+};
+
+async function findPostOfficesByPincode(pincode: string, pincodeMap: PincodeToStateMap): Promise<PostOffice[]> {
+  if (!pincode || pincode.length !== 6) return [];
+
+  const firstDigit = pincode.charAt(0);
+  const statesToSearch = pincodeMap[firstDigit];
+
+  if (!statesToSearch || statesToSearch.length === 0) {
+    return [];
+  }
+
+  const searchPromises = statesToSearch.map(state =>
+    fetch(`/data/${state}.json`).then(res => res.json() as Promise<PostOffice[]>)
+  );
+  
+  try {
+    const results = await Promise.all(searchPromises);
+    const allPostOfficesForStates = results.flat();
+    return allPostOfficesForStates.filter(po => po.pincode === pincode);
+  } catch (error) {
+    console.error("Failed to load or parse state data for pincode search", error);
+    return [];
+  }
 }
 
 export function PincodeClientPage() {
@@ -36,29 +59,29 @@ export function PincodeClientPage() {
   const [pincode, setPincode] = useState("");
   const [postOffices, setPostOffices] = useState<PostOffice[]>([]);
   const [searched, setSearched] = useState(false);
-  const [allPostOfficeData, setAllPostOfficeData] = useState<PostOffice[]>([]);
+  const [pincodeMap, setPincodeMap] = useState<PincodeToStateMap | null>(null);
   const [isLoadingData, setIsLoadingData] = useState(true);
 
   useEffect(() => {
-    fetch('/data/all_post_offices.json')
+    fetch('/data/pincode_to_state.json')
       .then(res => res.json())
       .then(data => {
-        setAllPostOfficeData(data);
+        setPincodeMap(data);
         setIsLoadingData(false);
       })
       .catch(err => {
-        console.error("Failed to load post office data", err);
+        console.error("Failed to load pincode to state mapping", err);
         setIsLoadingData(false);
       });
   }, []);
 
   const handleSearch = () => {
-    if (pincode.trim().length !== 6 || isLoadingData) {
+    if (pincode.trim().length !== 6 || !pincodeMap) {
         return;
     }
     startTransition(() => {
         setSearched(true);
-        findPostOfficesByPincode(pincode, allPostOfficeData).then(setPostOffices);
+        findPostOfficesByPincode(pincode, pincodeMap).then(setPostOffices);
     });
   };
 
@@ -77,11 +100,11 @@ export function PincodeClientPage() {
               type="text"
               placeholder={t('pincodePage.placeholder')}
               value={pincode}
-              onChange={(e) => setPincode(e.target.value)}
+              onChange={(e) => setPincode(e.target.value.replace(/[^0-9]/g, ''))}
               maxLength={6}
               disabled={isLoadingData}
             />
-            <Button type="button" onClick={handleSearch} disabled={isPending || isLoadingData}>
+            <Button type="button" onClick={handleSearch} disabled={isPending || isLoadingData || pincode.length !== 6}>
               <Search className="mr-2 h-4 w-4" />
               {isPending ? t('pincodePage.searching') : t('pincodePage.search')}
             </Button>
