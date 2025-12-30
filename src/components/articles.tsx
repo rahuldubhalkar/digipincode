@@ -41,6 +41,11 @@ export default function Articles() {
       title: "Ensuring Upgradation of DREAM App to Version 1.0.28 on all MDM Controlled Devices",
       image: placeholderImages.dreamAppUpdate,
       href: "/articles/dream-app-update"
+    },
+    {
+      title: "Result of GDSs to Multi-Tasking Staff (MTS) Cadre, held on 31.08.2025 - AP Circle",
+      image: placeholderImages.gdsToMtsResult,
+      href: "/articles/gds-to-mts-result"
     }
   ]
 
