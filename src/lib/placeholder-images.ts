@@ -7,4 +7,8 @@ export type ImagePlaceholder = {
   imageHint: string;
 };
 
-export const PlaceHolderImages: ImagePlaceholder[] = data.placeholderImages;
+export interface AppPlaceholderImages {
+    gdsIncentive: ImagePlaceholder;
+}
+
+export const placeholderImages: AppPlaceholderImages = data.placeholderImages;

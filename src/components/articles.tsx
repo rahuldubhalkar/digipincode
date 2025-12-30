@@ -3,11 +3,14 @@
 
 import { useTranslation } from "@/lib/i18n/use-translation";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { placeholderImages } from "@/lib/placeholder-images";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Articles() {
   const { t } = useTranslation();
 
-  const articles = [
+  const textArticles = [
     {
       title: t('articles.article1.title'),
       content: t('articles.article1.content'),
@@ -22,20 +25,51 @@ export default function Articles() {
     },
   ];
 
+  const imageArticle = {
+      title: "Incentive Structure for GDS Postal Staff (BPMs) on POSB Schemes",
+      image: placeholderImages.gdsIncentive,
+      href: "/articles/gds-incentive-scheme"
+  }
+
   return (
-    <div className="space-y-8">
-      {articles.map((article, index) => (
-        <Card key={index} className="w-full shadow-lg border-none">
+    <div className="space-y-8" id="articles">
+      <Card className="w-full shadow-lg border-none">
           <CardHeader>
-            <CardTitle className="text-2xl font-headline tracking-tight text-center">
-              {article.title}
-            </CardTitle>
+              <CardTitle className="text-2xl font-headline tracking-tight text-center">
+                  Informative Articles & Updates
+              </CardTitle>
           </CardHeader>
-          <CardContent className="prose max-w-none text-muted-foreground text-justify">
-            <p>{article.content}</p>
+          <CardContent className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div className="space-y-6">
+                    {textArticles.map((article, index) => (
+                        <div key={index}>
+                        <h3 className="text-xl font-semibold tracking-tight text-primary mb-2">{article.title}</h3>
+                        <p className="prose max-w-none text-muted-foreground text-justify text-sm">
+                            {article.content}
+                        </p>
+                        </div>
+                    ))}
+                </div>
+                <div className="flex justify-center">
+                    <Link href={imageArticle.href} className="group cursor-pointer block">
+                        <h3 className="text-xl font-semibold tracking-tight text-primary mb-2 text-center">{imageArticle.title}</h3>
+                        <div className="overflow-hidden rounded-lg border shadow-md">
+                        <Image
+                            src={imageArticle.image.imageUrl}
+                            alt={imageArticle.title}
+                            width={600}
+                            height={600}
+                            data-ai-hint={imageArticle.image.imageHint}
+                            className="w-full h-auto object-cover aspect-[4/3] transform transition-transform duration-300 group-hover:scale-105"
+                        />
+                        </div>
+                        <p className="text-center mt-2 text-sm text-muted-foreground group-hover:text-primary">Click to view details</p>
+                    </Link>
+                </div>
+            </div>
           </CardContent>
-        </Card>
-      ))}
+      </Card>
     </div>
   );
 }
