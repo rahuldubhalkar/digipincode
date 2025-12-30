@@ -8,9 +8,9 @@ import { Providers } from './providers';
 export const metadata: Metadata = {
   title: 'digi-pincode | All India PIN Code Finder, Postal Code Search, Post Office Directory',
   description: 'The complete India Post Office PIN code directory. Use our fast and accurate postal code search tool. Search by Pincode, State, or District to get a complete post office list with addresses and details for all India pincodes.',
-  manifest: "/site.webmanifest",
+  manifest: "/manifest.json",
   icons: {
-    icon: '/favicon.svg',
+    icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
   appleWebApp: {

@@ -1,0 +1,21 @@
+{
+  "name": "digi-pincode",
+  "short_name": "digi-pincode",
+  "description": "The complete India Post Office PIN code directory. Use our fast and accurate postal code search tool.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#E8EAF6",
+  "theme_color": "#4B0082",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
