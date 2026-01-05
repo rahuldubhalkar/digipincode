@@ -52,11 +52,6 @@ export default function Articles({ type }: ArticlesProps) {
       href: "/articles/gds-to-mts-result"
     },
     {
-        title: "Declaration of Result of Limited Departmental Competitive Examination for promotion to the post of Postal Assistant/Sorting Assistant for the vacancy year 2025 - Telangana Circle",
-        image: placeholderImages.ldceResultTelangana,
-        href: "/articles/ldce-result-telangana"
-    },
-    {
       title: "Promotion & Posting of STS officers in JAG of IPoS, Group 'A' and Transfer-Posting in JAG - Directorate Order dtd 29/12/2025",
       image: placeholderImages.iposJagPromotion,
       href: "/articles/ipos-jag-promotion-posting"

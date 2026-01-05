@@ -15,7 +15,6 @@ export interface AppPlaceholderImages {
     gdsToMtsResult: ImagePlaceholder;
     iposJagPromotion: ImagePlaceholder;
     sgbGrowth: ImagePlaceholder;
-    ldceResultTelangana: ImagePlaceholder;
     gdsPaidLeaveAccumulation: ImagePlaceholder;
     gdsPaidLeaveFaq: ImagePlaceholder;
     upPostalCalendar2026: ImagePlaceholder;
