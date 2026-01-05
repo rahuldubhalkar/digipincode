@@ -28,6 +28,7 @@ export function PincodeFinderWrapper({ states }: PincodeFinderWrapperProps) {
         <div className='space-y-12'>
             <div ref={finderRef}>
                 <PincodeFinder 
+                    key={selectedStateFromZone}
                     states={states}
                     selectedStateFromZone={selectedStateFromZone} 
                     onClear={handleClear} 

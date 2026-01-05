@@ -93,7 +93,6 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
 
     if (!state) {
         setAllPostOfficesForState([]);
-        setFilteredPostOffices([]);
         setIsLoadingStateData(false);
         return;
     }
@@ -107,7 +106,6 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
         } catch (error) {
             console.error(`Failed to load data for state: ${state}`, error);
             setAllPostOfficesForState([]);
-            setFilteredPostOffices([]);
         } finally {
             setIsLoadingStateData(false);
         }
