@@ -1,11 +1,18 @@
+
 "use client";
 
 import Link from "next/link";
 import { useTranslation } from "@/lib/i18n/use-translation";
+import { useState, useEffect } from "react";
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
+
 
   return (
     <footer className="bg-card border-t mt-auto">
