@@ -16,6 +16,9 @@ export interface AppPlaceholderImages {
     iposJagPromotion: ImagePlaceholder;
     sgbGrowth: ImagePlaceholder;
     ldceResultTelangana: ImagePlaceholder;
+    gdsPaidLeaveAccumulation: ImagePlaceholder;
+    gdsPaidLeaveFaq: ImagePlaceholder;
+    upPostalCalendar2026: ImagePlaceholder;
 }
 
 export const placeholderImages: AppPlaceholderImages = data.placeholderImages as AppPlaceholderImages;

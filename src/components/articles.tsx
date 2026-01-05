@@ -65,6 +65,21 @@ export default function Articles({ type }: ArticlesProps) {
         title: "Growth of Sovereign Gold Bond (SGB)",
         image: placeholderImages.sgbGrowth,
         href: "/articles/sgb-growth"
+    },
+    {
+      title: "Accumulation of Paid leave without Encashment facilities for Gramin Dak Sevak (GDS)",
+      image: placeholderImages.gdsPaidLeaveAccumulation,
+      href: "/articles/gds-paid-leave-accumulation"
+    },
+    {
+      title: "FAQ on Paid Leave of Gramin Dak Sevak ( GDS)",
+      image: placeholderImages.gdsPaidLeaveFaq,
+      href: "/articles/gds-paid-leave-faq"
+    },
+    {
+      title: "Postal Calendar 2026 - UP Circle",
+      image: placeholderImages.upPostalCalendar2026,
+      href: "/articles/up-postal-calendar-2026"
     }
   ]
 

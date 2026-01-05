@@ -42,6 +42,24 @@
       "description": "Declaration of Result of Limited Departmental Competitive Examination for promotion to the post of Postal Assistant/Sorting Assistant - Telangana Circle",
       "imageUrl": "https://blogger.googleusercontent.com/img/a/AVvXsEiRkE1GdBj290n9jKj5p3o9h1e2f1n7e2c9e4g7h3d8f6g2h1i4j5k6l7m8n9o0p1q2r3s4t5u6v7w8x9y0z/s1600/ocr_image.png",
       "imageHint": "exam result document"
+    },
+    "gdsPaidLeaveAccumulation": {
+      "id": "gds-paid-leave-accumulation",
+      "description": "Accumulation of Paid leave without Encashment facilities for Gramin Dak Sevak (GDS)",
+      "imageUrl": "https://blogger.googleusercontent.com/img/a/AVvXsEhOmQhxT-r2cxE4EqAo-XQBCi7YP6z8Uj7ve9Wqps-thQA1sy6M0jgzLUNLExmYpN0D8IjoDKIj0w8taEEKDnuH4bCiOkrkasO2RnZJxSbPpY21OW8DD_pNHPj3oP_GGIwqKKIYI0QrWdPiLE0nwv2vnj55NX6qv4lk6B1WtjGGyGMp7-fQIFTG_r_ErUHL=w634-h834",
+      "imageHint": "leave policy"
+    },
+    "gdsPaidLeaveFaq": {
+      "id": "gds-paid-leave-faq",
+      "description": "FAQ on Paid Leave of Gramin Dak Sevak ( GDS)",
+      "imageUrl": "https://blogger.googleusercontent.com/img/a/AVvXsEjzJRVU5llpo9RbIjJbu7c6ow21anCsjfwpCcVkkG52OUa-rlWhFBeK3QkTSftbz-CqnAtDSQ_ah3a8KWCKjnHnS1I_pmsZdwQj3LZVcS-PHTi2dS83c001o1yBkNNVCmcgYL6wGcjr_jplQ9uuzQb2aUHr8hwHFA1t8O5Czb4dcgQHTO8RlEvhPrdByELs=w533-h800",
+      "imageHint": "faq document"
+    },
+    "upPostalCalendar2026": {
+      "id": "up-postal-calendar-2026",
+      "description": "Postal Calendar 2026 - UP Circle",
+      "imageUrl": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhme7CPZ79RC3yw0JJJumFCsX6ad3ZPe_HpYHh24UaWIz92RCWP1DviHXt8kpDfGe80LE4JRTjHx2z-I5a2rrUk4MMDBGuTPnefVnGBLHL4KELWGs216qo5FCfraiPEPyhIQyDUGDat_CwRobE8Qs3c4-90fMundlcTe1tHdcNezlj0DSrafV0UlUBzZ_I/w578-h815/UP%20Postal%20Calendar%202026.webp",
+      "imageHint": "calendar 2026"
     }
   }
 }
