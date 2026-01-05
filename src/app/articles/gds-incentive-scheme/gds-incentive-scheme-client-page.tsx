@@ -24,8 +24,8 @@ const posbSchemes = [
 
 const pmSchemes = [
     { scheme: "PMSBY", details: "Per successful registration", incentive: "₹0.50" },
-    { scheme: "PMJJBY", details: "Per successful registration", incentive: "₹20" },
-    { scheme: "APY", details: "Per successful registration", incentive: "₹30" },
+    { scheme: "PMJJBY", details: "Per successful registration", incentive: "₹20/-" },
+    { scheme: "APY", details: "Per successful registration", incentive: "₹30/-" },
 ];
 
 
