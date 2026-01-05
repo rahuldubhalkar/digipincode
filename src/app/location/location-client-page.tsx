@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,7 +30,11 @@ export function LocationClientPage() {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [mapKey, setMapKey] = useState<number>(Date.now());
+  const [mapKey, setMapKey] = useState<number | null>(null);
+
+  useEffect(() => {
+    setMapKey(Date.now());
+  }, []);
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -102,7 +106,7 @@ export function LocationClientPage() {
             </Alert>
           )}
 
-          {location && (
+          {location && mapKey && (
              <div className="space-y-4">
               <div className="text-center p-6 bg-muted rounded-lg">
                 <h3 className="text-lg font-semibold mb-2">
