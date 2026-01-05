@@ -18,6 +18,7 @@ export default function Articles({ type }: ArticlesProps) {
   const [currentDate, setCurrentDate] = useState('');
 
   useEffect(() => {
+    // Set date on client-side only to avoid hydration mismatch
     setCurrentDate(new Date().toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
