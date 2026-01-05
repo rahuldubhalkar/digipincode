@@ -15,6 +15,7 @@ export interface AppPlaceholderImages {
     gdsToMtsResult: ImagePlaceholder;
     iposJagPromotion: ImagePlaceholder;
     sgbGrowth: ImagePlaceholder;
+    ldceResultTelangana: ImagePlaceholder;
 }
 
-export const placeholderImages: AppPlaceholderImages = data.placeholderImages;
+export const placeholderImages: AppPlaceholderImages = data.placeholderImages as AppPlaceholderImages;
