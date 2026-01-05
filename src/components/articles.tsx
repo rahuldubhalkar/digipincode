@@ -7,6 +7,7 @@ import { placeholderImages } from "@/lib/placeholder-images";
 import Image from "next/image";
 import Link from "next/link";
 import { User, Calendar } from "lucide-react";
+import { useState, useEffect } from "react";
 
 interface ArticlesProps {
   type: 'text' | 'image';
@@ -14,6 +15,15 @@ interface ArticlesProps {
 
 export default function Articles({ type }: ArticlesProps) {
   const { t } = useTranslation();
+  const [currentDate, setCurrentDate] = useState('');
+
+  useEffect(() => {
+    setCurrentDate(new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }));
+  }, []);
 
   const textArticles = [
     {
@@ -135,7 +145,7 @@ export default function Articles({ type }: ArticlesProps) {
                       </div>
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
-                        <span>Tuesday, December 30, 2025</span>
+                        <span>{currentDate}</span>
                       </div>
                     </div>
                     <p className="text-sm text-muted-foreground group-hover:text-primary">Click to view details</p>
