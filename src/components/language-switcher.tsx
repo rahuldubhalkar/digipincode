@@ -23,7 +23,7 @@ export default function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" suppressHydrationWarning>
           <Languages className="h-5 w-5" />
           <span className="sr-only">{t('languageSwitcher.tooltip')}</span>
         </Button>

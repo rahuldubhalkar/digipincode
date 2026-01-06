@@ -68,6 +68,7 @@ export function PincodeZoneList({ onZoneSelect }: PincodeZoneListProps) {
                 onClick={() => handleStateClick(zone.circle)}
                 className="text-primary hover:underline text-left"
                 aria-label={`${t('zoneList.searchFor')} ${zone.circle}`}
+                suppressHydrationWarning
               >
                 {zone.circle}
               </button>

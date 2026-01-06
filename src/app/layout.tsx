@@ -7,14 +7,15 @@ import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: {
-    default: 'digi-pincode | Indian Postal PIN Code Search',
+    default: 'pincode | Indian Post Pincode',
     template: '%s | digi-pincode',
   },
   description: 'The complete India Post Office PIN code directory. Use our fast and accurate postal code search tool. Search by Pincode, State, or District to get a complete post office list with addresses and details for all India pincodes.',
   manifest: "/manifest.json",
   icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
+    icon: '/favicon.svg?v=4',
+    shortcut: '/favicon.svg?v=4',
+    apple: '/favicon.svg?v=4',
   },
   appleWebApp: {
     title: 'digi-pincode',

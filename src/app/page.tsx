@@ -90,7 +90,7 @@ export default async function Home() {
             <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto">
                 {faqItems.map((item, index) => (
                     <AccordionItem value={`item-${index}`} key={index}>
-                        <AccordionTrigger>{item.question}</AccordionTrigger>
+                        <AccordionTrigger suppressHydrationWarning><div>{item.question}</div></AccordionTrigger>
                         <AccordionContent>
                             {item.answer}
                         </AccordionContent>

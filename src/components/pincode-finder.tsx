@@ -161,7 +161,7 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Select onValueChange={handleStateChange} value={selectedState}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full" suppressHydrationWarning>
                 <SelectValue placeholder={t('home.selectState')} />
               </SelectTrigger>
               <SelectContent>
@@ -180,10 +180,11 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
                 onChange={e => setSearchTerm(e.target.value)}
                 className="pl-10"
                 disabled={!selectedState}
+                suppressHydrationWarning
               />
             </div>
             <Select onValueChange={handleLetterChange} value={selectedLetter} disabled={!selectedState}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full" suppressHydrationWarning>
                     <SelectValue placeholder={t('home.filterByLetter')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -193,7 +194,7 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
                     ))}
                 </SelectContent>
             </Select>
-            <Button variant="outline" onClick={clearFilters} className="text-primary hover:text-primary">
+            <Button variant="outline" onClick={clearFilters} className="text-primary hover:text-primary" suppressHydrationWarning>
               <X className="mr-2 h-4 w-4" />
               {t('home.clearFilters')}
             </Button>
