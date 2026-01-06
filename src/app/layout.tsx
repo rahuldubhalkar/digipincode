@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     template: '%s | digi-pincode',
   },
   description: 'The complete India Post Office PIN code directory. Use our fast and accurate postal code search tool. Search by Pincode, State, or District to get a complete post office list with addresses and details for all India pincodes.',
+  keywords: ['pincode finder', 'india pincode search', 'postal code india', 'find a pin code', 'zip code india', 'pincode', 'postal code'],
   manifest: "/manifest.json",
   icons: {
     icon: '/favicon.svg?v=4',
