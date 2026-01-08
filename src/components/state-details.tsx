@@ -46,7 +46,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
         <Card className="border-none shadow-none">
             <CardContent className="p-0 space-y-4">
                  <p className="text-sm text-muted-foreground">Click on any City/Division below to filter results:</p>
-                <div key="districts-list" className="flex flex-wrap gap-x-4 gap-y-2">
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
                     {districts.map(district => (
                         <Button
                             key={district}
@@ -63,7 +63,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                 </div>
 
                 {divisions.length > 0 && (
-                    <div key="divisions-list" className="flex flex-wrap gap-x-4 gap-y-2">
+                    <div className="flex flex-wrap gap-x-4 gap-y-2">
                         {divisions.map(division => (
                            <Button
                             key={division}
