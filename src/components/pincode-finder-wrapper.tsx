@@ -26,6 +26,10 @@ export function PincodeFinderWrapper({ states }: PincodeFinderWrapperProps) {
 
     return (
         <div className='space-y-12' suppressHydrationWarning>
+            <div ref={finderRef} className="text-center">
+                <h1 className="text-3xl font-bold text-primary mb-2">Indian postal PIN code search</h1>
+                <p className="text-muted-foreground">Your complete guide to the Indian postal code system. Use our comprehensive All India PIN Code Finder to search for any postal code or Post Office details by State, District, or Post Office name.</p>
+            </div>
             <div ref={finderRef}>
                 <PincodeFinder 
                     key={selectedStateFromZone}

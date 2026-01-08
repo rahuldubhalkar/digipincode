@@ -47,18 +47,18 @@
     "circle": "Circle",
     "district": "District"
   },
-  "articles": {
-    "article1": {
-      "title": "Understanding the Indian PIN Code System",
-      "content": "The Postal Index Number (PIN) is a 6-digit code used by India Post for mail sorting. The first digit represents the postal region, the second the sub-region, and the third identifies the sorting district. The final three digits pinpoint the specific post office. This system ensures efficient mail delivery across the vast Indian postal network. Our All India PIN Code Finder simplifies navigating this system."
+  "info_articles": {
+    "what_is_digi_pincode": {
+      "title": "What is digi-pincode?",
+      "content": "digi-pincode is a fast and reliable tool for finding postal information in India. Our mission is to provide an easy-to-use platform for looking up pincodes, postal codes, and post office details. Built with modern web technologies, digi-pincode offers a seamless experience on any device, providing the most accurate and up-to-date information from the official Indian postal data API."
     },
-    "article2": {
-      "title": "How to Find Any Postal Code in India",
-      "content": "With our postal code search tool, finding PIN details is simple. You can search by state, district, or branch name. Select a state to see all associated districts, then drill down to find the exact post office. If you have the 6-digit PIN, use our 'Search by Pincode' feature for a direct lookup. Our India Post Office Directory is your one-stop solution."
+    "what_is_pincode": {
+      "title": "What is a Pincode?",
+      "content": "A Postal Index Number (PIN), or Pincode, is a unique 6-digit code assigned to every delivery post office in India. This system is the backbone of the mail sorting and delivery process. Each digit has a specific geographical meaning, ensuring that mail and packages are routed efficiently. Using the correct Pincode from our directory is crucial for timely and accurate delivery."
     },
-    "article3": {
-      "title": "The Importance of Using Correct PIN Codes",
-      "content": "Using the correct PIN code is vital for timely mail and package delivery. An incorrect code can cause significant delays, misrouting, or even lost items. The PIN code is an essential tool for logistics in India. By using our accurate Pincode search, you ensure your mail is routed correctly. Always verify postal codes with our reliable All India PIN Code List."
+    "how_to_use": {
+      "title": "How to use digi-pincode?",
+      "content": "To find a pincode, you can either select a state from the dropdown menu to see a list of all post offices, or you can use the 'Search by Pincode' feature to get details for a specific code. Our tool provides comprehensive information, including the post office name, pincode, office type, and district. It's the simplest way to navigate the Indian postal network."
     }
   },
   "faq": {

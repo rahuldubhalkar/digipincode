@@ -31,7 +31,7 @@ const Logo = () => {
           DIGI PINCODE
         </span>
         <span className="text-xs text-muted-foreground mt-1">
-          {t('header.tagline')}
+          The Complete India PIN Code Search Directory.
         </span>
       </div>
     </div>
