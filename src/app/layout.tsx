@@ -8,7 +8,7 @@ import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Find Indian Pincode - Fast & Accurate Postal Code Search',
+    default: 'India Post Pincode | Pincode Finder',
     template: '%s | India Post Pincode',
   },
   description: 'The complete India Post Office PIN code directory. Use our fast and accurate postal code search tool to find any pincode by state, district, or post office name.',

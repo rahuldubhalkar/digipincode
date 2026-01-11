@@ -28,7 +28,7 @@ const Logo = () => {
       </svg>
       <div className="flex flex-col">
         <span className="text-xl font-bold tracking-wider text-foreground">
-          India Post PINCODE
+          India Post Pincode
         </span>
         <span className="text-xs text-muted-foreground mt-1">
           The Complete India PIN Code Searching Tool.
