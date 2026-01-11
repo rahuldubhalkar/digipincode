@@ -11,12 +11,12 @@ export const metadata: Metadata = {
     template: '%s | India Post Pincode',
   },
   description: 'The complete India Post Office PIN code directory. Use our fast and accurate postal code search tool to find any pincode by state, district, or post office name.',
-  keywords: ['pincode', 'pin code', 'postal code', 'india pincode', 'post office india', 'pincode search', 'find pincode', 'pincode directory', 'post office near me', 'zip code india'],
+  keywords: ['pincode finder', 'india pincode search', 'postal code india', 'find a pin code', 'zip code india', 'pincode', 'pin code', 'postal code', 'india pincode', 'post office india', 'pincode search', 'find pincode', 'pincode directory', 'post office near me'],
   manifest: "/manifest.json",
   icons: {
-    icon: '/favicon.svg?v=4',
-    shortcut: '/favicon.svg?v=4',
-    apple: '/favicon.svg?v=4',
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
   },
   appleWebApp: {
     title: 'India Post Pincode',

@@ -1,10 +1,10 @@
 {
-  "name": "digi-pincode",
+  "name": "India Post Pincode",
   "short_name": "digi-pincode",
-  "description": "The complete India Post Office PIN code directory. Use our fast and accurate postal code search tool.",
+  "description": "The complete India Post Office PIN code directory. Use our fast and accurate postal code search tool to find any pincode by state, district, or post office name.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F3E5F5",
+  "background_color": "#ffffff",
   "theme_color": "#4B0082",
   "icons": [
     {

@@ -28,10 +28,10 @@ const Logo = () => {
       </svg>
       <div className="flex flex-col">
         <span className="text-xl font-bold tracking-wider text-foreground">
-          DIGI PINCODE
+          India Post PINCODE
         </span>
         <span className="text-xs text-muted-foreground mt-1">
-          The Complete India PIN Code Search Directory.
+          The Complete India PIN Code Searching Tool.
         </span>
       </div>
     </div>
