@@ -17,12 +17,14 @@ export const I18nContext = createContext<I18nContextType | undefined>(undefined)
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState('en');
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language');
     if (savedLanguage && translations[savedLanguage]) {
       setLanguageState(savedLanguage);
     }
+    setIsMounted(true);
   }, []);
 
   const setLanguage = (lang: string) => {
@@ -33,8 +35,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   };
 
   const t = (key: string, values?: Record<string, string | number>): string => {
+    const effectiveLanguage = isMounted ? language : 'en';
     const keys = key.split('.');
-    let result = translations[language];
+    let result = translations[effectiveLanguage];
     for (const k of keys) {
       result = result?.[k];
     }
@@ -62,7 +65,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <I18nContext.Provider value={{ language, setLanguage, t }}>
+    <I18nContext.Provider value={{ language: isMounted ? language : 'en', setLanguage, t }}>
       {children}
     </I18nContext.Provider>
   );
