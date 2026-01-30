@@ -31,11 +31,11 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                 <Table>
                   <TableHeader className="sticky top-0 bg-card z-10">
                     <TableRow>
-                      <TableHead suppressHydrationWarning>{t('table.officeName')}</TableHead>
-                      <TableHead suppressHydrationWarning>{t('table.pincode')}</TableHead>
-                      <TableHead suppressHydrationWarning>{t('table.officeType')}</TableHead>
-                      <TableHead suppressHydrationWarning>{t('table.district')}</TableHead>
-                      <TableHead suppressHydrationWarning>{t('table.state')}</TableHead>
+                      <TableHead>{t('table.officeName')}</TableHead>
+                      <TableHead>{t('table.pincode')}</TableHead>
+                      <TableHead>{t('table.officeType')}</TableHead>
+                      <TableHead>{t('table.district')}</TableHead>
+                      <TableHead>{t('table.state')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -51,7 +51,7 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell suppressHydrationWarning colSpan={5} className="h-24 text-center">
+                        <TableCell colSpan={5} className="h-24 text-center">
                           {noResultsMessage}
                         </TableCell>
                       </TableRow>
@@ -68,19 +68,19 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                             <Card key={`${po.officename}-${po.pincode}-${index}`} className="border rounded-lg p-4">
                                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                                     <div className="font-semibold col-span-2 text-base">{po.officename}</div>
-                                    <div className="text-muted-foreground" suppressHydrationWarning>{t('table.pincode')}</div>
+                                    <div className="text-muted-foreground">{t('table.pincode')}</div>
                                     <div>{po.pincode}</div>
-                                    <div className="text-muted-foreground" suppressHydrationWarning>{t('table.officeType')}</div>
+                                    <div className="text-muted-foreground">{t('table.officeType')}</div>
                                     <div>{po.officetype}</div>
-                                    <div className="text-muted-foreground" suppressHydrationWarning>{t('table.district')}</div>
+                                    <div className="text-muted-foreground">{t('table.district')}</div>
                                     <div>{po.district}</div>
-                                    <div className="text-muted-foreground" suppressHydrationWarning>{t('table.state')}</div>
+                                    <div className="text-muted-foreground">{t('table.state')}</div>
                                     <div>{po.statename}</div>
                                 </div>
                             </Card>
                         ))
                     ) : (
-                        <div suppressHydrationWarning className="h-24 flex items-center justify-center text-center text-muted-foreground">
+                        <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
                             {noResultsMessage}
                         </div>
                     )}

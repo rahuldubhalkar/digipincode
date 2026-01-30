@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,7 @@ export default function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" suppressHydrationWarning>
+        <Button variant="ghost" size="icon">
           <Languages className="h-5 w-5" />
           <span className="sr-only">{t('languageSwitcher.tooltip')}</span>
         </Button>

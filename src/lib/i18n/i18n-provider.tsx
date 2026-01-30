@@ -1,3 +1,4 @@
+
 "use client";
 
 import { createContext, useState, ReactNode, useEffect } from 'react';
@@ -63,9 +64,15 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
     return template;
   };
+  
+  const contextValue = {
+    language: isMounted ? language : 'en',
+    setLanguage,
+    t,
+  };
 
   return (
-    <I18nContext.Provider value={{ language: isMounted ? language : 'en', setLanguage, t }}>
+    <I18nContext.Provider value={contextValue}>
       {children}
     </I18nContext.Provider>
   );

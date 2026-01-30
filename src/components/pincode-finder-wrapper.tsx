@@ -10,7 +10,7 @@ interface PincodeFinderWrapperProps {
 
 export function PincodeFinderWrapper({ states }: PincodeFinderWrapperProps) {
     return (
-        <div className='space-y-12' suppressHydrationWarning>
+        <div className='space-y-12'>
             <PincodeFinder states={states} />
             <PincodeZoneList />
         </div>
