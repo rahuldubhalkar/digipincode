@@ -12,10 +12,10 @@ import Link from 'next/link';
 interface StateDetailsProps {
     selectedState: string;
     allPostOffices: PostOffice[];
-    onDistrictSelect: (district: string) => void;
     selectedDistrict: string;
-    onDivisionSelect: (division: string) => void;
     selectedDivision: string;
+    onDistrictSelect?: (district: string) => void;
+    onDivisionSelect?: (division: string) => void;
 }
 
 export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, selectedDistrict, onDivisionSelect, selectedDivision }: StateDetailsProps) {
@@ -51,6 +51,24 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                  <p className="text-sm text-muted-foreground">Click on any City/Division below to filter results or view a dedicated page:</p>
                 <div className="flex flex-wrap gap-x-4 gap-y-2">
                     {districts.map(district => {
+                        // If onDistrictSelect is passed, it's a button for filtering
+                        if (onDistrictSelect) {
+                            return (
+                                <Button
+                                    key={district}
+                                    variant="link"
+                                    className={cn(
+                                        "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
+                                        selectedDistrict === district && "text-primary font-bold"
+                                    )}
+                                    onClick={() => onDistrictSelect(district)}
+                                >
+                                    {district}
+                                </Button>
+                            )
+                        }
+                        
+                        // If onDistrictSelect is NOT passed, it's a link for navigation
                         const districtUrl = `/state/${stateUrlPart}/${district.replace(/ /g, '-').toLowerCase()}`;
                         return (
                             <Button
@@ -58,8 +76,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                                 variant="link"
                                 asChild
                                 className={cn(
-                                    "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
-                                    selectedDistrict === district && "text-primary font-bold"
+                                    "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline"
                                 )}
                             >
                                 <Link href={districtUrl}>{district}</Link>
@@ -78,7 +95,8 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                                 "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
                                 selectedDivision === division && "text-primary font-bold"
                             )}
-                            onClick={() => onDivisionSelect(division)}
+                            onClick={onDivisionSelect ? () => onDivisionSelect(division) : undefined}
+                            disabled={!onDivisionSelect}
                         >
                             {division}
                         </Button>

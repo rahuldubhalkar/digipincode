@@ -78,9 +78,7 @@ export default async function StatePage({ params }: { params: { stateName: strin
                        <StateDetails 
                            selectedState={stateNameParam}
                            allPostOffices={postOffices}
-                           onDistrictSelect={() => {}}
                            selectedDistrict=""
-                           onDivisionSelect={() => {}}
                            selectedDivision=""
                        />
                        <PostOfficeTable postOffices={postOffices.sort((a,b) => a.officename.localeCompare(b.officename))} />
