@@ -61,7 +61,6 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                                     "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
                                     selectedDistrict === district && "text-primary font-bold"
                                 )}
-                                onClick={() => onDistrictSelect(district)}
                             >
                                 <Link href={districtUrl}>{district}</Link>
                             </Button>
