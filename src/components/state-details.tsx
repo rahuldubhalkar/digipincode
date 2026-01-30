@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useMemo } from 'react';
@@ -6,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n/use-translation';
+import Link from 'next/link';
 
 interface StateDetailsProps {
     selectedState: string;
@@ -40,25 +42,31 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
     if (!selectedState || !allPostOffices.length) {
         return null;
     }
+    
+    const stateUrlPart = selectedState.replace(/ /g, '-').toLowerCase();
 
     return (
         <Card className="border-none shadow-none">
             <CardContent className="p-0 space-y-4">
-                 <p className="text-sm text-muted-foreground">Click on any City/Division below to filter results:</p>
+                 <p className="text-sm text-muted-foreground">Click on any City/Division below to filter results or view a dedicated page:</p>
                 <div className="flex flex-wrap gap-x-4 gap-y-2">
-                    {districts.map(district => (
-                        <Button
-                            key={district}
-                            variant="link"
-                            className={cn(
-                                "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
-                                selectedDistrict === district && "text-primary font-bold"
-                            )}
-                            onClick={() => onDistrictSelect(district)}
-                        >
-                            {district}
-                        </Button>
-                    ))}
+                    {districts.map(district => {
+                        const districtUrl = `/state/${stateUrlPart}/${district.replace(/ /g, '-').toLowerCase()}`;
+                        return (
+                            <Button
+                                key={district}
+                                variant="link"
+                                asChild
+                                className={cn(
+                                    "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
+                                    selectedDistrict === district && "text-primary font-bold"
+                                )}
+                                onClick={() => onDistrictSelect(district)}
+                            >
+                                <Link href={districtUrl}>{district}</Link>
+                            </Button>
+                        )
+                    })}
                 </div>
 
                 {divisions.length > 0 && (

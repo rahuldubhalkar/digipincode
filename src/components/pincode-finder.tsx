@@ -6,14 +6,6 @@ import type { PostOffice } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
   Card,
   CardContent,
   CardDescription,
@@ -32,14 +24,13 @@ import { Search, X } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useTranslation } from '@/lib/i18n/use-translation';
 import { StateDetails } from './state-details';
+import { PostOfficeTable } from './post-office-table';
 
 export interface PincodeFinderProps {
   states: string[];
-  selectedStateFromZone?: string;
-  onClear: () => void;
 }
 
-function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: PincodeFinderProps) {
+function PincodeFinderComponent({ states }: PincodeFinderProps) {
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
 
@@ -54,12 +45,6 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
   
   const [isLoadingStateData, setIsLoadingStateData] = useState(false);
 
-  useEffect(() => {
-    if (selectedStateFromZone) {
-      handleStateChange(selectedStateFromZone);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStateFromZone]);
 
   const applyFilters = useCallback((offices: PostOffice[]) => {
     let filtered = offices;
@@ -137,7 +122,6 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
   };
   
   const clearFilters = () => {
-    onClear();
     setSelectedState('');
     setSelectedDivision('');
     setSelectedDistrict('');
@@ -221,91 +205,8 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
                     onDivisionSelect={handleDivisionChange}
                     selectedDivision={selectedDivision}
                 />
-                <div className="mt-8 hidden md:block">
-                <ScrollArea className="h-[500px] border rounded-lg">
-                    <Table>
-                    <TableHeader className="sticky top-0 bg-card z-10">
-                        <TableRow>
-                        <TableHead>{t('table.officeName')}</TableHead>
-                        <TableHead>{t('table.pincode')}</TableHead>
-                        <TableHead>{t('table.officeType')}</TableHead>
-                        <TableHead>{t('table.division')}</TableHead>
-                        <TableHead>{t('table.region')}</TableHead>
-                        <TableHead>{t('table.circle')}</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {(isPending || isLoadingStateData) ? (
-                        <TableRow>
-                            <TableCell colSpan={6}>
-                            <div className="space-y-2 p-4">
-                                <Skeleton className="h-8 w-full" />
-                                <Skeleton className="h-8 w-full" />
-                                <Skeleton className="h-8 w-full" />
-                            </div>
-                            </TableCell>
-                        </TableRow>
-                        ) : filteredPostOffices.length > 0 ? (
-                        filteredPostOffices.map((po, index) => (
-                            <TableRow key={`${po.officename}-${po.pincode}-${index}`}>
-                            <TableCell className="font-medium">{po.officename}</TableCell>
-                            <TableCell>{po.pincode}</TableCell>
-                            <TableCell>{po.officetype}</TableCell>
-                            <TableCell>{po.divisionname}</TableCell>
-                            <TableCell>{po.regionname}</TableCell>
-                            <TableCell>{po.circlename}</TableCell>
-                            </TableRow>
-                        ))
-                        ) : (
-                        <TableRow>
-                            <TableCell colSpan={6} className="h-24 text-center">
-                                {isAnyFilterActive ? t('home.noResults') : t('home.selectFilter')}
-                            </TableCell>
-                        </TableRow>
-                        )}
-                    </TableBody>
-                    </Table>
-                </ScrollArea>
-                </div>
-                <div className="mt-8 block md:hidden">
-                    <ScrollArea className="h-[500px]">
-                        <div className="space-y-4">
-                        {(isPending || isLoadingStateData) ? (
-                            <div className='space-y-4'>
-                                <Skeleton className="h-32 w-full" />
-                                <Skeleton className="h-32 w-full" />
-                                <Skeleton className="h-32 w-full" />
-                            </div>
-                        ) : filteredPostOffices.length > 0 ? (
-                            filteredPostOffices.map((po, index) => (
-                                <Card key={`${po.officename}-${po.pincode}-${index}`} className="border rounded-lg p-4">
-                                    <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                                        <div className="font-semibold col-span-2 text-base">{po.officename}</div>
-                                        
-                                        <div className="text-muted-foreground">{t('table.pincode')}</div>
-                                        <div>{po.pincode}</div>
-                                        
-                                        <div className="text-muted-foreground">{t('table.officeType')}</div>
-                                        <div>{po.officetype}</div>
-                                        
-                                        <div className="text-muted-foreground">{t('table.division')}</div>
-                                        <div>{po.divisionname}</div>
-
-                                        <div className="text-muted-foreground">{t('table.region')}</div>
-                                        <div>{po.regionname}</div>
-
-                                        <div className="text-muted-foreground">{t('table.circle')}</div>
-                                        <div>{po.circlename}</div>
-                                    </div>
-                                </Card>
-                            ))
-                        ) : (
-                            <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
-                                {isAnyFilterActive ? t('home.noResults') : t('home.selectFilter')}
-                            </div>
-                        )}
-                        </div>
-                    </ScrollArea>
+                <div className="mt-8">
+                    <PostOfficeTable postOffices={filteredPostOffices} searched={isAnyFilterActive} />
                 </div>
                 </>
             )}
