@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getTranslation } from '@/lib/i18n/get-translation';
-import InfoArticles from '@/components/info-articles';
+import ImageArticles from '@/components/image-articles';
 
 function PincodeFinderSkeleton() {
     return (
@@ -79,7 +79,7 @@ export default async function Home() {
         <PincodeFinderWrapper states={states} />
       </Suspense>
 
-      <InfoArticles />
+      <ImageArticles />
       
       <Card className="w-full shadow-lg border-none">
           <CardHeader>
