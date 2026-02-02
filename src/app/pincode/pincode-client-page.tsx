@@ -23,7 +23,6 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTranslation } from "@/lib/i18n/use-translation";
 
 type PincodeToStateMap = {
   [key: string]: string[];
@@ -54,7 +53,6 @@ async function findPostOfficesByPincode(pincode: string, pincodeMap: PincodeToSt
 }
 
 export function PincodeClientPage() {
-  const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
   const [pincode, setPincode] = useState("");
   const [postOffices, setPostOffices] = useState<PostOffice[]>([]);
@@ -89,16 +87,16 @@ export function PincodeClientPage() {
     <main className="container mx-auto px-4 py-8">
       <Card className="w-full max-w-4xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-3xl">{t('pincodePage.title')}</CardTitle>
+          <CardTitle className="text-3xl">Find Post Office by PIN Code</CardTitle>
           <CardDescription>
-            {t('pincodePage.description')}
+            Enter any 6-digit Indian Postal PIN Code to instantly find Post Office details online. Our fast Pincode search tool provides an accurate post office list for all postal codes in India.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-8">
           <div className="flex w-full max-w-sm items-center space-x-2">
             <Input
               type="text"
-              placeholder={t('pincodePage.placeholder')}
+              placeholder="Enter 6-digit PIN Code"
               value={pincode}
               onChange={(e) => setPincode(e.target.value.replace(/[^0-9]/g, ''))}
               maxLength={6}
@@ -106,7 +104,7 @@ export function PincodeClientPage() {
             />
             <Button type="button" onClick={handleSearch} disabled={isPending || isLoadingData || pincode.length !== 6}>
               <Search className="mr-2 h-4 w-4" />
-              {isPending ? t('pincodePage.searching') : t('pincodePage.search')}
+              {isPending ? "Searching..." : "Search Pincode"}
             </Button>
           </div>
 
@@ -116,14 +114,14 @@ export function PincodeClientPage() {
                 <Table>
                   <TableHeader className="sticky top-0 bg-card">
                     <TableRow>
-                      <TableHead>{t('table.officeName')}</TableHead>
-                      <TableHead>{t('table.pincode')}</TableHead>
-                      <TableHead>{t('table.officeType')}</TableHead>
-                      <TableHead>{t('table.taluka')}</TableHead>
-                      <TableHead>{t('table.state')}</TableHead>
-                      <TableHead>{t('table.division')}</TableHead>
-                      <TableHead>{t('table.region')}</TableHead>
-                      <TableHead>{t('table.circle')}</TableHead>
+                      <TableHead>Office Name</TableHead>
+                      <TableHead>Pincode</TableHead>
+                      <TableHead>Office Type</TableHead>
+                      <TableHead>Taluka</TableHead>
+                      <TableHead>State</TableHead>
+                      <TableHead>Division</TableHead>
+                      <TableHead>Region</TableHead>
+                      <TableHead>Circle</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -156,8 +154,8 @@ export function PincodeClientPage() {
                       <TableRow>
                         <TableCell colSpan={8} className="h-24 text-center">
                           {searched
-                            ? t('pincodePage.noResults')
-                            : t('pincodePage.startSearch')}
+                            ? "No Post Office found for this pincode. Please check the postal code and try again."
+                            : "Enter a pincode to start an India PIN Code search."}
                         </TableCell>
                       </TableRow>
                     )}
@@ -180,25 +178,25 @@ export function PincodeClientPage() {
                                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                                     <div className="font-semibold col-span-2 text-base">{po.officename}</div>
                                     
-                                    <div className="text-muted-foreground">{t('table.pincode')}</div>
+                                    <div className="text-muted-foreground">Pincode</div>
                                     <div>{po.pincode}</div>
                                     
-                                    <div className="text-muted-foreground">{t('table.officeType')}</div>
+                                    <div className="text-muted-foreground">Office Type</div>
                                     <div>{po.officetype}</div>
 
-                                    <div className="text-muted-foreground">{t('table.taluka')}</div>
+                                    <div className="text-muted-foreground">Taluka</div>
                                     <div>{po.Taluk}</div>
                                     
-                                    <div className="text-muted-foreground">{t('table.state')}</div>
+                                    <div className="text-muted-foreground">State</div>
                                     <div>{po.statename}</div>
 
-                                    <div className="text-muted-foreground">{t('table.division')}</div>
+                                    <div className="text-muted-foreground">Division</div>
                                     <div>{po.divisionname}</div>
 
-                                    <div className="text-muted-foreground">{t('table.region')}</div>
+                                    <div className="text-muted-foreground">Region</div>
                                     <div>{po.regionname}</div>
 
-                                    <div className="text-muted-foreground">{t('table.circle')}</div>
+                                    <div className="text-muted-foreground">Circle</div>
                                     <div>{po.circlename}</div>
                                 </div>
                             </Card>
@@ -206,8 +204,8 @@ export function PincodeClientPage() {
                     ) : (
                         <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
                             {searched
-                            ? t('pincodePage.noResults')
-                            : t('pincodePage.startSearch')}
+                            ? "No Post Office found for this pincode. Please check the postal code and try again."
+                            : "Enter a pincode to start an India PIN Code search."}
                         </div>
                     )}
                     </div>

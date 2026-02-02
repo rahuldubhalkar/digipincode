@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useTranslation } from "@/lib/i18n/use-translation";
 
 interface PostOfficeTableProps {
     postOffices: PostOffice[];
@@ -20,9 +19,7 @@ interface PostOfficeTableProps {
 }
 
 export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTableProps) {
-    const { t } = useTranslation();
-
-    const noResultsMessage = searched ? t('home.noResults') : t('home.selectFilter');
+    const noResultsMessage = searched ? "No Post Office found. Try adjusting your filters." : "Select a state to begin your post office search and see a list of all post offices.";
 
     return (
         <div className="w-full">
@@ -31,11 +28,11 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                 <Table>
                   <TableHeader className="sticky top-0 bg-card z-10">
                     <TableRow>
-                      <TableHead>{t('table.officeName')}</TableHead>
-                      <TableHead>{t('table.pincode')}</TableHead>
-                      <TableHead>{t('table.officeType')}</TableHead>
-                      <TableHead>{t('table.district')}</TableHead>
-                      <TableHead>{t('table.state')}</TableHead>
+                      <TableHead>Office Name</TableHead>
+                      <TableHead>Pincode</TableHead>
+                      <TableHead>Office Type</TableHead>
+                      <TableHead>District</TableHead>
+                      <TableHead>State</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -68,13 +65,13 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                             <Card key={`${po.officename}-${po.pincode}-${index}`} className="border rounded-lg p-4">
                                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                                     <div className="font-semibold col-span-2 text-base">{po.officename}</div>
-                                    <div className="text-muted-foreground">{t('table.pincode')}</div>
+                                    <div className="text-muted-foreground">Pincode</div>
                                     <div>{po.pincode}</div>
-                                    <div className="text-muted-foreground">{t('table.officeType')}</div>
+                                    <div className="text-muted-foreground">Office Type</div>
                                     <div>{po.officetype}</div>
-                                    <div className="text-muted-foreground">{t('table.district')}</div>
+                                    <div className="text-muted-foreground">District</div>
                                     <div>{po.district}</div>
-                                    <div className="text-muted-foreground">{t('table.state')}</div>
+                                    <div className="text-muted-foreground">State</div>
                                     <div>{po.statename}</div>
                                 </div>
                             </Card>

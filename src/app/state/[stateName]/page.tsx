@@ -3,7 +3,6 @@ import { getStates } from '@/lib/data';
 import { PostOffice } from '@/lib/types';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { getTranslation } from '@/lib/i18n/get-translation';
 import { StateDetails } from '@/components/state-details';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -33,7 +32,6 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: { stateName: string } }) {
     const stateName = params.stateName.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    const t = await getTranslation('en');
 
     return {
         title: `All Pincodes in ${stateName} - India Post Pincode`,
@@ -51,7 +49,6 @@ export default async function StatePage({ params }: { params: { stateName: strin
     }
     
     const postOffices = await getPostOfficesByState(stateNameParam);
-    const t = await getTranslation('en');
     const stateName = stateNameParam.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
     return (

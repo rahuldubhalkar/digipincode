@@ -11,19 +11,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useTranslation } from "@/lib/i18n/use-translation";
 import { Loader } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Dynamically import the map component to prevent SSR issues
 const LocationMap = dynamic(() => import("@/components/location-map"), {
   ssr: false,
   loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />,
 });
 
 export function LocationClientPage() {
-  const { t } = useTranslation();
   const [location, setLocation] = useState<{
     latitude: number;
     longitude: number;
@@ -38,7 +35,7 @@ export function LocationClientPage() {
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
-      setError(t("location.geolocationNotSupported"));
+      setError("Geolocation is not supported by your browser.");
       return;
     }
 
@@ -56,16 +53,16 @@ export function LocationClientPage() {
         setIsLoading(false);
       },
       (err) => {
-        let errorMessage = t("location.error.generic");
+        let errorMessage = "An unknown error occurred while trying to get your location.";
         switch (err.code) {
           case err.PERMISSION_DENIED:
-            errorMessage = t("location.error.permissionDenied");
+            errorMessage = "Permission to access location was denied. Please check your browser settings.";
             break;
           case err.POSITION_UNAVAILABLE:
-            errorMessage = t("location.error.positionUnavailable");
+            errorMessage = "Location information is unavailable.";
             break;
           case err.TIMEOUT:
-            errorMessage = t("location.error.timeout");
+            errorMessage = "The request to get user location timed out.";
             break;
         }
         setError(errorMessage);
@@ -78,8 +75,8 @@ export function LocationClientPage() {
     <main className="container mx-auto px-4 py-8">
       <Card className="w-full max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-3xl">{t("location.title")}</CardTitle>
-          <CardDescription>{t("location.description")}</CardDescription>
+          <CardTitle className="text-3xl">Find My Location</CardTitle>
+          <CardDescription>Click the button below to get your current geographic coordinates. You may need to grant location permissions in your browser.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex justify-center">
@@ -91,17 +88,17 @@ export function LocationClientPage() {
               {isLoading ? (
                 <>
                   <Loader className="mr-2 h-5 w-5 animate-spin" />
-                  {t("location.loading")}
+                  Fetching Location...
                 </>
               ) : (
-                t("location.button")
+                "Get My Current Location"
               )}
             </Button>
           </div>
 
           {error && (
             <Alert variant="destructive">
-              <AlertTitle>{t("location.error.title")}</AlertTitle>
+              <AlertTitle>Location Error</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
@@ -110,15 +107,15 @@ export function LocationClientPage() {
              <div className="space-y-4">
               <div className="text-center p-6 bg-muted rounded-lg">
                 <h3 className="text-lg font-semibold mb-2">
-                  {t("location.yourLocation")}
+                  Your Current Location
                 </h3>
                 <div className="font-mono text-lg space-y-2">
                   <p>
-                    <span className="font-semibold">{t("location.latitude")}:</span>{" "}
+                    <span className="font-semibold">Latitude:</span>{" "}
                     {location.latitude.toFixed(6)}
                   </p>
                   <p>
-                    <span className="font-semibold">{t("location.longitude")}:</span>{" "}
+                    <span className="font-semibold">Longitude:</span>{" "}
                     {location.longitude.toFixed(6)}
                   </p>
                 </div>
