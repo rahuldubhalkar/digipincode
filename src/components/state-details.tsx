@@ -85,7 +85,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                     })}
                 </div>
 
-                {divisions.length > 0 && (
+                {divisions.length > 0 && onDivisionSelect && (
                     <div className="flex flex-wrap gap-x-4 gap-y-2">
                         {divisions.map(division => (
                            <Button
@@ -95,8 +95,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                                 "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
                                 selectedDivision === division && "text-primary font-bold"
                             )}
-                            onClick={onDivisionSelect ? () => onDivisionSelect(division) : undefined}
-                            disabled={!onDivisionSelect}
+                            onClick={() => onDivisionSelect(division)}
                         >
                             {division}
                         </Button>
