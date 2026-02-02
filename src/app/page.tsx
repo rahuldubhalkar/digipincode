@@ -1,37 +1,13 @@
 
 
-import { PincodeFinderWrapper } from '@/components/pincode-finder-wrapper';
 import { getStates } from '@/lib/data';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { getTranslation } from '@/lib/i18n/get-translation';
 import ImageArticles from '@/components/image-articles';
+import { PincodeZoneList } from '@/components/pincode-zone-list';
+import { SearchForm } from '@/components/search-form';
 
-function PincodeFinderSkeleton() {
-    return (
-        <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Skeleton className="h-10 w-full" />
-                <Skeleton className="h-10 w-full" />
-                <Skeleton className="h-10 w-full" />
-                <Skeleton className="h-10 w-full" />
-            </div>
-            <div className="flex justify-center pt-4">
-                <Skeleton className="h-10 w-28" />
-            </div>
-            <div className="max-w-3xl mx-auto border rounded-lg p-6">
-                <Skeleton className="h-8 w-1/2 mx-auto mb-4" />
-                <div className="space-y-2">
-                    <Skeleton className="h-12 w-full" />
-                    <Skeleton className="h-12 w-full" />
-                    <Skeleton className="h-12 w-full" />
-                </div>
-            </div>
-      </div>
-    )
-}
 
 async function getFaqItems(t: (key: string) => string) {
     return [
@@ -75,13 +51,21 @@ export default async function Home() {
 
   return (
     <main className="container mx-auto px-4 py-8 space-y-12">
-       <Suspense fallback={<PincodeFinderSkeleton />}>
-        <PincodeFinderWrapper states={states} />
-      </Suspense>
+        <Card className="w-full shadow-lg border-none">
+            <CardHeader className="text-center">
+                <CardTitle className="text-3xl font-headline tracking-tight text-primary">{t('home.title')}</CardTitle>
+                <CardDescription>{t('home.description')}</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <SearchForm states={states} />
+            </CardContent>
+        </Card>
 
-      <ImageArticles />
+        <PincodeZoneList />
+
+        <ImageArticles />
       
-      <Card className="w-full shadow-lg border-none">
+        <Card className="w-full shadow-lg border-none">
           <CardHeader>
             <CardTitle className="text-2xl font-headline tracking-tight text-center">{faqTitle}</CardTitle>
           </CardHeader>
