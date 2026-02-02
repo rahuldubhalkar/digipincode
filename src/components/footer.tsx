@@ -6,7 +6,7 @@ import { useTranslation } from "@/lib/i18n/use-translation";
 import { useState, useEffect } from "react";
 
 export default function Footer() {
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [currentYear, setCurrentYear] = useState<number | null>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
