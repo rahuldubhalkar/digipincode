@@ -6,36 +6,38 @@ import { pincodeZones } from "@/lib/pincode-zones";
 import Link from "next/link";
 
 export function PincodeZoneList() {
-  const stateMapping: { [key: string]: string } = {
-      "Delhi": "DELHI",
-      "Haryana": "HARYANA",
-      "Punjab": "PUNJAB",
-      "Himachal Pradesh": "HIMACHAL PRADESH",
-      "Jammu & Kashmir": "JAMMU AND KASHMIR",
-      "Uttar Pradesh": "UTTAR PRADESH",
-      "Rajasthan": "RAJASTHAN",
-      "Gujarat": "GUJARAT",
-      "Maharashtra": "MAHARASHTRA",
-      "Madhya Pradesh": "MADHYA PRADESH",
-      "Chhattisgarh": "CHHATTISGARH",
-      "Andhra Pradesh": "ANDHRA PRADESH",
-      "TELANGANA": "TELANGANA",
-      "Karnataka": "KARNATAKA",
-      "Tamil Nadu": "TAMIL NADU",
-      "Kerala": "KERALA",
-      "Lakshadweep": "LAKSHADWEEP",
-      "West Bengal": "WEST BENGAL",
-      "Andaman & Nicobar": "ANDAMAN AND NICOBAR ISLANDS",
-      "Orissa": "ODISHA",
-      "Assam": "ASSAM",
-      "Arunachal Pradesh": "ARUNACHAL PRADESH",
-      "Manipur": "MANIPUR",
-      "Meghalaya": "MEGHALAYA",
-      "Mizoram": "MIZORAM",
-      "Nagaland": "NAGALAND",
-      "Tripura": "TRIPURA",
-      "Bihar": "BIHAR",
-      "Jharkhand": "JHARKHAND",
+  // This mapping connects the 'circle' from pincodeZones to the URL slug
+  // generated for the static state pages.
+  const circleToSlugMap: { [key: string]: string } = {
+      "Delhi": "delhi",
+      "Haryana": "haryana",
+      "Punjab": "punjab",
+      "Himachal Pradesh": "himachal-pradesh",
+      "Jammu & Kashmir": "jammu-and-kashmir",
+      "Uttar Pradesh": "uttar-pradesh",
+      "Rajasthan": "rajasthan",
+      "Gujarat": "gujarat",
+      "Maharashtra": "maharashtra",
+      "Madhya Pradesh": "madhya-pradesh",
+      "Chhattisgarh": "chhattisgarh",
+      "Andhra Pradesh": "andhra-pradesh",
+      "TELANGANA": "telangana",
+      "Karnataka": "karnataka",
+      "Tamil Nadu": "tamil-nadu",
+      "Kerala": "kerala",
+      "Lakshadweep": "lakshadweep",
+      "West Bengal": "west-bengal",
+      "Andaman & Nicobar": "andaman-and-nicobar-islands",
+      "Orissa": "odisha",
+      "Assam": "assam",
+      "Arunachal Pradesh": "arunachal-pradesh",
+      "Manipur": "manipur",
+      "Meghalaya": "meghalaya",
+      "Mizoram": "mizoram",
+      "Nagaland": "nagaland",
+      "Tripura": "tripura",
+      "Bihar": "bihar",
+      "Jharkhand": "jharkhand",
     };
 
   return (
@@ -46,8 +48,12 @@ export function PincodeZoneList() {
       <CardContent>
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-3 text-sm">
           {pincodeZones.map((zone) => {
-             const officialStateName = stateMapping[zone.circle] || zone.circle.toUpperCase();
-             const stateUrl = `/state/${officialStateName.replace(/ /g, '-').toLowerCase()}`;
+             const stateSlug = circleToSlugMap[zone.circle];
+             if (!stateSlug) {
+                 // Skip rendering if no mapping is found to prevent broken links
+                 return null;
+             }
+             const stateUrl = `/state/${stateSlug}`;
             return (
                 <li key={zone.id} className="flex items-start">
                 <span className="font-semibold text-muted-foreground w-16 flex-shrink-0">{zone.digits}</span>
