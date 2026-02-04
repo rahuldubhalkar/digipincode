@@ -1,9 +1,9 @@
+
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
  // IMPORTANT: Set output to 'export' for static hosting
  output: 'export',
- assetPrefix: './',
  experimental: {
   // allowedDevOrigins: ["https://6000-firebase-studio-1765984807570.cluster-sumfw3zmzzhzkx4mpvz3ogth4y.cloudworkstations.dev"],
  },
