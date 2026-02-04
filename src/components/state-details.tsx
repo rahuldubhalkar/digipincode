@@ -27,8 +27,12 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
         const divisionSet = new Set<string>();
         
         allPostOffices.forEach(po => {
-            districtSet.add(po.district);
-            divisionSet.add(po.divisionname);
+            if (po.district) {
+                districtSet.add(po.district);
+            }
+            if (po.divisionname) {
+                divisionSet.add(po.divisionname);
+            }
         });
         
         return {
