@@ -22,6 +22,8 @@ export function SearchForm({ states, initialState = '', initialSearchTerm = '', 
   const [selectedState, setSelectedState] = useState(initialState);
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [letter, setLetter] = useState(initialLetter);
+  
+  const alphabets = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,12 +80,18 @@ export function SearchForm({ states, initialState = '', initialSearchTerm = '', 
 
         <div className="space-y-2">
             <label className="text-sm font-medium">Filter by First Letter</label>
-            <Input
-                placeholder="e.g. A"
-                value={letter}
-                onChange={e => setLetter(e.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase())}
-                maxLength={1}
-            />
+            <Select onValueChange={setLetter} value={letter}>
+                <SelectTrigger className="w-full">
+                    <SelectValue placeholder="e.g. A" />
+                </SelectTrigger>
+                <SelectContent>
+                    <ScrollArea className="h-72">
+                        {alphabets.map((alpha) => (
+                            <SelectItem key={alpha} value={alpha}>{alpha}</SelectItem>
+                        ))}
+                    </ScrollArea>
+              </SelectContent>
+            </Select>
         </div>
 
         <div className="flex gap-2">
