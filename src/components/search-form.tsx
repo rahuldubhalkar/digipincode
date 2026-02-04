@@ -13,13 +13,15 @@ interface SearchFormProps {
   states: string[];
   initialState?: string;
   initialSearchTerm?: string;
+  initialLetter?: string;
 }
 
-export function SearchForm({ states, initialState = '', initialSearchTerm = '' }: SearchFormProps) {
+export function SearchForm({ states, initialState = '', initialSearchTerm = '', initialLetter = '' }: SearchFormProps) {
   const router = useRouter();
 
   const [selectedState, setSelectedState] = useState(initialState);
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+  const [letter, setLetter] = useState(initialLetter);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,18 +31,22 @@ export function SearchForm({ states, initialState = '', initialSearchTerm = '' }
     if (searchTerm) {
       params.set('q', searchTerm);
     }
+    if (letter) {
+      params.set('letter', letter);
+    }
     router.push(`/search?${params.toString()}`);
   };
 
   const clearSearch = () => {
       setSelectedState('');
       setSearchTerm('');
+      setLetter('');
       router.push('/');
   }
 
   return (
     <form onSubmit={handleSearch} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
         <div className="space-y-2">
             <label className="text-sm font-medium">Select a State to Find Pincode</label>
             <Select onValueChange={setSelectedState} value={selectedState}>
@@ -70,14 +76,24 @@ export function SearchForm({ states, initialState = '', initialSearchTerm = '' }
             </div>
         </div>
 
+        <div className="space-y-2">
+            <label className="text-sm font-medium">Filter by First Letter</label>
+            <Input
+                placeholder="e.g. A"
+                value={letter}
+                onChange={e => setLetter(e.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase())}
+                maxLength={1}
+            />
+        </div>
+
         <div className="flex gap-2">
             <Button type="submit" disabled={!selectedState} className="w-full">
               <Search className="mr-2 h-4 w-4" />
-              Search Pincode
+              Search
             </Button>
              <Button type="button" variant="outline" onClick={clearSearch} className="text-primary hover:text-primary">
               <X className="mr-2 h-4 w-4" />
-              Clear All Filters
+              Clear
             </Button>
         </div>
       </div>
