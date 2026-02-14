@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -38,25 +37,36 @@ export function SearchForm({
   useEffect(() => {
     if (!selectedState) {
       setDistricts([]);
+      setSelectedDistrict(''); // Also reset selected district
       return;
     }
 
-    let isSubscribed = true;
-    fetch(`/data/${selectedState}.json`)
-      .then(res => res.json())
-      .then((postOffices: PostOffice[]) => {
-        if (isSubscribed) {
+    let isMounted = true;
+    
+    const fetchDistricts = async () => {
+      try {
+        const response = await fetch(`/data/${selectedState}.json`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch');
+        }
+        const postOffices: PostOffice[] = await response.json();
+        if (isMounted) {
           const uniqueDistricts = [...new Set(postOffices.map(po => po.district).filter(Boolean))].sort();
           setDistricts(uniqueDistricts);
         }
-      })
-      .catch(error => {
-        if (isSubscribed) {
+      } catch (error) {
+        if (isMounted) {
+          console.error('Failed to load districts for state:', selectedState, error);
           setDistricts([]);
         }
-      });
-    
-    return () => { isSubscribed = false; };
+      }
+    };
+
+    fetchDistricts();
+
+    return () => {
+      isMounted = false;
+    };
   }, [selectedState]);
 
   const handleStateChange = (state: string) => {
@@ -111,7 +121,7 @@ export function SearchForm({
 
         <div className="space-y-2">
             <label className="text-sm font-medium">Select a District</label>
-            <Select onValueChange={setSelectedDistrict} value={selectedDistrict} disabled={!selectedState || districts.length === 0} suppressHydrationWarning>
+            <Select onValueChange={setSelectedDistrict} value={selectedDistrict} disabled={!selectedState} suppressHydrationWarning>
                 <SelectTrigger className="w-full" suppressHydrationWarning>
                     <SelectValue placeholder="Select a District" />
                 </SelectTrigger>
