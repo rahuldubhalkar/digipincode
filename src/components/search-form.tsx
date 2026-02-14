@@ -32,6 +32,7 @@ export function SearchForm({
   const [selectedDistrict, setSelectedDistrict] = useState(initialDistrict);
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [letter, setLetter] = useState(initialLetter);
+  const [districtSelectKey, setDistrictSelectKey] = useState(Date.now());
   
   const alphabets = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 
@@ -54,10 +55,12 @@ export function SearchForm({
         const postOffices: PostOffice[] = await response.json();
         const uniqueDistricts = [...new Set(postOffices.map(po => po.district).filter(Boolean))].sort();
         setDistricts(uniqueDistricts);
+        setDistrictSelectKey(Date.now()); // Force re-render of Select
       } catch (error) {
         if (error instanceof Error && error.name !== 'AbortError') {
           console.error('Failed to load districts for state:', selectedState, error);
           setDistricts([]);
+          setDistrictSelectKey(Date.now());
         }
       }
     };
@@ -121,7 +124,7 @@ export function SearchForm({
 
         <div className="space-y-2">
             <label className="text-sm font-medium">Select a District</label>
-            <Select onValueChange={setSelectedDistrict} value={selectedDistrict} disabled={!selectedState} suppressHydrationWarning>
+            <Select key={districtSelectKey} onValueChange={setSelectedDistrict} value={selectedDistrict} disabled={!selectedState} suppressHydrationWarning>
                 <SelectTrigger className="w-full" suppressHydrationWarning>
                     <SelectValue placeholder="Select a District" />
                 </SelectTrigger>
