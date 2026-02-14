@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -37,25 +38,24 @@ export function SearchForm({
   useEffect(() => {
     if (!selectedState) {
       setDistricts([]);
-      setSelectedDistrict(''); // Also reset selected district
+      setSelectedDistrict('');
       return;
     }
 
-    let isMounted = true;
+    const controller = new AbortController();
+    const signal = controller.signal;
     
     const fetchDistricts = async () => {
       try {
-        const response = await fetch(`/data/${selectedState}.json`);
+        const response = await fetch(`/data/${selectedState}.json`, { signal });
         if (!response.ok) {
-          throw new Error('Failed to fetch');
+          throw new Error('Failed to fetch districts');
         }
         const postOffices: PostOffice[] = await response.json();
-        if (isMounted) {
-          const uniqueDistricts = [...new Set(postOffices.map(po => po.district).filter(Boolean))].sort();
-          setDistricts(uniqueDistricts);
-        }
+        const uniqueDistricts = [...new Set(postOffices.map(po => po.district).filter(Boolean))].sort();
+        setDistricts(uniqueDistricts);
       } catch (error) {
-        if (isMounted) {
+        if (error instanceof Error && error.name !== 'AbortError') {
           console.error('Failed to load districts for state:', selectedState, error);
           setDistricts([]);
         }
@@ -65,7 +65,7 @@ export function SearchForm({
     fetchDistricts();
 
     return () => {
-      isMounted = false;
+      controller.abort();
     };
   }, [selectedState]);
 
