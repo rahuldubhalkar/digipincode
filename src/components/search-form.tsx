@@ -36,21 +36,28 @@ export function SearchForm({
   const alphabets = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 
   useEffect(() => {
-    if (selectedState) {
-      fetch(`/data/${selectedState}.json`)
-        .then(res => res.json())
-        .then((postOffices: PostOffice[]) => {
+    if (!selectedState) {
+      setDistricts([]);
+      return;
+    }
+
+    let isSubscribed = true;
+    fetch(`/data/${selectedState}.json`)
+      .then(res => res.json())
+      .then((postOffices: PostOffice[]) => {
+        if (isSubscribed) {
           const uniqueDistricts = [...new Set(postOffices.map(po => po.district).filter(Boolean))].sort();
           setDistricts(uniqueDistricts);
-          if (initialDistrict && !uniqueDistricts.includes(initialDistrict)) {
-            setSelectedDistrict('');
-          }
-        });
-    } else {
-      setDistricts([]);
-      setSelectedDistrict('');
-    }
-  }, [selectedState, initialDistrict]);
+        }
+      })
+      .catch(error => {
+        if (isSubscribed) {
+          setDistricts([]);
+        }
+      });
+    
+    return () => { isSubscribed = false; };
+  }, [selectedState]);
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
