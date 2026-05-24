@@ -1,0 +1,16 @@
+{
+  "name": "India Post Pincode",
+  "short_name": "Pincode Finder",
+  "description": "The complete India Post Office PIN code directory. Use our fast and accurate postal code search tool to find any pincode by state, district, or post office name.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#4B0082",
+  "theme_color": "#4B0082",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
