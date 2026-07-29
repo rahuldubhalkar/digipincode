@@ -6,11 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { StateDetails } from '@/components/state-details';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home } from 'lucide-react';
+import { Home, MapPin } from 'lucide-react';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { PostOfficeTable } from '@/components/post-office-table';
-
 
 async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
     try {
@@ -34,11 +33,10 @@ export async function generateMetadata({ params }: { params: { stateName: string
     const stateName = params.stateName.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
     return {
-        title: `All Pincodes in ${stateName} - India Post Pincode`,
-        description: `Find a complete list of all Post Office PIN codes in ${stateName}. Search by district or post office name in our comprehensive Indian postal code directory.`,
+        title: `All Post Office Pincodes in ${stateName} | India Post Directory`,
+        description: `Browse the complete list of post offices and PIN codes in ${stateName}. Find postal details for all districts in ${stateName} including office type, division, and delivery status.`,
     };
 }
-
 
 export default async function StatePage({ params }: { params: { stateName: string } }) {
     const stateNameParam = params.stateName.replace(/-/g, ' ').toUpperCase();
@@ -53,13 +51,23 @@ export default async function StatePage({ params }: { params: { stateName: strin
 
     return (
         <main className="container mx-auto px-4 py-8 space-y-8">
-            <Card>
-                <CardHeader>
+            <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-4">
+                <Link href="/" className="hover:text-primary flex items-center gap-1">
+                    <Home className="h-4 w-4" /> Home
+                </Link>
+                <span>/</span>
+                <span className="text-foreground font-medium">{stateName}</span>
+            </nav>
+
+            <Card className="border-none shadow-lg">
+                <CardHeader className="bg-primary/5 rounded-t-lg">
                     <div className="flex justify-between items-start flex-wrap gap-4">
-                        <div>
-                             <CardTitle className="text-3xl">Post Offices in {stateName}</CardTitle>
-                             <CardDescription>
-                                A complete list of all post offices and PIN codes in {stateName}.
+                        <div className="space-y-2">
+                             <CardTitle className="text-3xl md:text-4xl text-primary font-bold">
+                                Post Offices in {stateName}
+                             </CardTitle>
+                             <CardDescription className="text-lg">
+                                Access the official directory of all pincodes and postal locations across {stateName}.
                             </CardDescription>
                         </div>
                         <Button variant="outline" asChild>
@@ -70,15 +78,28 @@ export default async function StatePage({ params }: { params: { stateName: strin
                         </Button>
                     </div>
                 </CardHeader>
-                <CardContent>
-                    <div className="space-y-8">
-                       <StateDetails 
-                           selectedState={stateNameParam}
-                           allPostOffices={postOffices}
-                           selectedDistrict=""
-                           selectedDivision=""
-                       />
-                       <PostOfficeTable postOffices={postOffices.sort((a,b) => a.officename.localeCompare(b.officename))} />
+                <CardContent className="pt-8">
+                    <div className="space-y-12">
+                       <section>
+                            <div className="flex items-center gap-2 mb-4">
+                                <MapPin className="text-primary h-6 w-6" />
+                                <h2 className="text-2xl font-semibold">Select a District</h2>
+                            </div>
+                            <StateDetails 
+                                selectedState={stateNameParam}
+                                allPostOffices={postOffices}
+                                selectedDistrict=""
+                                selectedDivision=""
+                            />
+                       </section>
+
+                       <section className="space-y-4">
+                            <h2 className="text-2xl font-semibold">Complete Post Office List</h2>
+                            <p className="text-muted-foreground">
+                                Below is the alphabetical list of all post offices registered in {stateName}. Use the search filters above for specific results.
+                            </p>
+                            <PostOfficeTable postOffices={postOffices.sort((a,b) => a.officename.localeCompare(b.officename))} />
+                       </section>
                     </div>
                 </CardContent>
             </Card>

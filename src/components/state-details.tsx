@@ -49,59 +49,67 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
 
     return (
         <Card className="border-none shadow-none">
-            <CardContent className="p-0 space-y-4">
-                 <p className="text-sm text-muted-foreground">Click on any City/Division below to filter results or view a dedicated page:</p>
-                <div className="flex flex-wrap gap-x-4 gap-y-2">
-                    {districts.map(district => {
-                        // If onDistrictSelect is passed, it's a button for filtering
-                        if (onDistrictSelect) {
+            <CardContent className="p-0 space-y-6">
+                 <div className="space-y-4">
+                    <p className="text-sm font-medium text-muted-foreground">Browse postal information for specific districts in {selectedState}:</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                        {districts.map(district => {
+                            if (!district) return null;
+                            
+                            // If onDistrictSelect is passed, it's a button for filtering
+                            if (onDistrictSelect) {
+                                return (
+                                    <Button
+                                        key={district}
+                                        variant="outline"
+                                        size="sm"
+                                        className={cn(
+                                            "justify-start text-xs h-auto py-2 px-3 whitespace-normal text-left transition-colors",
+                                            selectedDistrict === district 
+                                                ? "bg-primary text-primary-foreground border-primary" 
+                                                : "hover:bg-primary/10 hover:text-primary"
+                                        )}
+                                        onClick={() => onDistrictSelect(district)}
+                                    >
+                                        {district}
+                                    </Button>
+                                )
+                            }
+                            
+                            // If onDistrictSelect is NOT passed, it's a link for navigation
+                            const districtUrl = `/state/${stateUrlPart}/${district.replace(/ /g, '-').toLowerCase()}`;
                             return (
-                                <Button
-                                    key={district}
-                                    variant="link"
-                                    className={cn(
-                                        "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
-                                        selectedDistrict === district && "text-primary font-bold"
-                                    )}
-                                    onClick={() => onDistrictSelect(district)}
+                                <Link 
+                                    key={district} 
+                                    href={districtUrl}
+                                    className="flex items-center p-2 rounded-md border border-input hover:border-primary hover:bg-primary/5 transition-all text-xs font-medium text-muted-foreground hover:text-primary"
                                 >
                                     {district}
-                                </Button>
+                                </Link>
                             )
-                        }
-                        
-                        // If onDistrictSelect is NOT passed, it's a link for navigation
-                        const districtUrl = `/state/${stateUrlPart}/${district.replace(/ /g, '-').toLowerCase()}`;
-                        return (
-                            <Button
-                                key={district}
-                                variant="link"
-                                asChild
-                                className={cn(
-                                    "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline"
-                                )}
-                            >
-                                <Link href={districtUrl}>{district}</Link>
-                            </Button>
-                        )
-                    })}
+                        })}
+                    </div>
                 </div>
 
                 {divisions.length > 0 && onDivisionSelect && (
-                    <div className="flex flex-wrap gap-x-4 gap-y-2">
-                        {divisions.map(division => (
-                           <Button
-                            key={division}
-                            variant="link"
-                            className={cn(
-                                "p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline",
-                                selectedDivision === division && "text-primary font-bold"
-                            )}
-                            onClick={() => onDivisionSelect(division)}
-                        >
-                            {division}
-                        </Button>
-                        ))}
+                    <div className="space-y-2">
+                        <p className="text-sm font-medium text-muted-foreground">Filter by Division:</p>
+                        <div className="flex flex-wrap gap-2">
+                            {divisions.map(division => (
+                            <Button
+                                key={division}
+                                variant="secondary"
+                                size="sm"
+                                className={cn(
+                                    "text-xs px-3 h-8",
+                                    selectedDivision === division && "bg-primary text-primary-foreground"
+                                )}
+                                onClick={() => onDivisionSelect(division)}
+                            >
+                                {division}
+                            </Button>
+                            ))}
+                        </div>
                     </div>
                 )}
             </CardContent>
