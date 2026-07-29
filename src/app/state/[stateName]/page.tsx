@@ -1,4 +1,3 @@
-
 import { getStates } from '@/lib/data';
 import { PostOffice } from '@/lib/types';
 import { notFound } from 'next/navigation';
@@ -13,7 +12,7 @@ import { PostOfficeTable } from '@/components/post-office-table';
 
 async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
     try {
-        const filePath = path.join(process.cwd(), `public/data/${state}.json`);
+        const filePath = path.join(process.cwd(), 'public', 'data', `${state}.json`);
         const fileContent = await fs.readFile(filePath, 'utf-8');
         return JSON.parse(fileContent);
     } catch (error) {
@@ -28,8 +27,11 @@ export async function generateStaticParams() {
     }));
 }
 
-export async function generateMetadata({ params }: any) {
-    const stateName = params.stateName.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+export async function generateMetadata({ params }: { params: Promise<any> }) {
+    const { stateName: stateNameSlug } = await params;
+    if (!stateNameSlug) return { title: 'State Pincode Directory' };
+    
+    const stateName = stateNameSlug.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
     return {
         title: `All PIN Codes in ${stateName} | Post Office Directory`,
@@ -37,8 +39,11 @@ export async function generateMetadata({ params }: any) {
     };
 }
 
-export default async function StatePage({ params }: any) {
-    const stateNameParam = params.stateName.replace(/-/g, ' ').toUpperCase();
+export default async function StatePage({ params }: { params: Promise<any> }) {
+    const { stateName: stateNameSlug } = await params;
+    if (!stateNameSlug) notFound();
+
+    const stateNameParam = stateNameSlug.replace(/-/g, ' ').toUpperCase();
     const states = await getStates();
     
     if (!states.includes(stateNameParam)) {
@@ -69,7 +74,7 @@ export default async function StatePage({ params }: any) {
                                 Complete directory of postal locations and 6-digit PIN codes across all districts in {stateName}.
                             </CardDescription>
                         </div>
-                        <Button variant="outline" asChild>
+                        <Button variant="outline" asChild suppressHydrationWarning>
                             <Link href="/">
                                 <Home className="mr-2 h-4 w-4" />
                                 Home
@@ -100,7 +105,7 @@ export default async function StatePage({ params }: any) {
                             <p className="text-muted-foreground">
                                 Detailed information for all {postOffices.length} post offices registered in the {stateName} circle. Use the district links above to filter the list.
                             </p>
-                            <PostOfficeTable postOffices={postOffices.sort((a,b) => a.officename.localeCompare(b.officename))} />
+                            <PostOfficeTable postOffices={postOffices.sort((a,b) => (a.officename || "").localeCompare(b.officename || ""))} />
                        </section>
                     </div>
                 </CardContent>

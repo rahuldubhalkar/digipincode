@@ -39,10 +39,10 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     'name': 'India Post Pincode',
-    'url': 'https://www.digi-pincode.com', // Replace with your actual domain
+    'url': 'https://www.digi-pincode.com',
     'potentialAction': {
       '@type': 'SearchAction',
-      'target': 'https://www.digi-pincode.com/search?q={search_term_string}', // Replace with your actual search URL
+      'target': 'https://www.digi-pincode.com/search?q={search_term_string}',
       'query-input': 'required name=search_term_string',
     },
   };

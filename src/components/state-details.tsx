@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useMemo } from 'react';
@@ -64,6 +65,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                                         key={district}
                                         variant="outline"
                                         size="sm"
+                                        suppressHydrationWarning
                                         className={cn(
                                             "justify-start text-xs h-auto py-2 px-3 whitespace-normal text-left transition-colors",
                                             selectedDistrict === district 
@@ -101,6 +103,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                                 key={division}
                                 variant="secondary"
                                 size="sm"
+                                suppressHydrationWarning
                                 className={cn(
                                     "text-xs px-3 h-8",
                                     selectedDivision === division && "bg-primary text-primary-foreground"

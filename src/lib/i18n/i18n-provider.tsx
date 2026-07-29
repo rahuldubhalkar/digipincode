@@ -19,7 +19,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState('en');
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('language');
+    const savedLanguage = typeof window !== 'undefined' ? localStorage.getItem('language') : null;
     if (savedLanguage && translations[savedLanguage]) {
       setLanguageState(savedLanguage);
     }
@@ -28,29 +28,25 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const setLanguage = (lang: string) => {
     if (translations[lang]) {
       setLanguageState(lang);
-      localStorage.setItem('language', lang);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('language', lang);
+      }
     }
   };
 
   const t = (key: string, values?: Record<string, string | number>): string => {
     const keys = key.split('.');
-    let result = translations[language];
-    for (const k of keys) {
-      result = result?.[k];
-    }
+    
+    const getFromDict = (dict: any) => {
+      let curr = dict;
+      for (const k of keys) {
+        if (!curr || typeof curr !== 'object') return null;
+        curr = curr[k];
+      }
+      return typeof curr === 'string' ? curr : null;
+    };
 
-    let template: string;
-
-    if (typeof result === 'string') {
-        template = result;
-    } else {
-        // Fallback to English if translation is missing
-        let fallbackResult = translations['en'];
-        for (const k of keys) {
-            fallbackResult = fallbackResult?.[k];
-        }
-        template = fallbackResult || key;
-    }
+    let template = getFromDict(translations[language]) || getFromDict(translations['en']) || key;
 
     if (values) {
       return template.replace(/\{\{(\w+)\}\}/g, (placeholder, placeholderKey) => {

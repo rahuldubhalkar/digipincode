@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next';
 import { getStates } from '@/lib/data';
 import { PostOffice } from '@/lib/types';
@@ -11,7 +10,7 @@ import { SearchForm } from '@/components/search-form';
 async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
     if (!state) return [];
     try {
-        const filePath = path.join(process.cwd(), `public/data/${state}.json`);
+        const filePath = path.join(process.cwd(), 'public', 'data', `${state}.json`);
         const fileContent = await fs.readFile(filePath, 'utf-8');
         return JSON.parse(fileContent);
     } catch (error) {
@@ -20,11 +19,12 @@ async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
     }
 }
 
-export async function generateMetadata({ searchParams }: any): Promise<Metadata> {
-    const state = typeof searchParams.state === 'string' ? searchParams.state : '';
-    const district = typeof searchParams.district === 'string' ? searchParams.district : '';
-    const searchTerm = typeof searchParams.q === 'string' ? searchParams.q : '';
-    const letter = typeof searchParams.letter === 'string' ? searchParams.letter : '';
+export async function generateMetadata({ searchParams }: { searchParams: Promise<any> }): Promise<Metadata> {
+    const sParams = await searchParams;
+    const state = typeof sParams.state === 'string' ? sParams.state : '';
+    const district = typeof sParams.district === 'string' ? sParams.district : '';
+    const searchTerm = typeof sParams.q === 'string' ? sParams.q : '';
+    const letter = typeof sParams.letter === 'string' ? sParams.letter : '';
 
     let title = 'Pincode Search';
     let location = '';
@@ -38,59 +38,55 @@ export async function generateMetadata({ searchParams }: any): Promise<Metadata>
         title = `Search results in ${location}`;
     }
     if(searchTerm) {
-        title += ` for \"${searchTerm}\"`;
+        title += ` for "${searchTerm}"`;
     }
     if(letter) {
-        title += ` starting with \"${letter}\"`;
+        title += ` starting with "${letter}"`;
     }
 
     return {
         title,
         description: `Find pincodes and post office details. Search results for state: ${state}, district: ${district}, query: ${searchTerm}, and letter: ${letter}.`,
-        robots: {
-            index: false, // Don't index search result pages
-            follow: false,
-        }
     };
 }
 
-export default async function SearchPage({ searchParams }: any) {
-    const state = typeof searchParams.state === 'string' ? searchParams.state.toUpperCase() : '';
-    const district = typeof searchParams.district === 'string' ? searchParams.district : '';
-    const searchTerm = typeof searchParams.q === 'string' ? searchParams.q : '';
-    const letter = typeof searchParams.letter === 'string' ? searchParams.letter.toUpperCase() : '';
+export default async function SearchPage({ searchParams }: { searchParams: Promise<any> }) {
+    const sParams = await searchParams;
+    const state = typeof sParams.state === 'string' ? sParams.state.toUpperCase() : '';
+    const district = typeof sParams.district === 'string' ? sParams.district : '';
+    const searchTerm = typeof sParams.q === 'string' ? sParams.q : '';
+    const letter = typeof sParams.letter === 'string' ? sParams.letter.toUpperCase() : '';
 
     const allPostOffices = await getPostOfficesByState(state);
     
     const filteredPostOffices = allPostOffices.filter(po => {
         let matches = true;
         if (district) {
-            matches = matches && po.district.toUpperCase() === district.toUpperCase();
+            matches = matches && (po.district || "").toUpperCase() === district.toUpperCase();
         }
         if (searchTerm) {
-            matches = matches && po.officename.toLowerCase().includes(searchTerm.toLowerCase());
+            matches = matches && (po.officename || "").toLowerCase().includes(searchTerm.toLowerCase());
         }
         if (letter) {
-            matches = matches && po.officename.toUpperCase().startsWith(letter);
+            matches = matches && (po.officename || "").toUpperCase().startsWith(letter);
         }
         return matches;
-    }).sort((a, b) => a.officename.localeCompare(b.officename));
+    }).sort((a, b) => (a.officename || "").localeCompare(b.officename || ""));
     
     const states = await getStates();
     
     let location = '';
-    const districtName = district.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-    const stateName = state.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    const districtName = district ? district.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ') : '';
+    const stateName = state ? state.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ') : '';
 
-    if (district) location += `${districtName}, `;
-    if (state) location += stateName;
-
+    if (districtName) location += `${districtName}, `;
+    if (stateName) location += stateName;
 
     let description = ``;
-    if (searchTerm) description += `Query: \"${searchTerm}\"`;
+    if (searchTerm) description += `Query: "${searchTerm}"`;
     if (letter) {
         if (description) description += `, `;
-        description += `Starting with: \"${letter}\"`;
+        description += `Starting with: "${letter}"`;
     }
 
     return (
@@ -115,8 +111,8 @@ export default async function SearchPage({ searchParams }: any) {
                 <CardHeader>
                     <CardTitle>
                         {filteredPostOffices.length > 0 
-                            ? `Search Results in ${location}`
-                            : `No results found for your search in ${location}`
+                            ? `Search Results in ${location || 'India'}`
+                            : `No results found for your search in ${location || 'India'}`
                         }
                     </CardTitle>
                      {description && <CardDescription>{description}</CardDescription>}

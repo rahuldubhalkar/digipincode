@@ -12,7 +12,7 @@ import { PostOfficeTable } from '@/components/post-office-table';
 
 async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
     try {
-        const filePath = path.join(process.cwd(), `public/data/${state}.json`);
+        const filePath = path.join(process.cwd(), 'public', 'data', `${state}.json`);
         const fileContent = await fs.readFile(filePath, 'utf-8');
         return JSON.parse(fileContent);
     } catch (error) {
@@ -20,16 +20,10 @@ async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
     }
 }
 
-export async function generateStaticParams() {
-    const states = await getStates();
-    // For large builds, we might limit this or pre-render common ones.
-    // For this prototype, we'll keep it targeted.
-    return [];
-}
-
-export async function generateMetadata({ params }: any) {
-    const stateName = params.stateName.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    const districtName = params.districtName.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+export async function generateMetadata({ params }: { params: Promise<any> }) {
+    const { stateName: sNameSlug, districtName: dNameSlug } = await params;
+    const stateName = sNameSlug.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    const districtName = dNameSlug.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
     return {
         title: `PIN Codes in ${districtName}, ${stateName} | District Directory`,
@@ -37,9 +31,10 @@ export async function generateMetadata({ params }: any) {
     };
 }
 
-export default async function DistrictPage({ params }: any) {
-    const stateNameParam = params.stateName.replace(/-/g, ' ').toUpperCase();
-    const districtNameParam = params.districtName.replace(/-/g, ' ').toUpperCase();
+export default async function DistrictPage({ params }: { params: Promise<any> }) {
+    const { stateName: sNameSlug, districtName: dNameSlug } = await params;
+    const stateNameParam = sNameSlug.replace(/-/g, ' ').toUpperCase();
+    const districtNameParam = dNameSlug.replace(/-/g, ' ').toUpperCase();
     
     const allPostOffices = await getPostOfficesByState(stateNameParam);
     
@@ -64,7 +59,7 @@ export default async function DistrictPage({ params }: any) {
                     <Home className="h-4 w-4" /> Home
                 </Link>
                 <span>/</span>
-                <Link href={`/state/${params.stateName}`} className="hover:text-primary">
+                <Link href={`/state/${sNameSlug}`} className="hover:text-primary">
                     {stateName}
                 </Link>
                 <span>/</span>
@@ -85,8 +80,8 @@ export default async function DistrictPage({ params }: any) {
                                 Detailed directory of all {districtPostOffices.length} post offices and {uniquePincodes.size} unique PIN codes in {districtName} district, {stateName}.
                             </CardDescription>
                         </div>
-                        <Button variant="outline" asChild>
-                            <Link href={`/state/${params.stateName}`}>
+                        <Button variant="outline" asChild suppressHydrationWarning>
+                            <Link href={`/state/${sNameSlug}`}>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 All {stateName} Districts
                             </Link>
