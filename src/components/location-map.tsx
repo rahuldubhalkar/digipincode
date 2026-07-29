@@ -1,9 +1,9 @@
-
 "use client";
 
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useTranslation } from "@/lib/i18n/use-translation";
 
 // Fix for default marker icon issue with webpack
 const icon = L.icon({
@@ -23,6 +23,7 @@ interface LocationMapProps {
 }
 
 export default function LocationMap({ latitude, longitude }: LocationMapProps) {
+  const { t } = useTranslation();
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
 
@@ -41,7 +42,7 @@ export default function LocationMap({ latitude, longitude }: LocationMapProps) {
 
       L.marker([latitude, longitude], { icon: icon })
         .addTo(mapInstance.current)
-        .bindPopup("Your Current Location")
+        .bindPopup(t("location.yourLocation"))
         .openPopup();
     }
 
@@ -52,7 +53,7 @@ export default function LocationMap({ latitude, longitude }: LocationMapProps) {
         mapInstance.current = null;
       }
     };
-  }, [latitude, longitude]);
+  }, [latitude, longitude, t]);
 
   return (
     <div

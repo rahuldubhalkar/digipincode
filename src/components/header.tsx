@@ -1,10 +1,11 @@
-
 "use client";
 
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import LanguageSwitcher from "./language-switcher";
+import { useTranslation } from "@/lib/i18n/use-translation";
 
 const Logo = () => {
   return (
@@ -37,6 +38,7 @@ const Logo = () => {
 
 
 export default function Header() {
+  const { t } = useTranslation();
   return (
     <header className="bg-card border-b shadow-sm sticky top-0 z-40">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -45,25 +47,27 @@ export default function Header() {
         </Link>
         <nav className="hidden md:flex items-center space-x-1">
           <Button variant="ghost" asChild>
-            <Link href="/">Home</Link>
+            <Link href="/">{t('nav.home')}</Link>
           </Button>
           <Button variant="ghost" asChild>
-            <Link href="/pincode">Search by Pincode</Link>
+            <Link href="/pincode">{t('nav.findByPincode')}</Link>
           </Button>
            <Button variant="ghost" asChild>
-            <Link href="/location">My Location</Link>
+            <Link href="/location">{t('nav.myLocation')}</Link>
           </Button>
           <Button variant="ghost" asChild>
-            <Link href="/about">About Us</Link>
+            <Link href="/about">{t('nav.about')}</Link>
           </Button>
           <Button variant="ghost" asChild>
-            <Link href="/privacy-policy">Privacy Policy</Link>
+            <Link href="/privacy-policy">{t('nav.privacyPolicy')}</Link>
           </Button>
           <Button variant="ghost" asChild>
-            <Link href="/contact">Contact Us</Link>
+            <Link href="/contact">{t('nav.contact')}</Link>
           </Button>
+          <LanguageSwitcher />
         </nav>
         <div className="md:hidden flex items-center gap-2">
+          <LanguageSwitcher />
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon">
@@ -74,22 +78,22 @@ export default function Header() {
             <SheetContent side="right">
               <nav className="grid gap-4 text-lg font-medium mt-8">
                 <Link href="/" className="py-2 hover:text-primary">
-                  Home
+                  {t('nav.home')}
                 </Link>
                 <Link href="/pincode" className="py-2 hover:text-primary">
-                  Search by Pincode
+                  {t('nav.findByPincode')}
                 </Link>
                  <Link href="/location" className="py-2 hover:text-primary">
-                  My Location
+                  {t('nav.myLocation')}
                 </Link>
                 <Link href="/about" className="py-2 hover:text-primary">
-                  About Us
+                  {t('nav.about')}
                 </Link>
                 <Link href="/privacy-policy" className="py-2 hover:text-primary">
-                  Privacy Policy
+                  {t('nav.privacyPolicy')}
                 </Link>
                 <Link href="/contact" className="py-2 hover:text-primary">
-                  Contact Us
+                  {t('nav.contact')}
                 </Link>
               </nav>
             </SheetContent>

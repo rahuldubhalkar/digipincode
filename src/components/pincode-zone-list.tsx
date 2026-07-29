@@ -1,11 +1,13 @@
-
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { pincodeZones } from "@/lib/pincode-zones";
+import { useTranslation } from "@/lib/i18n/use-translation";
 import Link from "next/link";
 
 export function PincodeZoneList() {
+  const { t } = useTranslation();
+
   // This mapping connects the 'circle' from pincodeZones to the URL slug
   // generated for the static state pages.
   const circleToSlugMap: { [key: string]: string } = {
@@ -43,21 +45,24 @@ export function PincodeZoneList() {
   return (
     <Card className="w-full shadow-lg border-none">
       <CardHeader>
-        <CardTitle className="text-2xl font-headline tracking-tight text-center">Search Postal Circle by First 2 Digits of PINcode</CardTitle>
+        <CardTitle className="text-2xl font-headline tracking-tight text-center">{t('zoneList.title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-3 text-sm">
           {pincodeZones.map((zone) => {
              const stateSlug = circleToSlugMap[zone.circle];
              if (!stateSlug) {
-                 // Skip rendering if no mapping is found to prevent broken links
                  return null;
              }
              const stateUrl = `/state/${stateSlug}`;
             return (
                 <li key={zone.id} className="flex items-start">
                 <span className="font-semibold text-muted-foreground w-16 flex-shrink-0">{zone.digits}</span>
-                <Link href={stateUrl} className="text-primary hover:underline text-left" aria-label={`Search for ${zone.circle}`}>
+                <Link 
+                    href={stateUrl} 
+                    className="text-primary hover:underline text-left" 
+                    aria-label={`${t('zoneList.searchFor')} ${zone.circle}`}
+                >
                     {zone.circle}
                 </Link>
                 </li>

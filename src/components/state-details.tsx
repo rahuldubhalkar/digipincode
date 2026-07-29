@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useMemo } from 'react';
@@ -6,6 +5,7 @@ import type { PostOffice } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n/use-translation';
 import Link from 'next/link';
 
 interface StateDetailsProps {
@@ -18,6 +18,7 @@ interface StateDetailsProps {
 }
 
 export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, selectedDistrict, onDivisionSelect, selectedDivision }: StateDetailsProps) {
+    const { t } = useTranslation();
 
     const { districts, divisions } = useMemo(() => {
         if (!allPostOffices.length) {
@@ -56,6 +57,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                         {districts.map(district => {
                             if (!district) return null;
                             
+                            // If an onDistrictSelect handler is passed, it's for the home page filters
                             if (onDistrictSelect) {
                                 return (
                                     <Button
@@ -75,6 +77,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                                 )
                             }
                             
+                            // Otherwise, it's a direct navigation link for the landing pages
                             const districtUrl = `/state/${stateUrlPart}/${district.replace(/ /g, '-').toLowerCase()}`;
                             return (
                                 <Link 
