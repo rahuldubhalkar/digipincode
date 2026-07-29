@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { StateDetails } from '@/components/state-details';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home, MapPin } from 'lucide-react';
+import { Home, MapPin, List } from 'lucide-react';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { PostOfficeTable } from '@/components/post-office-table';
@@ -17,7 +17,6 @@ async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
         const fileContent = await fs.readFile(filePath, 'utf-8');
         return JSON.parse(fileContent);
     } catch (error) {
-        console.error(`Failed to load data for state: ${state}`, error);
         return [];
     }
 }
@@ -33,8 +32,8 @@ export async function generateMetadata({ params }: { params: { stateName: string
     const stateName = params.stateName.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
     return {
-        title: `All Post Office Pincodes in ${stateName} | India Post Directory`,
-        description: `Browse the complete list of post offices and PIN codes in ${stateName}. Find postal details for all districts in ${stateName} including office type, division, and delivery status.`,
+        title: `All PIN Codes in ${stateName} | Post Office Directory`,
+        description: `Browse the complete list of post offices and PIN codes in ${stateName}. Find postal details for all districts in ${stateName} including office type, taluka, and delivery status.`,
     };
 }
 
@@ -64,16 +63,16 @@ export default async function StatePage({ params }: { params: { stateName: strin
                     <div className="flex justify-between items-start flex-wrap gap-4">
                         <div className="space-y-2">
                              <CardTitle className="text-3xl md:text-4xl text-primary font-bold">
-                                Post Offices in {stateName}
+                                Post Offices & PIN Codes in {stateName}
                              </CardTitle>
                              <CardDescription className="text-lg">
-                                Access the official directory of all pincodes and postal locations across {stateName}.
+                                Complete directory of postal locations and 6-digit PIN codes across all districts in {stateName}.
                             </CardDescription>
                         </div>
                         <Button variant="outline" asChild>
                             <Link href="/">
                                 <Home className="mr-2 h-4 w-4" />
-                                Back to Home
+                                Home
                             </Link>
                         </Button>
                     </div>
@@ -81,9 +80,9 @@ export default async function StatePage({ params }: { params: { stateName: strin
                 <CardContent className="pt-8">
                     <div className="space-y-12">
                        <section>
-                            <div className="flex items-center gap-2 mb-4">
+                            <div className="flex items-center gap-2 mb-6">
                                 <MapPin className="text-primary h-6 w-6" />
-                                <h2 className="text-2xl font-semibold">Select a District</h2>
+                                <h2 className="text-2xl font-bold tracking-tight">Browse by District</h2>
                             </div>
                             <StateDetails 
                                 selectedState={stateNameParam}
@@ -93,10 +92,13 @@ export default async function StatePage({ params }: { params: { stateName: strin
                             />
                        </section>
 
-                       <section className="space-y-4">
-                            <h2 className="text-2xl font-semibold">Complete Post Office List</h2>
+                       <section className="space-y-6">
+                            <div className="flex items-center gap-2">
+                                <List className="text-primary h-6 w-6" />
+                                <h2 className="text-2xl font-bold tracking-tight">Post Office Directory: {stateName}</h2>
+                            </div>
                             <p className="text-muted-foreground">
-                                Below is the alphabetical list of all post offices registered in {stateName}. Use the search filters above for specific results.
+                                Detailed information for all {postOffices.length} post offices registered in the {stateName} circle. Use the district links above to filter the list.
                             </p>
                             <PostOfficeTable postOffices={postOffices.sort((a,b) => a.officename.localeCompare(b.officename))} />
                        </section>

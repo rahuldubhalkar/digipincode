@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home, ArrowLeft, MapPin } from 'lucide-react';
+import { Home, ArrowLeft, MapPin, Hash } from 'lucide-react';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { PostOfficeTable } from '@/components/post-office-table';
@@ -20,33 +20,11 @@ async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
     }
 }
 
-async function getAllStateData() {
-    const states = await getStates();
-    const allData = await Promise.all(states.map(async state => {
-        const postOffices = await getPostOfficesByState(state);
-        return { state, postOffices };
-    }));
-    return allData;
-}
-
 export async function generateStaticParams() {
-    const allStateData = await getAllStateData();
-    const params: { stateName: string; districtName: string }[] = [];
-
-    allStateData.forEach(({ state, postOffices }) => {
-        if (postOffices.length > 0) {
-            const districts = [...new Set(postOffices.map(po => po.district))];
-            districts.forEach(district => {
-                if (district) {
-                     params.push({
-                        stateName: state.replace(/ /g, '-').toLowerCase(),
-                        districtName: district.replace(/ /g, '-').toLowerCase(),
-                    });
-                }
-            });
-        }
-    });
-    return params;
+    const states = await getStates();
+    // For large builds, we might limit this or pre-render common ones.
+    // For this prototype, we'll keep it targeted.
+    return [];
 }
 
 export async function generateMetadata({ params }: { params: { stateName: string, districtName: string } }) {
@@ -54,8 +32,8 @@ export async function generateMetadata({ params }: { params: { stateName: string
     const districtName = params.districtName.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
     return {
-        title: `PIN Codes in ${districtName}, ${stateName} | Post Office Directory`,
-        description: `Find all 6-digit PIN codes for post offices in ${districtName} district, ${stateName}. View complete details including office type, taluka, and delivery status for mail delivery.`,
+        title: `PIN Codes in ${districtName}, ${stateName} | District Directory`,
+        description: `Find all 6-digit PIN codes for post offices in ${districtName} district, ${stateName}. View complete details including office type, taluka, and delivery status.`,
     };
 }
 
@@ -77,6 +55,7 @@ export default async function DistrictPage({ params }: { params: { stateName: st
 
     const stateName = stateNameParam.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
     const districtName = districtNameParam.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    const uniquePincodes = new Set(districtPostOffices.map(po => po.pincode));
 
     return (
         <main className="container mx-auto px-4 py-8 space-y-8">
@@ -99,27 +78,59 @@ export default async function DistrictPage({ params }: { params: { stateName: st
                              <div className="flex items-center gap-2">
                                 <MapPin className="text-primary h-6 w-6" />
                                 <CardTitle className="text-3xl md:text-4xl text-primary font-bold">
-                                    Post Offices in {districtName}
+                                    PIN Codes in {districtName}
                                 </CardTitle>
                              </div>
                              <CardDescription className="text-lg">
-                                Complete Pincode list and postal details for {districtName} district, {stateName}.
+                                Detailed directory of all {districtPostOffices.length} post offices and {uniquePincodes.size} unique PIN codes in {districtName} district, {stateName}.
                             </CardDescription>
                         </div>
                         <Button variant="outline" asChild>
                             <Link href={`/state/${params.stateName}`}>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back to {stateName}
+                                All {stateName} Districts
                             </Link>
                         </Button>
                     </div>
                 </CardHeader>
                 <CardContent className="pt-8">
-                    <section className="space-y-4">
-                        <p className="text-muted-foreground">
-                            Explore the comprehensive directory of post offices located in {districtName}. Each entry includes the official PIN code, office type (Head Office, Sub Office, or Branch Office), and delivery status.
-                        </p>
-                        <PostOfficeTable postOffices={districtPostOffices.sort((a,b) => a.officename.localeCompare(b.officename))} />
+                    <section className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <Card className="bg-muted/50 border-none">
+                                <CardContent className="pt-6">
+                                    <div className="flex items-center gap-3">
+                                        <div className="bg-primary/10 p-2 rounded-full">
+                                            <Hash className="h-5 w-5 text-primary" />
+                                        </div>
+                                        <div>
+                                            <p className="text-2xl font-bold">{uniquePincodes.size}</p>
+                                            <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Total PIN Codes</p>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                            <Card className="bg-muted/50 border-none">
+                                <CardContent className="pt-6">
+                                    <div className="flex items-center gap-3">
+                                        <div className="bg-primary/10 p-2 rounded-full">
+                                            <MapPin className="h-5 w-5 text-primary" />
+                                        </div>
+                                        <div>
+                                            <p className="text-2xl font-bold">{districtPostOffices.length}</p>
+                                            <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Post Offices</p>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                        <div className="space-y-4">
+                            <h2 className="text-2xl font-bold tracking-tight">Post Office & Pincode List</h2>
+                            <p className="text-muted-foreground">
+                                The following table provides complete details for every post office in {districtName}, including their type, Taluka, and official 6-digit Indian PIN code.
+                            </p>
+                            <PostOfficeTable postOffices={districtPostOffices.sort((a,b) => a.officename.localeCompare(b.officename))} />
+                        </div>
                     </section>
                 </CardContent>
             </Card>

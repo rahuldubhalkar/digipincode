@@ -51,12 +51,11 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
         <Card className="border-none shadow-none">
             <CardContent className="p-0 space-y-6">
                  <div className="space-y-4">
-                    <p className="text-sm font-medium text-muted-foreground">Browse postal information for specific districts in {selectedState}:</p>
+                    <p className="text-sm font-medium text-muted-foreground">Select a district to view all its PIN codes and post offices:</p>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                         {districts.map(district => {
                             if (!district) return null;
                             
-                            // If onDistrictSelect is passed, it's a button for filtering
                             if (onDistrictSelect) {
                                 return (
                                     <Button
@@ -76,7 +75,6 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                                 )
                             }
                             
-                            // If onDistrictSelect is NOT passed, it's a link for navigation
                             const districtUrl = `/state/${stateUrlPart}/${district.replace(/ /g, '-').toLowerCase()}`;
                             return (
                                 <Link 
@@ -93,7 +91,7 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
 
                 {divisions.length > 0 && onDivisionSelect && (
                     <div className="space-y-2">
-                        <p className="text-sm font-medium text-muted-foreground">Filter by Division:</p>
+                        <p className="text-sm font-medium text-muted-foreground">Filter by Postal Division:</p>
                         <div className="flex flex-wrap gap-2">
                             {divisions.map(division => (
                             <Button
