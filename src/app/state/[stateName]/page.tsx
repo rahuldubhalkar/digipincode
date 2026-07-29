@@ -23,13 +23,13 @@ async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
 
 export async function generateStaticParams() {
     const states = await getStates();
-    return states.map(state => ({
+    return states.map((state: string) => ({
         stateName: state.replace(/ /g, '-').toLowerCase(),
     }));
 }
 
-export async function generateMetadata({ params }: { params: { stateName: string } }) {
-    const stateName = params.stateName.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+export async function generateMetadata({ params }: any) {
+    const stateName = params.stateName.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
     return {
         title: `All PIN Codes in ${stateName} | Post Office Directory`,
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: { stateName: string
     };
 }
 
-export default async function StatePage({ params }: { params: { stateName: string } }) {
+export default async function StatePage({ params }: any) {
     const stateNameParam = params.stateName.replace(/-/g, ' ').toUpperCase();
     const states = await getStates();
     
@@ -46,7 +46,7 @@ export default async function StatePage({ params }: { params: { stateName: strin
     }
     
     const postOffices = await getPostOfficesByState(stateNameParam);
-    const stateName = stateNameParam.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    const stateName = stateNameParam.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
     return (
         <main className="container mx-auto px-4 py-8 space-y-8">

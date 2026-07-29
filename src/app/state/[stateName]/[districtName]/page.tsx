@@ -27,9 +27,9 @@ export async function generateStaticParams() {
     return [];
 }
 
-export async function generateMetadata({ params }: { params: { stateName: string, districtName: string } }) {
-    const stateName = params.stateName.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    const districtName = params.districtName.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+export async function generateMetadata({ params }: any) {
+    const stateName = params.stateName.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    const districtName = params.districtName.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
     return {
         title: `PIN Codes in ${districtName}, ${stateName} | District Directory`,
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: { stateName: string
     };
 }
 
-export default async function DistrictPage({ params }: { params: { stateName: string, districtName: string } }) {
+export default async function DistrictPage({ params }: any) {
     const stateNameParam = params.stateName.replace(/-/g, ' ').toUpperCase();
     const districtNameParam = params.districtName.replace(/-/g, ' ').toUpperCase();
     
@@ -53,8 +53,8 @@ export default async function DistrictPage({ params }: { params: { stateName: st
         notFound();
     }
 
-    const stateName = stateNameParam.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-    const districtName = districtNameParam.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    const stateName = stateNameParam.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    const districtName = districtNameParam.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
     const uniquePincodes = new Set(districtPostOffices.map(po => po.pincode));
 
     return (

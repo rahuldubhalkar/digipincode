@@ -3,13 +3,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { pincodeZones } from "@/lib/pincode-zones";
 import { useTranslation } from "@/lib/i18n/use-translation";
+import { Button } from "./ui/button";
 import Link from "next/link";
 
-export function PincodeZoneList() {
+interface PincodeZoneListProps {
+  onZoneSelect?: (state: string) => void;
+}
+
+export function PincodeZoneList({ onZoneSelect }: PincodeZoneListProps) {
   const { t } = useTranslation();
 
-  // This mapping connects the 'circle' from pincodeZones to the URL slug
-  // generated for the static state pages.
   const circleToSlugMap: { [key: string]: string } = {
       "Delhi": "delhi",
       "Haryana": "haryana",
@@ -57,14 +60,25 @@ export function PincodeZoneList() {
              const stateUrl = `/state/${stateSlug}`;
             return (
                 <li key={zone.id} className="flex items-start">
-                <span className="font-semibold text-muted-foreground w-16 flex-shrink-0">{zone.digits}</span>
-                <Link 
-                    href={stateUrl} 
-                    className="text-primary hover:underline text-left" 
-                    aria-label={`${t('zoneList.searchFor')} ${zone.circle}`}
-                >
-                    {zone.circle}
-                </Link>
+                    <span className="font-semibold text-muted-foreground w-16 flex-shrink-0">{zone.digits}</span>
+                    {onZoneSelect ? (
+                        <Button
+                            variant="link"
+                            onClick={() => onZoneSelect(zone.circle)}
+                            className="text-primary hover:underline text-left h-auto p-0"
+                            aria-label={`${t('zoneList.searchFor')} ${zone.circle}`}
+                        >
+                            {zone.circle}
+                        </Button>
+                    ) : (
+                        <Link
+                            href={stateUrl}
+                            className="text-primary hover:underline text-left"
+                            aria-label={`${t('zoneList.searchFor')} ${zone.circle}`}
+                        >
+                            {zone.circle}
+                        </Link>
+                    )}
                 </li>
             );
           })}

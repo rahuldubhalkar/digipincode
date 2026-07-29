@@ -20,7 +20,7 @@ async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
     }
 }
 
-export async function generateMetadata({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }): Promise<Metadata> {
+export async function generateMetadata({ searchParams }: any): Promise<Metadata> {
     const state = typeof searchParams.state === 'string' ? searchParams.state : '';
     const district = typeof searchParams.district === 'string' ? searchParams.district : '';
     const searchTerm = typeof searchParams.q === 'string' ? searchParams.q : '';
@@ -29,19 +29,19 @@ export async function generateMetadata({ searchParams }: { searchParams: { [key:
     let title = 'Pincode Search';
     let location = '';
     if (district) {
-        location += `${district.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}, `;
+        location += `${district.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}, `;
     }
      if (state) {
-        location += `${state.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}`;
+        location += `${state.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}`;
     }
     if (location) {
         title = `Search results in ${location}`;
     }
     if(searchTerm) {
-        title += ` for "${searchTerm}"`;
+        title += ` for \"${searchTerm}\"`;
     }
     if(letter) {
-        title += ` starting with "${letter}"`;
+        title += ` starting with \"${letter}\"`;
     }
 
     return {
@@ -54,7 +54,7 @@ export async function generateMetadata({ searchParams }: { searchParams: { [key:
     };
 }
 
-export default async function SearchPage({ searchParams }: { searchParams: { [key:string]: string | string[] | undefined } }) {
+export default async function SearchPage({ searchParams }: any) {
     const state = typeof searchParams.state === 'string' ? searchParams.state.toUpperCase() : '';
     const district = typeof searchParams.district === 'string' ? searchParams.district : '';
     const searchTerm = typeof searchParams.q === 'string' ? searchParams.q : '';
@@ -79,18 +79,18 @@ export default async function SearchPage({ searchParams }: { searchParams: { [ke
     const states = await getStates();
     
     let location = '';
-    const districtName = district.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-    const stateName = state.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    const districtName = district.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    const stateName = state.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
     if (district) location += `${districtName}, `;
     if (state) location += stateName;
 
 
     let description = ``;
-    if (searchTerm) description += `Query: "${searchTerm}"`;
+    if (searchTerm) description += `Query: \"${searchTerm}\"`;
     if (letter) {
         if (description) description += `, `;
-        description += `Starting with: "${letter}"`;
+        description += `Starting with: \"${letter}\"`;
     }
 
     return (

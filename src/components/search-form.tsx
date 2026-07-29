@@ -108,8 +108,8 @@ export function SearchForm({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
         <div className="space-y-2">
             <label className="text-sm font-medium">Select a State</label>
-            <Select onValueChange={handleStateChange} value={selectedState} suppressHydrationWarning>
-              <SelectTrigger className="w-full" suppressHydrationWarning>
+            <Select onValueChange={handleStateChange} value={selectedState}>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a State" />
               </SelectTrigger>
               <SelectContent>
@@ -124,8 +124,8 @@ export function SearchForm({
 
         <div className="space-y-2">
             <label className="text-sm font-medium">Select a District</label>
-            <Select key={districtSelectKey} onValueChange={setSelectedDistrict} value={selectedDistrict} disabled={!selectedState} suppressHydrationWarning>
-                <SelectTrigger className="w-full" suppressHydrationWarning>
+            <Select key={districtSelectKey} onValueChange={setSelectedDistrict} value={selectedDistrict} disabled={!selectedState}>
+                <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a District" />
                 </SelectTrigger>
                 <SelectContent>
@@ -154,8 +154,8 @@ export function SearchForm({
 
         <div className="space-y-2">
             <label className="text-sm font-medium">Filter by First Letter</label>
-            <Select onValueChange={setLetter} value={letter} suppressHydrationWarning>
-                <SelectTrigger className="w-full" suppressHydrationWarning>
+            <Select onValueChange={setLetter} value={letter}>
+                <SelectTrigger className="w-full">
                     <SelectValue placeholder="e.g. A" />
                 </SelectTrigger>
                 <SelectContent>
@@ -173,7 +173,7 @@ export function SearchForm({
               <Search className="mr-2 h-4 w-4" />
               Search
             </Button>
-             <Button type="button" variant="outline" onClick={clearSearch} className="text-primary hover:text-primary" suppressHydrationWarning>
+             <Button type="button" variant="outline" onClick={clearSearch} className="text-primary hover:text-primary">
               <X className="mr-2 h-4 w-4" />
               Clear
             </Button>
