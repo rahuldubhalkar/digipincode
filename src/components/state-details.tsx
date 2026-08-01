@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useMemo } from 'react';
 import type { PostOffice } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from './ui/button';
@@ -11,39 +10,17 @@ import Link from 'next/link';
 
 interface StateDetailsProps {
     selectedState: string;
-    allPostOffices: PostOffice[];
+    districts: string[];
     selectedDistrict: string;
     selectedDivision: string;
     onDistrictSelect?: (district: string) => void;
     onDivisionSelect?: (division: string) => void;
 }
 
-export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, selectedDistrict, onDivisionSelect, selectedDivision }: StateDetailsProps) {
+export function StateDetails({ selectedState, districts, onDistrictSelect, selectedDistrict, onDivisionSelect, selectedDivision }: StateDetailsProps) {
     const { t } = useTranslation();
-
-    const { districts, divisions } = useMemo(() => {
-        if (!allPostOffices.length) {
-            return { districts: [], divisions: [] };
-        }
-        const districtSet = new Set<string>();
-        const divisionSet = new Set<string>();
-        
-        allPostOffices.forEach(po => {
-            if (po.district) {
-                districtSet.add(po.district);
-            }
-            if (po.divisionname) {
-                divisionSet.add(po.divisionname);
-            }
-        });
-        
-        return {
-            districts: Array.from(districtSet).sort(),
-            divisions: Array.from(divisionSet).sort(),
-        };
-    }, [allPostOffices]);
     
-    if (!selectedState || !allPostOffices.length) {
+    if (!selectedState || !districts.length) {
         return null;
     }
     
@@ -93,29 +70,6 @@ export function StateDetails({ selectedState, allPostOffices, onDistrictSelect, 
                         })}
                     </div>
                 </div>
-
-                {divisions.length > 0 && onDivisionSelect && (
-                    <div className="space-y-2">
-                        <p className="text-sm font-medium text-muted-foreground">Filter by Postal Division:</p>
-                        <div className="flex flex-wrap gap-2">
-                            {divisions.map(division => (
-                            <Button
-                                key={division}
-                                variant="secondary"
-                                size="sm"
-                                suppressHydrationWarning
-                                className={cn(
-                                    "text-xs px-3 h-8",
-                                    selectedDivision === division && "bg-primary text-primary-foreground"
-                                )}
-                                onClick={() => onDivisionSelect(division)}
-                            >
-                                {division}
-                            </Button>
-                            ))}
-                        </div>
-                    </div>
-                )}
             </CardContent>
         </Card>
     );

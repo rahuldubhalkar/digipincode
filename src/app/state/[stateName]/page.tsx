@@ -1,24 +1,11 @@
 import { getStates } from '@/lib/data';
-import type { PostOffice } from '@/lib/types';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { StateDetails } from '@/components/state-details';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home, MapPin, List } from 'lucide-react';
-import { promises as fs } from 'fs';
-import path from 'path';
-import { PostOfficeTable } from '@/components/post-office-table';
-
-async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
-    try {
-        const filePath = path.join(process.cwd(), 'public', 'data', `${state.toUpperCase()}.json`);
-        const fileContent = await fs.readFile(filePath, 'utf-8');
-        return JSON.parse(fileContent);
-    } catch (error) {
-        return [];
-    }
-}
+import { Home, MapPin } from 'lucide-react';
+import { getDistrictsByState } from '@/lib/districts';
 
 export async function generateStaticParams() {
     const states = await getStates();
@@ -50,7 +37,7 @@ export default async function StatePage({ params }: { params: Promise<any> }) {
         notFound();
     }
     
-    const postOffices = await getPostOfficesByState(stateNameParam);
+    const districts = await getDistrictsByState(stateNameParam);
     const stateName = stateNameParam.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
     return (
@@ -91,21 +78,10 @@ export default async function StatePage({ params }: { params: Promise<any> }) {
                             </div>
                             <StateDetails 
                                 selectedState={stateNameParam}
-                                allPostOffices={postOffices}
+                                districts={districts}
                                 selectedDistrict=""
                                 selectedDivision=""
                             />
-                       </section>
-
-                       <section className="space-y-6">
-                            <div className="flex items-center gap-2">
-                                <List className="text-primary h-6 w-6" />
-                                <h2 className="text-2xl font-bold tracking-tight">Post Office Directory: {stateName}</h2>
-                            </div>
-                            <p className="text-muted-foreground">
-                                Detailed information for all {postOffices.length} post offices registered in the {stateName} circle. Use the district links above to filter the list.
-                            </p>
-                            <PostOfficeTable postOffices={postOffices.sort((a,b) => (a.officename || "").localeCompare(b.officename || ""))} />
                        </section>
                     </div>
                 </CardContent>

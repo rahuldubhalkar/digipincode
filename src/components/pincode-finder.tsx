@@ -44,6 +44,7 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
   const [isPending, startTransition] = useTransition();
 
   const [allPostOfficesForState, setAllPostOfficesForState] = useState<PostOffice[]>([]);
+  const [districts, setDistricts] = useState<string[]>([]);
   const [filteredPostOffices, setFilteredPostOffices] = useState<PostOffice[]>([]);
 
   const [selectedState, setSelectedState] = useState('');
@@ -93,19 +94,26 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
 
     if (!state) {
         setAllPostOfficesForState([]);
+        setDistricts([]);
         setIsLoadingStateData(false);
         return;
     }
 
     startTransition(async () => {
         try {
-            const res = await fetch(`/data/${state}.json`);
-            const offices = await res.json();
+            const [officesRes, districtsRes] = await Promise.all([
+                fetch(`/data/${state}.json`),
+                fetch(`/data/${state}-districts.json`)
+            ]);
+            const offices = await officesRes.json();
+            const districtData = await districtsRes.json();
             setAllPostOfficesForState(offices);
+            setDistricts(districtData);
             applyFilters(offices);
         } catch (error) {
             console.error(`Failed to load data for state: ${state}`, error);
             setAllPostOfficesForState([]);
+            setDistricts([]);
         } finally {
             setIsLoadingStateData(false);
         }
@@ -145,6 +153,7 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
     setSelectedLetter('');
     setAllPostOfficesForState([]);
     setFilteredPostOffices([]);
+    setDistricts([]);
   };
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -215,7 +224,7 @@ function PincodeFinderComponent({ states, selectedStateFromZone, onClear }: Pinc
                 <>
                 <StateDetails 
                     selectedState={selectedState} 
-                    allPostOffices={allPostOfficesForState}
+                    districts={districts}
                     onDistrictSelect={handleDistrictChange}
                     selectedDistrict={selectedDistrict}
                     onDivisionSelect={handleDivisionChange}
