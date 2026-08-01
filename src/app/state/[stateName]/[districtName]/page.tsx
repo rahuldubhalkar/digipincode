@@ -10,19 +10,26 @@ import path from 'path';
 import { PostOfficeTable } from '@/components/post-office-table';
 
 async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
+    if (!state) return [];
     try {
         const filePath = path.join(process.cwd(), 'public', 'data', `${state.toUpperCase()}.json`);
         const fileContent = await fs.readFile(filePath, 'utf-8');
-        return JSON.parse(fileContent);
+        const data = JSON.parse(fileContent);
+        return Array.isArray(data) ? data : [];
     } catch (error) {
         return [];
     }
 }
 
 export async function generateMetadata({ params }: { params: Promise<any> }) {
-    const { stateName: sNameSlug, districtName: dNameSlug } = await params;
-    const stateName = sNameSlug.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    const districtName = dNameSlug.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    const resolvedParams = await params;
+    const sNameSlug = resolvedParams?.stateName || '';
+    const dNameSlug = resolvedParams?.districtName || '';
+    
+    const formatSlug = (slug: string) => slug.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    
+    const stateName = formatSlug(sNameSlug);
+    const districtName = formatSlug(dNameSlug);
 
     return {
         title: `PIN Codes in ${districtName}, ${stateName} | District Directory`,
@@ -31,24 +38,33 @@ export async function generateMetadata({ params }: { params: Promise<any> }) {
 }
 
 export default async function DistrictPage({ params }: { params: Promise<any> }) {
-    const { stateName: sNameSlug, districtName: dNameSlug } = await params;
+    const resolvedParams = await params;
+    const sNameSlug = resolvedParams?.stateName || '';
+    const dNameSlug = resolvedParams?.districtName || '';
+    
+    if (!sNameSlug || !dNameSlug) notFound();
+
     const stateNameParam = sNameSlug.replace(/-/g, ' ').toUpperCase();
     const districtNameParam = dNameSlug.replace(/-/g, ' ').toUpperCase();
     
     const allPostOffices = await getPostOfficesByState(stateNameParam);
     
-    if (!allPostOffices.length) {
+    if (!allPostOffices || allPostOffices.length === 0) {
         notFound();
     }
     
-    const districtPostOffices = allPostOffices.filter(po => po.district && po.district.toUpperCase() === districtNameParam);
+    const districtPostOffices = allPostOffices.filter(po => 
+        po && po.district && po.district.toUpperCase() === districtNameParam
+    );
 
-    if (!districtPostOffices.length) {
+    if (districtPostOffices.length === 0) {
         notFound();
     }
 
-    const stateName = stateNameParam.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-    const districtName = districtNameParam.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    const formatName = (name: string) => name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    
+    const stateName = formatName(stateNameParam);
+    const districtName = formatName(districtNameParam);
     const uniquePincodes = new Set(districtPostOffices.map(po => po.pincode));
 
     return (

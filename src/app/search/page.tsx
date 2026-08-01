@@ -12,14 +12,15 @@ async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
     try {
         const filePath = path.join(process.cwd(), 'public', 'data', `${state.toUpperCase()}.json`);
         const fileContent = await fs.readFile(filePath, 'utf-8');
-        return JSON.parse(fileContent);
+        const data = JSON.parse(fileContent);
+        return Array.isArray(data) ? data : [];
     } catch (error) {
         console.error(`Failed to load data for state: ${state}`, error);
         return [];
     }
 }
 
-export async function generateMetadata({ searchParams }: { searchParams: Promise<any> }): Promise<Metadata> {
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }): Promise<Metadata> {
     const sParams = await searchParams;
     const state = typeof sParams.state === 'string' ? sParams.state : '';
     const district = typeof sParams.district === 'string' ? sParams.district : '';
@@ -28,29 +29,33 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 
     let title = 'Pincode Search';
     let location = '';
-    if (district) {
-        location += `${district.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}, `;
+    
+    const formatName = (str: string) => str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
+    if (district && typeof district === 'string') {
+        location += `${formatName(district)}, `;
     }
-     if (state) {
-        location += `${state.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}`;
+    if (state && typeof state === 'string') {
+        location += formatName(state);
     }
+    
     if (location) {
         title = `Search results in ${location}`;
     }
-    if(searchTerm) {
+    if (searchTerm && typeof searchTerm === 'string') {
         title += ` for "${searchTerm}"`;
     }
-    if(letter) {
+    if (letter && typeof letter === 'string') {
         title += ` starting with "${letter}"`;
     }
 
     return {
-        title,
-        description: `Find pincodes and post office details. Search results for state: ${state}, district: ${district}, query: ${searchTerm}, and letter: ${letter}.`,
+        title: `${title} | India Post Directory`,
+        description: `Find pincodes and post office details. Search results for ${location || 'India'}. ${searchTerm ? `Query: ${searchTerm}.` : ''}`,
     };
 }
 
-export default async function SearchPage({ searchParams }: { searchParams: Promise<any> }) {
+export default async function SearchPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
     const sParams = await searchParams;
     const state = typeof sParams.state === 'string' ? sParams.state.toUpperCase() : '';
     const district = typeof sParams.district === 'string' ? sParams.district : '';
@@ -60,6 +65,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     const allPostOffices = await getPostOfficesByState(state);
     
     const filteredPostOffices = allPostOffices.filter(po => {
+        if (!po) return false;
         let matches = true;
         if (district) {
             matches = matches && (po.district || "").toUpperCase() === district.toUpperCase();
@@ -75,12 +81,11 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     
     const states = await getStates();
     
+    const formatName = (str: string) => str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    
     let location = '';
-    const districtName = district ? district.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ') : '';
-    const stateName = state ? state.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ') : '';
-
-    if (districtName) location += `${districtName}, `;
-    if (stateName) location += stateName;
+    if (district) location += `${formatName(district)}, `;
+    if (state) location += formatName(state);
 
     let description = ``;
     if (searchTerm) description += `Query: "${searchTerm}"`;

@@ -17,12 +17,14 @@ export const I18nContext = createContext<I18nContextType | undefined>(undefined)
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState('en');
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     const savedLanguage = typeof window !== 'undefined' ? localStorage.getItem('language') : null;
     if (savedLanguage && translations[savedLanguage]) {
       setLanguageState(savedLanguage);
     }
+    setIsHydrated(true);
   }, []);
 
   const setLanguage = (lang: string) => {
@@ -49,9 +51,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     let template = getFromDict(translations[language]) || getFromDict(translations['en']) || key;
 
     if (values) {
-      return template.replace(/\{\{(\w+)\}\}/g, (placeholder, placeholderKey) => {
-        return values[placeholderKey] !== undefined ? String(values[placeholderKey]) : placeholder;
-      });
+        return template.replace(/\{\{(\w+)\}\}/g, (placeholder, placeholderKey) => {
+            return values[placeholderKey] !== undefined ? String(values[placeholderKey]) : placeholder;
+        });
     }
 
     return template;

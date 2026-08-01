@@ -15,7 +15,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: Promise<any> }) {
-    const { stateName: stateNameSlug } = await params;
+    const resolvedParams = await params;
+    const stateNameSlug = resolvedParams?.stateName || '';
     if (!stateNameSlug) return { title: 'State Pincode Directory' };
     
     const stateName = stateNameSlug.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -27,7 +28,8 @@ export async function generateMetadata({ params }: { params: Promise<any> }) {
 }
 
 export default async function StatePage({ params }: { params: Promise<any> }) {
-    const { stateName: stateNameSlug } = await params;
+    const resolvedParams = await params;
+    const stateNameSlug = resolvedParams?.stateName || '';
     if (!stateNameSlug) notFound();
 
     const stateNameParam = stateNameSlug.replace(/-/g, ' ').toUpperCase();
