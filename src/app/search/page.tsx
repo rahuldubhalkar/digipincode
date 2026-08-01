@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getStates } from '@/lib/data';
-import { PostOffice } from '@/lib/types';
+import type { PostOffice } from '@/lib/types';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { PostOfficeTable } from '@/components/post-office-table';
@@ -10,7 +10,7 @@ import { SearchForm } from '@/components/search-form';
 async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
     if (!state) return [];
     try {
-        const filePath = path.join(process.cwd(), 'public', 'data', `${state}.json`);
+        const filePath = path.join(process.cwd(), 'public', 'data', `${state.toUpperCase()}.json`);
         const fileContent = await fs.readFile(filePath, 'utf-8');
         return JSON.parse(fileContent);
     } catch (error) {

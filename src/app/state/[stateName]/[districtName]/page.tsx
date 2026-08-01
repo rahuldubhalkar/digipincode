@@ -1,6 +1,5 @@
-
 import { getStates } from '@/lib/data';
-import { PostOffice } from '@/lib/types';
+import type { PostOffice } from '@/lib/types';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Link from 'next/link';
@@ -12,7 +11,7 @@ import { PostOfficeTable } from '@/components/post-office-table';
 
 async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
     try {
-        const filePath = path.join(process.cwd(), 'public', 'data', `${state}.json`);
+        const filePath = path.join(process.cwd(), 'public', 'data', `${state.toUpperCase()}.json`);
         const fileContent = await fs.readFile(filePath, 'utf-8');
         return JSON.parse(fileContent);
     } catch (error) {
@@ -124,7 +123,7 @@ export default async function DistrictPage({ params }: { params: Promise<any> })
                             <p className="text-muted-foreground">
                                 The following table provides complete details for every post office in {districtName}, including their type, Taluka, and official 6-digit Indian PIN code.
                             </p>
-                            <PostOfficeTable postOffices={districtPostOffices.sort((a,b) => a.officename.localeCompare(b.officename))} />
+                            <PostOfficeTable postOffices={districtPostOffices.sort((a,b) => (a.officename || "").localeCompare(b.officename || ""))} />
                         </div>
                     </section>
                 </CardContent>
