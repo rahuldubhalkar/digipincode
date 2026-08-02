@@ -1,3 +1,4 @@
+
 import { getStates } from '@/lib/data';
 import type { PostOffice } from '@/lib/types';
 import { notFound } from 'next/navigation';
@@ -21,7 +22,7 @@ async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
     }
 }
 
-export async function generateMetadata({ params }: { params: Promise<any> }) {
+export async function generateMetadata({ params }: { params: Promise<{ stateName: string, districtName: string }> }) {
     const resolvedParams = await params;
     const sNameSlug = resolvedParams?.stateName || '';
     const dNameSlug = resolvedParams?.districtName || '';
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<any> }) {
     };
 }
 
-export default async function DistrictPage({ params }: { params: Promise<any> }) {
+export default async function DistrictPage({ params }: { params: Promise<{ stateName: string, districtName: string }> }) {
     const resolvedParams = await params;
     const sNameSlug = resolvedParams?.stateName || '';
     const dNameSlug = resolvedParams?.districtName || '';

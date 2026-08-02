@@ -4,7 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import ImageArticles from '@/components/image-articles';
 import { PincodeZoneList } from '@/components/pincode-zone-list';
-import { SearchForm } from '@/components/search-form';
+import { PincodeClientPage } from './pincode/pincode-client-page';
 
 const faqItems = [
     {
@@ -44,15 +44,7 @@ export default async function Home() {
   
   return (
     <main className="container mx-auto px-4 py-8 space-y-12">
-        <Card className="w-full shadow-lg border-none">
-            <CardHeader className="text-center">
-                <CardTitle className="text-3xl font-headline tracking-tight text-primary">Indian postal PIN code search</CardTitle>
-                <CardDescription>Your complete guide to the Indian postal code system. Use our comprehensive All India PIN Code Finder to search for any postal code or Post Office details by State, District, or Post Office name.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <SearchForm states={states} />
-            </CardContent>
-        </Card>
+        <PincodeClientPage states={states} />
 
         <PincodeZoneList />
 

@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { getStates } from '@/lib/data';
 import type { PostOffice } from '@/lib/types';
@@ -64,7 +65,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
 
     const allPostOffices = await getPostOfficesByState(state);
     
-    const filteredPostOffices = allPostOffices.filter(po => {
+    const filteredPostOffices = (allPostOffices || []).filter(po => {
         if (!po) return false;
         let matches = true;
         if (district) {

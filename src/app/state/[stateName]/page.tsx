@@ -1,3 +1,4 @@
+
 import { getStates } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -14,7 +15,7 @@ export async function generateStaticParams() {
     }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<any> }) {
+export async function generateMetadata({ params }: { params: Promise<{ stateName: string }> }) {
     const resolvedParams = await params;
     const stateNameSlug = resolvedParams?.stateName || '';
     if (!stateNameSlug) return { title: 'State Pincode Directory' };
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<any> }) {
     };
 }
 
-export default async function StatePage({ params }: { params: Promise<any> }) {
+export default async function StatePage({ params }: { params: Promise<{ stateName: string }> }) {
     const resolvedParams = await params;
     const stateNameSlug = resolvedParams?.stateName || '';
     if (!stateNameSlug) notFound();

@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -45,7 +46,6 @@ export default function Header() {
 
   const navItems = [
     { href: "/", label: t('nav.home'), icon: Home },
-    { href: "/pincode", label: t('nav.findByPincode'), icon: Search },
     { href: "/location", label: t('nav.myLocation'), icon: MapPin },
     { href: "/about", label: t('nav.about'), icon: Info },
     { href: "/privacy-policy", label: t('nav.privacyPolicy'), icon: ShieldCheck },
