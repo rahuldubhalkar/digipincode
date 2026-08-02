@@ -23,9 +23,7 @@ async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ stateName: string, districtName: string }> }) {
-    const resolvedParams = await params;
-    const sNameSlug = resolvedParams?.stateName || '';
-    const dNameSlug = resolvedParams?.districtName || '';
+    const { stateName: sNameSlug, districtName: dNameSlug } = await params;
     
     const formatSlug = (slug: string) => slug.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     
@@ -39,9 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ stateName
 }
 
 export default async function DistrictPage({ params }: { params: Promise<{ stateName: string, districtName: string }> }) {
-    const resolvedParams = await params;
-    const sNameSlug = resolvedParams?.stateName || '';
-    const dNameSlug = resolvedParams?.districtName || '';
+    const { stateName: sNameSlug, districtName: dNameSlug } = await params;
     
     if (!sNameSlug || !dNameSlug) notFound();
 
@@ -96,7 +92,7 @@ export default async function DistrictPage({ params }: { params: Promise<{ state
                                 Detailed directory of all {districtPostOffices.length} post offices and {uniquePincodes.size} unique PIN codes in {districtName} district, {stateName}.
                             </CardDescription>
                         </div>
-                        <Button variant="outline" asChild suppressHydrationWarning>
+                        <Button variant="outline" asChild>
                             <Link href={`/state/${sNameSlug}`}>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 All {stateName} Districts
@@ -107,7 +103,7 @@ export default async function DistrictPage({ params }: { params: Promise<{ state
                 <CardContent className="pt-8">
                     <section className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                            <Card className="bg-muted/50 border-none">
+                            <Card className="bg-muted/50 border-none shadow-none">
                                 <CardContent className="pt-6">
                                     <div className="flex items-center gap-3">
                                         <div className="bg-primary/10 p-2 rounded-full">
@@ -120,7 +116,7 @@ export default async function DistrictPage({ params }: { params: Promise<{ state
                                     </div>
                                 </CardContent>
                             </Card>
-                            <Card className="bg-muted/50 border-none">
+                            <Card className="bg-muted/50 border-none shadow-none">
                                 <CardContent className="pt-6">
                                     <div className="flex items-center gap-3">
                                         <div className="bg-primary/10 p-2 rounded-full">

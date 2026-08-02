@@ -1,3 +1,4 @@
+
 "use client";
 
 import { createContext, useState, ReactNode, useEffect } from 'react';
@@ -17,14 +18,12 @@ export const I18nContext = createContext<I18nContextType | undefined>(undefined)
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState('en');
-  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     const savedLanguage = typeof window !== 'undefined' ? localStorage.getItem('language') : null;
     if (savedLanguage && translations[savedLanguage]) {
       setLanguageState(savedLanguage);
     }
-    setIsHydrated(true);
   }, []);
 
   const setLanguage = (lang: string) => {

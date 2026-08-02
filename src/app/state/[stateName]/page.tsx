@@ -33,21 +33,19 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ stateName: string }> }) {
-    const resolvedParams = await params;
-    const stateNameSlug = resolvedParams?.stateName || '';
+    const { stateName: stateNameSlug } = await params;
     if (!stateNameSlug) return { title: 'State Pincode Directory' };
     
     const stateName = stateNameSlug.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
     return {
         title: `All PIN Codes in ${stateName} | Post Office Directory`,
-        description: `Browse the complete list of post offices and PIN codes in ${stateName}. Find postal details for all districts in ${stateName} including office type, taluka, and delivery status.`,
+        description: `Browse the complete list of post offices and PIN codes in ${stateName}. Find postal details for all districts in ${stateName}.`,
     };
 }
 
 export default async function StatePage({ params }: { params: Promise<{ stateName: string }> }) {
-    const resolvedParams = await params;
-    const stateNameSlug = resolvedParams?.stateName || '';
+    const { stateName: stateNameSlug } = await params;
     if (!stateNameSlug) notFound();
 
     const stateNameParam = stateNameSlug.replace(/-/g, ' ').toUpperCase();
@@ -62,7 +60,6 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
         getPostOfficesByState(stateNameParam)
     ]);
     
-    // Fallback if districts list is empty but we have post offices
     const effectiveDistricts = districts.length > 0 
         ? districts 
         : [...new Set(allPostOffices.map(po => po?.district).filter(Boolean))].sort();
@@ -90,7 +87,7 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
                                 Complete directory of {allPostOffices.length} postal locations and unique PIN codes across {effectiveDistricts.length} districts in {stateName}.
                             </CardDescription>
                         </div>
-                        <Button variant="outline" asChild suppressHydrationWarning>
+                        <Button variant="outline" asChild>
                             <Link href="/">
                                 <Home className="mr-2 h-4 w-4" />
                                 Home

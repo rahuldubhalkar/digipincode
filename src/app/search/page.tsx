@@ -26,33 +26,19 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     const state = typeof sParams.state === 'string' ? sParams.state : '';
     const district = typeof sParams.district === 'string' ? sParams.district : '';
     const searchTerm = typeof sParams.q === 'string' ? sParams.q : '';
-    const letter = typeof sParams.letter === 'string' ? sParams.letter : '';
 
     let title = 'Pincode Search';
     let location = '';
     
-    const formatName = (str: string) => str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-
-    if (district && typeof district === 'string') {
-        location += `${formatName(district)}, `;
-    }
-    if (state && typeof state === 'string') {
-        location += formatName(state);
-    }
+    if (district) location += `${district}, `;
+    if (state) location += state;
     
-    if (location) {
-        title = `Search results in ${location}`;
-    }
-    if (searchTerm && typeof searchTerm === 'string') {
-        title += ` for "${searchTerm}"`;
-    }
-    if (letter && typeof letter === 'string') {
-        title += ` starting with "${letter}"`;
-    }
+    if (location) title = `Search results in ${location}`;
+    if (searchTerm) title += ` for "${searchTerm}"`;
 
     return {
         title: `${title} | India Post Directory`,
-        description: `Find pincodes and post office details. Search results for ${location || 'India'}. ${searchTerm ? `Query: ${searchTerm}.` : ''}`,
+        description: `Find pincodes and post office details. Search results for ${location || 'India'}.`,
     };
 }
 
@@ -61,7 +47,6 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     const state = typeof sParams.state === 'string' ? sParams.state.toUpperCase() : '';
     const district = typeof sParams.district === 'string' ? sParams.district : '';
     const searchTerm = typeof sParams.q === 'string' ? sParams.q : '';
-    const letter = typeof sParams.letter === 'string' ? sParams.letter.toUpperCase() : '';
 
     const allPostOffices = await getPostOfficesByState(state);
     
@@ -74,33 +59,17 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         if (searchTerm) {
             matches = matches && (po.officename || "").toLowerCase().includes(searchTerm.toLowerCase());
         }
-        if (letter) {
-            matches = matches && (po.officename || "").toUpperCase().startsWith(letter);
-        }
         return matches;
     }).sort((a, b) => (a.officename || "").localeCompare(b.officename || ""));
     
     const states = await getStates();
-    
-    const formatName = (str: string) => str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    
-    let location = '';
-    if (district) location += `${formatName(district)}, `;
-    if (state) location += formatName(state);
-
-    let description = ``;
-    if (searchTerm) description += `Query: "${searchTerm}"`;
-    if (letter) {
-        if (description) description += `, `;
-        description += `Starting with: "${letter}"`;
-    }
 
     return (
         <main className="container mx-auto px-4 py-8 space-y-8">
              <Card className="w-full shadow-lg border-none">
                 <CardHeader className="text-center">
                     <CardTitle className="text-3xl font-headline tracking-tight text-primary">Pincode Search</CardTitle>
-                    <CardDescription>Use the form below to search for pincodes across India.</CardDescription>
+                    <CardDescription>Search for pincodes across India.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <SearchForm 
@@ -108,7 +77,6 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                         initialState={state}
                         initialDistrict={district}
                         initialSearchTerm={searchTerm}
-                        initialLetter={letter}
                     />
                 </CardContent>
             </Card>
@@ -117,11 +85,10 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                 <CardHeader>
                     <CardTitle>
                         {filteredPostOffices.length > 0 
-                            ? `Search Results in ${location || 'India'}`
-                            : `No results found for your search in ${location || 'India'}`
+                            ? `Search Results`
+                            : `No results found`
                         }
                     </CardTitle>
-                     {description && <CardDescription>{description}</CardDescription>}
                 </CardHeader>
                 <CardContent>
                     <PostOfficeTable postOffices={filteredPostOffices} searched={true} />
