@@ -1,11 +1,9 @@
 
 "use client";
 
-import type { PostOffice } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
-import { useTranslation } from '@/lib/i18n/use-translation';
 import Link from 'next/link';
 
 interface StateDetailsProps {
@@ -17,9 +15,7 @@ interface StateDetailsProps {
     onDivisionSelect?: (division: string) => void;
 }
 
-export function StateDetails({ selectedState, districts, onDistrictSelect, selectedDistrict, onDivisionSelect, selectedDivision }: StateDetailsProps) {
-    const { t } = useTranslation();
-    
+export function StateDetails({ selectedState, districts, onDistrictSelect, selectedDistrict }: StateDetailsProps) {
     if (!selectedState || !districts.length) {
         return null;
     }

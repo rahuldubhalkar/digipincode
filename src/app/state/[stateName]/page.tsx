@@ -5,8 +5,25 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { StateDetails } from '@/components/state-details';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home, MapPin } from 'lucide-react';
+import { Home, MapPin, List } from 'lucide-react';
 import { getDistrictsByState } from '@/lib/districts';
+import { promises as fs } from 'fs';
+import path from 'path';
+import { PostOfficeTable } from '@/components/post-office-table';
+import type { PostOffice } from '@/lib/types';
+
+async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
+    if (!state) return [];
+    try {
+        const filePath = path.join(process.cwd(), 'public', 'data', `${state.toUpperCase()}.json`);
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const data = JSON.parse(fileContent);
+        return Array.isArray(data) ? data : [];
+    } catch (error) {
+        console.error(`Failed to load data for state: ${state}`, error);
+        return [];
+    }
+}
 
 export async function generateStaticParams() {
     const states = await getStates();
@@ -40,7 +57,16 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
         notFound();
     }
     
-    const districts = await getDistrictsByState(stateNameParam);
+    const [districts, allPostOffices] = await Promise.all([
+        getDistrictsByState(stateNameParam),
+        getPostOfficesByState(stateNameParam)
+    ]);
+    
+    // Fallback if districts list is empty but we have post offices
+    const effectiveDistricts = districts.length > 0 
+        ? districts 
+        : [...new Set(allPostOffices.map(po => po?.district).filter(Boolean))].sort();
+
     const stateName = stateNameParam.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
     return (
@@ -61,7 +87,7 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
                                 Post Offices & PIN Codes in {stateName}
                              </CardTitle>
                              <CardDescription className="text-lg">
-                                Complete directory of postal locations and 6-digit PIN codes across all districts in {stateName}.
+                                Complete directory of {allPostOffices.length} postal locations and unique PIN codes across {effectiveDistricts.length} districts in {stateName}.
                             </CardDescription>
                         </div>
                         <Button variant="outline" asChild suppressHydrationWarning>
@@ -72,21 +98,29 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
                         </Button>
                     </div>
                 </CardHeader>
-                <CardContent className="pt-8">
-                    <div className="space-y-12">
-                       <section>
-                            <div className="flex items-center gap-2 mb-6">
-                                <MapPin className="text-primary h-6 w-6" />
-                                <h2 className="text-2xl font-bold tracking-tight">Browse by District</h2>
-                            </div>
-                            <StateDetails 
-                                selectedState={stateNameParam}
-                                districts={districts}
-                                selectedDistrict=""
-                                selectedDivision=""
-                            />
-                       </section>
-                    </div>
+                <CardContent className="pt-8 space-y-12">
+                    <section>
+                        <div className="flex items-center gap-2 mb-6">
+                            <MapPin className="text-primary h-6 w-6" />
+                            <h2 className="text-2xl font-bold tracking-tight">Browse by District</h2>
+                        </div>
+                        <StateDetails 
+                            selectedState={stateNameParam}
+                            districts={effectiveDistricts}
+                            selectedDistrict=""
+                            selectedDivision=""
+                        />
+                    </section>
+
+                    <section>
+                        <div className="flex items-center gap-2 mb-6">
+                            <List className="text-primary h-6 w-6" />
+                            <h2 className="text-2xl font-bold tracking-tight">All Post Offices in {stateName}</h2>
+                        </div>
+                        <PostOfficeTable 
+                            postOffices={allPostOffices.sort((a,b) => (a?.officename || "").localeCompare(b?.officename || ""))} 
+                        />
+                    </section>
                 </CardContent>
             </Card>
         </main>
