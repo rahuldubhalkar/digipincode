@@ -18,12 +18,15 @@ async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
         const data = JSON.parse(fileContent);
         return Array.isArray(data) ? data : [];
     } catch (error) {
+        console.error(`Failed to read data for ${state}:`, error);
         return [];
     }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ stateName: string, districtName: string }> }) {
-    const { stateName: sNameSlug, districtName: dNameSlug } = await params;
+    const p = await params;
+    const sNameSlug = p.stateName;
+    const dNameSlug = p.districtName;
     
     const formatSlug = (slug: string) => slug.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     
@@ -37,7 +40,9 @@ export async function generateMetadata({ params }: { params: Promise<{ stateName
 }
 
 export default async function DistrictPage({ params }: { params: Promise<{ stateName: string, districtName: string }> }) {
-    const { stateName: sNameSlug, districtName: dNameSlug } = await params;
+    const p = await params;
+    const sNameSlug = p.stateName;
+    const dNameSlug = p.districtName;
     
     if (!sNameSlug || !dNameSlug) notFound();
 
@@ -55,14 +60,26 @@ export default async function DistrictPage({ params }: { params: Promise<{ state
     );
 
     if (districtPostOffices.length === 0) {
+        // Fallback: If no exact district match, it might be due to slug mismatch
+        const possibleDistricts = [...new Set(allPostOffices.map(po => po.district).filter(Boolean))];
+        const matched = possibleDistricts.find(d => d.replace(/ /g, '-').toLowerCase() === dNameSlug);
+        
+        if (matched) {
+            const redirectedOffices = allPostOffices.filter(po => po.district === matched);
+            return <DistrictView stateName={stateNameParam} districtName={matched} offices={redirectedOffices} sSlug={sNameSlug} />;
+        }
         notFound();
     }
 
+    return <DistrictView stateName={stateNameParam} districtName={districtNameParam} offices={districtPostOffices} sSlug={sNameSlug} />;
+}
+
+function DistrictView({ stateName, districtName, offices, sSlug }: { stateName: string, districtName: string, offices: PostOffice[], sSlug: string }) {
     const formatName = (name: string) => name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     
-    const stateName = formatName(stateNameParam);
-    const districtName = formatName(districtNameParam);
-    const uniquePincodes = new Set(districtPostOffices.map(po => po.pincode));
+    const displayState = formatName(stateName);
+    const displayDistrict = formatName(districtName);
+    const uniquePincodes = new Set(offices.map(po => po.pincode));
 
     return (
         <main className="container mx-auto px-4 py-8 space-y-8">
@@ -71,74 +88,72 @@ export default async function DistrictPage({ params }: { params: Promise<{ state
                     <Home className="h-4 w-4" /> Home
                 </Link>
                 <span>/</span>
-                <Link href={`/state/${sNameSlug}`} className="hover:text-primary">
-                    {stateName}
+                <Link href={`/state/${sSlug}`} className="hover:text-primary">
+                    {displayState}
                 </Link>
                 <span>/</span>
-                <span className="text-foreground font-medium">{districtName}</span>
+                <span className="text-foreground font-medium">{displayDistrict}</span>
             </nav>
 
-            <Card className="border-none shadow-lg">
-                <CardHeader className="bg-primary/5 rounded-t-lg">
+            <Card className="border-none shadow-lg overflow-hidden">
+                <CardHeader className="bg-primary/5 border-b">
                     <div className="flex justify-between items-start flex-wrap gap-4">
                         <div className="space-y-2">
                              <div className="flex items-center gap-2">
                                 <MapPin className="text-primary h-6 w-6" />
                                 <CardTitle className="text-3xl md:text-4xl text-primary font-bold">
-                                    PIN Codes in {districtName}
+                                    PIN Codes in {displayDistrict}
                                 </CardTitle>
                              </div>
                              <CardDescription className="text-lg">
-                                Detailed directory of all {districtPostOffices.length} post offices and {uniquePincodes.size} unique PIN codes in {districtName} district, {stateName}.
+                                Detailed directory of all {offices.length} post offices and {uniquePincodes.size} unique PIN codes in {displayDistrict}, {displayState}.
                             </CardDescription>
                         </div>
                         <Button variant="outline" asChild>
-                            <Link href={`/state/${sNameSlug}`}>
+                            <Link href={`/state/${sSlug}`}>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                All {stateName} Districts
+                                All {displayState} Districts
                             </Link>
                         </Button>
                     </div>
                 </CardHeader>
                 <CardContent className="pt-8">
-                    <section className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                            <Card className="bg-muted/50 border-none shadow-none">
-                                <CardContent className="pt-6">
-                                    <div className="flex items-center gap-3">
-                                        <div className="bg-primary/10 p-2 rounded-full">
-                                            <Hash className="h-5 w-5 text-primary" />
-                                        </div>
-                                        <div>
-                                            <p className="text-2xl font-bold">{uniquePincodes.size}</p>
-                                            <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Total PIN Codes</p>
-                                        </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                        <Card className="bg-muted/50 border-none shadow-none">
+                            <CardContent className="pt-6">
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-primary/10 p-2 rounded-full">
+                                        <Hash className="h-5 w-5 text-primary" />
                                     </div>
-                                </CardContent>
-                            </Card>
-                            <Card className="bg-muted/50 border-none shadow-none">
-                                <CardContent className="pt-6">
-                                    <div className="flex items-center gap-3">
-                                        <div className="bg-primary/10 p-2 rounded-full">
-                                            <MapPin className="h-5 w-5 text-primary" />
-                                        </div>
-                                        <div>
-                                            <p className="text-2xl font-bold">{districtPostOffices.length}</p>
-                                            <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Post Offices</p>
-                                        </div>
+                                    <div>
+                                        <p className="text-2xl font-bold">{uniquePincodes.size}</p>
+                                        <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Total PIN Codes</p>
                                     </div>
-                                </CardContent>
-                            </Card>
-                        </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <Card className="bg-muted/50 border-none shadow-none">
+                            <CardContent className="pt-6">
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-primary/10 p-2 rounded-full">
+                                        <MapPin className="h-5 w-5 text-primary" />
+                                    </div>
+                                    <div>
+                                        <p className="text-2xl font-bold">{offices.length}</p>
+                                        <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Post Offices</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
 
-                        <div className="space-y-4">
-                            <h2 className="text-2xl font-bold tracking-tight">Post Office & Pincode List</h2>
-                            <p className="text-muted-foreground">
-                                The following table provides complete details for every post office in {districtName}, including their type, Taluka, and official 6-digit Indian PIN code.
-                            </p>
-                            <PostOfficeTable postOffices={districtPostOffices.sort((a,b) => (a.officename || "").localeCompare(b.officename || ""))} />
-                        </div>
-                    </section>
+                    <div className="space-y-4">
+                        <h2 className="text-2xl font-bold tracking-tight">Post Office & Pincode List</h2>
+                        <p className="text-muted-foreground">
+                            The following directory provides official 6-digit Indian PIN codes and branch details for every location in {displayDistrict}.
+                        </p>
+                        <PostOfficeTable postOffices={offices.sort((a,b) => (a.officename || "").localeCompare(b.officename || ""))} />
+                    </div>
                 </CardContent>
             </Card>
         </main>

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { StateDetails } from '@/components/state-details';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home, MapPin } from 'lucide-react';
+import { Home, MapPin, ArrowLeft } from 'lucide-react';
 import { getDistrictsByState } from '@/lib/districts';
 
 export async function generateStaticParams() {
@@ -16,7 +16,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ stateName: string }> }) {
-    const { stateName: stateNameSlug } = await params;
+    const p = await params;
+    const stateNameSlug = p.stateName;
     if (!stateNameSlug) return { title: 'State Pincode Directory' };
     
     const stateName = stateNameSlug.replace(/-/g, ' ').split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -28,19 +29,22 @@ export async function generateMetadata({ params }: { params: Promise<{ stateName
 }
 
 export default async function StatePage({ params }: { params: Promise<{ stateName: string }> }) {
-    const { stateName: stateNameSlug } = await params;
+    const p = await params;
+    const stateNameSlug = p.stateName;
     if (!stateNameSlug) notFound();
 
     const stateNameParam = stateNameSlug.replace(/-/g, ' ').toUpperCase();
     const states = await getStates();
     
+    // Exact match check
     if (!states.includes(stateNameParam)) {
-        notFound();
+        // Try finding closest match or redirect
+        const found = states.find(s => s.replace(/ /g, '-').toLowerCase() === stateNameSlug);
+        if (!found) notFound();
     }
     
     const districts = await getDistrictsByState(stateNameParam);
-
-    const stateName = stateNameParam.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    const stateNameDisplay = stateNameParam.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
     return (
         <main className="container mx-auto px-4 py-8 space-y-8">
@@ -49,24 +53,24 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
                     <Home className="h-4 w-4" /> Home
                 </Link>
                 <span>/</span>
-                <span className="text-foreground font-medium">{stateName}</span>
+                <span className="text-foreground font-medium">{stateNameDisplay}</span>
             </nav>
 
-            <Card className="border-none shadow-lg">
-                <CardHeader className="bg-primary/5 rounded-t-lg">
+            <Card className="border-none shadow-lg overflow-hidden">
+                <CardHeader className="bg-primary/5 border-b">
                     <div className="flex justify-between items-start flex-wrap gap-4">
                         <div className="space-y-2">
                              <CardTitle className="text-3xl md:text-4xl text-primary font-bold">
-                                Post Offices & PIN Codes in {stateName}
+                                Post Offices & PIN Codes in {stateNameDisplay}
                              </CardTitle>
                              <CardDescription className="text-lg">
-                                Complete directory of postal locations and unique PIN codes across {districts.length} districts in {stateName}.
+                                Complete directory of postal locations across {districts.length} districts in {stateNameDisplay}.
                             </CardDescription>
                         </div>
                         <Button variant="outline" asChild>
                             <Link href="/">
-                                <Home className="mr-2 h-4 w-4" />
-                                Home
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Back to Search
                             </Link>
                         </Button>
                     </div>
@@ -77,12 +81,18 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
                             <MapPin className="text-primary h-6 w-6" />
                             <h2 className="text-2xl font-bold tracking-tight">Browse by District</h2>
                         </div>
-                        <StateDetails 
-                            selectedState={stateNameParam}
-                            districts={districts}
-                            selectedDistrict=""
-                            selectedDivision=""
-                        />
+                        {districts.length > 0 ? (
+                             <StateDetails 
+                                selectedState={stateNameParam}
+                                districts={districts}
+                                selectedDistrict=""
+                                selectedDivision=""
+                            />
+                        ) : (
+                            <div className="text-center py-12 bg-muted/30 rounded-lg">
+                                <p className="text-muted-foreground">District information for {stateNameDisplay} is currently being updated. Please check back shortly.</p>
+                            </div>
+                        )}
                     </section>
                 </CardContent>
             </Card>

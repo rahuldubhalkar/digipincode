@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +14,7 @@ interface PincodeZoneListProps {
 export function PincodeZoneList({ onZoneSelect }: PincodeZoneListProps) {
   const { t } = useTranslation();
 
+  // Mapping circle names to the URL slugs used in the file system
   const circleToSlugMap: { [key: string]: string } = {
       "Delhi": "delhi",
       "Haryana": "haryana",
@@ -43,6 +45,8 @@ export function PincodeZoneList({ onZoneSelect }: PincodeZoneListProps) {
       "Tripura": "tripura",
       "Bihar": "bihar",
       "Jharkhand": "jharkhand",
+      "Uttarakhand": "uttarakhand",
+      "Goa": "goa"
     };
 
   return (
@@ -54,18 +58,16 @@ export function PincodeZoneList({ onZoneSelect }: PincodeZoneListProps) {
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-3 text-sm">
           {pincodeZones.map((zone) => {
              const stateSlug = circleToSlugMap[zone.circle];
-             if (!stateSlug) {
-                 return null;
-             }
-             const stateUrl = `/state/${stateSlug}`;
+             const stateUrl = stateSlug ? `/state/${stateSlug}` : "#";
+             
             return (
-                <li key={zone.id} className="flex items-start">
-                    <span className="font-semibold text-muted-foreground w-16 flex-shrink-0">{zone.digits}</span>
+                <li key={zone.id} className="flex items-start group">
+                    <span className="font-semibold text-muted-foreground w-16 flex-shrink-0 group-hover:text-primary transition-colors">{zone.digits}</span>
                     {onZoneSelect ? (
                         <Button
                             variant="link"
                             onClick={() => onZoneSelect(zone.circle)}
-                            className="text-primary hover:underline text-left h-auto p-0"
+                            className="text-primary hover:underline text-left h-auto p-0 font-medium"
                             aria-label={`${t('zoneList.searchFor')} ${zone.circle}`}
                         >
                             {zone.circle}
@@ -73,7 +75,7 @@ export function PincodeZoneList({ onZoneSelect }: PincodeZoneListProps) {
                     ) : (
                         <Link
                             href={stateUrl}
-                            className="text-primary hover:underline text-left"
+                            className="text-primary hover:underline text-left font-medium"
                             aria-label={`${t('zoneList.searchFor')} ${zone.circle}`}
                         >
                             {zone.circle}
