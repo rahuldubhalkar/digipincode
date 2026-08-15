@@ -48,6 +48,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     };
 
     const templateValue = getFromDict(translations[language]) || getFromDict(translations['en']);
+    // Fallback: If key points to an object or is missing, return the key as a string
     const template = typeof templateValue === 'string' ? templateValue : key;
 
     if (values) {

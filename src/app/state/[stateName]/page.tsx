@@ -42,9 +42,10 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
     const offices = await getPostOfficesByState(matchedState);
     if (!offices || offices.length === 0) notFound();
     
+    // Robust extraction of districts
     const districts = [...new Set(offices.map(po => {
         const d = po.district || (po as any).District || (po as any).districtname || '';
-        return d.trim();
+        return d.toString().trim();
     }).filter(Boolean))].sort();
 
     const stateNameDisplay = matchedState.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');

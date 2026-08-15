@@ -40,6 +40,7 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                     {postOffices.length > 0 ? (
                       postOffices.map((po, index) => {
                         if (!po) return null;
+                        // Robust property lookup
                         const district = po.district || (po as any).District || (po as any).districtname || (po as any).Districtname || 'N/A';
                         const taluka = po.Taluk || (po as any).taluk || (po as any).Taluka || po.divisionname || 'N/A';
                         const officeName = po.officename || (po as any).officename || 'Unknown';

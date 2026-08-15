@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home, ArrowLeft, MapPin, Hash } from 'lucide-react';
+import { Home, ArrowLeft, MapPin } from 'lucide-react';
 import { getPostOfficesByState } from '@/lib/districts';
 import { PostOfficeTable } from '@/components/post-office-table';
 
@@ -47,7 +47,7 @@ export default async function DistrictPage({ params }: { params: Promise<{ state
     if (districtPostOffices.length === 0) notFound();
 
     const firstEntry = districtPostOffices[0];
-    const actualDistrictName = (firstEntry.district || (firstEntry as any).District || (firstEntry as any).districtname || dNameSlug.replace(/-/g, ' ')).toUpperCase();
+    const actualDistrictName = (firstEntry.district || (firstEntry as any).District || (firstEntry as any).districtname || dNameSlug.replace(/-/g, ' ')).toString().toUpperCase();
 
     return (
         <main className="container mx-auto px-4 py-8 space-y-8">
@@ -86,7 +86,11 @@ export default async function DistrictPage({ params }: { params: Promise<{ state
                     </div>
                 </CardHeader>
                 <CardContent className="pt-8">
-                    <PostOfficeTable postOffices={districtPostOffices.sort((a,b) => (a.officename || "").localeCompare(b.officename || ""))} />
+                    <PostOfficeTable postOffices={districtPostOffices.sort((a,b) => {
+                      const aName = a.officename || (a as any).officename || "";
+                      const bName = b.officename || (b as any).officename || "";
+                      return aName.localeCompare(bName);
+                    })} />
                 </CardContent>
             </Card>
         </main>

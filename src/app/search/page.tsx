@@ -53,14 +53,22 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     const filteredPostOffices = (allPostOffices || []).filter(po => {
         if (!po) return false;
         let matches = true;
+        // Deep lookup for district and office name
+        const poDistrict = po.district || (po as any).District || (po as any).districtname || "";
+        const poOffice = po.officename || (po as any).officename || "";
+
         if (district) {
-            matches = matches && (po.district || "").toUpperCase() === district.toUpperCase();
+            matches = matches && poDistrict.toString().toUpperCase() === district.toUpperCase();
         }
         if (searchTerm) {
-            matches = matches && (po.officename || "").toLowerCase().includes(searchTerm.toLowerCase());
+            matches = matches && poOffice.toString().toLowerCase().includes(searchTerm.toLowerCase());
         }
         return matches;
-    }).sort((a, b) => (a.officename || "").localeCompare(b.officename || ""));
+    }).sort((a, b) => {
+      const aName = a.officename || (a as any).officename || "";
+      const bName = b.officename || (b as any).officename || "";
+      return aName.localeCompare(bName);
+    });
     
     const states = await getStates();
 
@@ -85,7 +93,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                 <CardHeader>
                     <CardTitle>
                         {filteredPostOffices.length > 0 
-                            ? `Search Results`
+                            ? `Search Results (${filteredPostOffices.length})`
                             : `No results found`
                         }
                     </CardTitle>
