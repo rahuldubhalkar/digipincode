@@ -15,7 +15,6 @@ export async function generateMetadata({ params }: { params: Promise<{ stateName
     const dNameSlug = p.districtName;
     
     const formatSlug = (slug: string) => slug.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    
     const stateName = formatSlug(sNameSlug);
     const districtName = formatSlug(dNameSlug);
 
@@ -34,39 +33,21 @@ export default async function DistrictPage({ params }: { params: Promise<{ state
 
     const states = await getStates();
     const matchedState = states.find(s => s.replace(/ /g, '-').toLowerCase() === sNameSlug);
-    
     if (!matchedState) notFound();
 
     const allPostOffices = await getPostOfficesByState(matchedState);
-    
-    if (!allPostOffices || allPostOffices.length === 0) {
-        notFound();
-    }
+    if (!allPostOffices || allPostOffices.length === 0) notFound();
     
     const districtNameSlug = dNameSlug.toLowerCase();
-    
-    // Filter with case-insensitivity and multiple key checks (district, District, districtname)
     const districtPostOffices = allPostOffices.filter(po => {
         const d = (po.district || (po as any).District || (po as any).districtname || '').toString();
         return d && d.replace(/ /g, '-').toLowerCase() === districtNameSlug;
     });
 
-    if (districtPostOffices.length === 0) {
-        notFound();
-    }
+    if (districtPostOffices.length === 0) notFound();
 
     const firstEntry = districtPostOffices[0];
     const actualDistrictName = (firstEntry.district || (firstEntry as any).District || (firstEntry as any).districtname || dNameSlug.replace(/-/g, ' ')).toUpperCase();
-
-    return <DistrictView stateName={matchedState} districtName={actualDistrictName} offices={districtPostOffices} sSlug={sNameSlug} />;
-}
-
-function DistrictView({ stateName, districtName, offices, sSlug }: { stateName: string, districtName: string, offices: PostOffice[], sSlug: string }) {
-    const formatName = (name: string) => name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    
-    const displayState = formatName(stateName);
-    const displayDistrict = formatName(districtName);
-    const uniquePincodes = new Set(offices.map(po => po.pincode));
 
     return (
         <main className="container mx-auto px-4 py-8 space-y-8">
@@ -75,11 +56,11 @@ function DistrictView({ stateName, districtName, offices, sSlug }: { stateName: 
                     <Home className="h-4 w-4" /> Home
                 </Link>
                 <span>/</span>
-                <Link href={`/state/${sSlug}`} className="hover:text-primary">
-                    {displayState}
+                <Link href={`/state/${sNameSlug}`} className="hover:text-primary">
+                    {matchedState}
                 </Link>
                 <span>/</span>
-                <span className="text-foreground font-medium">{displayDistrict}</span>
+                <span className="text-foreground font-medium">{actualDistrictName}</span>
             </nav>
 
             <Card className="border-none shadow-lg overflow-hidden">
@@ -89,60 +70,25 @@ function DistrictView({ stateName, districtName, offices, sSlug }: { stateName: 
                              <div className="flex items-center gap-2">
                                 <MapPin className="text-primary h-6 w-6" />
                                 <CardTitle className="text-3xl md:text-4xl text-primary font-bold">
-                                    PIN Codes in {displayDistrict}
+                                    PIN Codes in {actualDistrictName}
                                 </CardTitle>
                              </div>
                              <CardDescription className="text-lg">
-                                Detailed directory of all {offices.length} post offices and {uniquePincodes.size} unique PIN codes in {displayDistrict}, {displayState}.
+                                Detailed directory of all {districtPostOffices.length} post offices in {actualDistrictName}, {matchedState}.
                             </CardDescription>
                         </div>
                         <Button variant="outline" asChild>
-                            <Link href={`/state/${sSlug}`}>
+                            <Link href={`/state/${sNameSlug}`}>
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                All {displayState} Districts
+                                Back to {matchedState}
                             </Link>
                         </Button>
                     </div>
                 </CardHeader>
                 <CardContent className="pt-8">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                        <Card className="bg-muted/50 border-none shadow-none">
-                            <CardContent className="pt-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="bg-primary/10 p-2 rounded-full">
-                                        <Hash className="h-5 w-5 text-primary" />
-                                    </div>
-                                    <div>
-                                        <p className="text-2xl font-bold">{uniquePincodes.size}</p>
-                                        <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Total PIN Codes</p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                        <Card className="bg-muted/50 border-none shadow-none">
-                            <CardContent className="pt-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="bg-primary/10 p-2 rounded-full">
-                                        <MapPin className="h-5 w-5 text-primary" />
-                                    </div>
-                                    <div>
-                                        <p className="text-2xl font-bold">{offices.length}</p>
-                                        <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Post Offices</p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-
-                    <div className="space-y-4">
-                        <h2 className="text-2xl font-bold tracking-tight">Post Office & Pincode List</h2>
-                        <p className="text-muted-foreground">
-                            The following directory provides official 6-digit Indian PIN codes and branch details for every location in {displayDistrict}.
-                        </p>
-                        <PostOfficeTable postOffices={offices.sort((a,b) => (a.officename || "").localeCompare(b.officename || ""))} />
-                    </div>
+                    <PostOfficeTable postOffices={districtPostOffices.sort((a,b) => (a.officename || "").localeCompare(b.officename || ""))} />
                 </CardContent>
             </Card>
         </main>
-    )
+    );
 }

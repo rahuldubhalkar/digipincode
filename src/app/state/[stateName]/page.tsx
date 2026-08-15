@@ -35,25 +35,16 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
     if (!stateNameSlug) notFound();
 
     const states = await getStates();
-    
-    // Find matching state name from the authorized list
     const matchedState = states.find(s => s.replace(/ /g, '-').toLowerCase() === stateNameSlug);
     
-    if (!matchedState) {
-        notFound();
-    }
+    if (!matchedState) notFound();
     
-    // Fetch offices directly to ensure we have data
     const offices = await getPostOfficesByState(matchedState);
+    if (!offices || offices.length === 0) notFound();
     
-    if (!offices || offices.length === 0) {
-        notFound();
-    }
-    
-    // Derive districts from the offices data with robust key matching
     const districts = [...new Set(offices.map(po => {
-        // Handle various possible key names for district
-        return (po.district || (po as any).District || (po as any).districtname || '').trim();
+        const d = po.district || (po as any).District || (po as any).districtname || '';
+        return d.trim();
     }).filter(Boolean))].sort();
 
     const stateNameDisplay = matchedState.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
@@ -88,7 +79,7 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
                     </div>
                 </CardHeader>
                 <CardContent className="pt-8 space-y-12">
-                    {districts.length > 0 ? (
+                    {districts.length > 0 && (
                         <section>
                             <div className="flex items-center gap-2 mb-6">
                                 <MapPin className="text-primary h-6 w-6" />
@@ -101,10 +92,6 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
                                 selectedDivision=""
                             />
                         </section>
-                    ) : (
-                        <div className="bg-muted/30 rounded-lg p-8 text-center text-muted-foreground">
-                            <p>We are currently indexing the districts for {stateNameDisplay}. Detailed office data is available below.</p>
-                        </div>
                     )}
 
                     <section className="space-y-6">
@@ -112,13 +99,10 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
                             <Building2 className="text-primary h-6 w-6" />
                             <h2 className="text-2xl font-bold tracking-tight">All Post Offices in {stateNameDisplay}</h2>
                         </div>
-                        <p className="text-muted-foreground">
-                            Below is the complete list of post offices and their respective 6-digit PIN codes for the entire state of {stateNameDisplay}.
-                        </p>
                         <PostOfficeTable postOffices={offices} searched={true} />
                     </section>
                 </CardContent>
             </Card>
         </main>
-    )
+    );
 }
