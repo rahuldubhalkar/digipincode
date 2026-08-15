@@ -1,4 +1,3 @@
-
 "use client";
 
 import type { PostOffice } from "@/lib/types";
@@ -24,16 +23,16 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
     return (
         <div className="w-full">
             <div className="hidden md:block">
-              <ScrollArea className="h-[600px] border rounded-lg">
+              <ScrollArea className="h-[600px] border rounded-lg bg-card">
                 <Table>
-                  <TableHeader className="sticky top-0 bg-card z-10">
+                  <TableHeader className="sticky top-0 bg-card z-10 shadow-sm">
                     <TableRow>
-                      <TableHead className="w-[200px]">Office Name</TableHead>
-                      <TableHead>Pincode</TableHead>
-                      <TableHead>Office Type</TableHead>
-                      <TableHead>Taluka / Tehsil</TableHead>
-                      <TableHead>District</TableHead>
-                      <TableHead>State</TableHead>
+                      <TableHead className="w-[250px] font-bold">Office Name</TableHead>
+                      <TableHead className="font-bold">Pincode</TableHead>
+                      <TableHead className="font-bold">Office Type</TableHead>
+                      <TableHead className="font-bold">Taluka / Tehsil</TableHead>
+                      <TableHead className="font-bold">District</TableHead>
+                      <TableHead className="font-bold">State</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -46,19 +45,19 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                         const officeName = po.officename || (po as any).officename || 'Unknown';
                         
                         return (
-                          <TableRow key={`${officeName}-${po.pincode}-${index}`} className="hover:bg-muted/50 transition-colors">
-                            <TableCell className="font-medium text-primary">{officeName}</TableCell>
-                            <TableCell className="font-mono bg-primary/5 px-2 rounded">{po.pincode}</TableCell>
-                            <TableCell>{po.officetype}</TableCell>
-                            <TableCell>{taluka}</TableCell>
-                            <TableCell>{district}</TableCell>
-                            <TableCell>{po.statename}</TableCell>
+                          <TableRow key={`${officeName}-${po.pincode}-${index}`} className="hover:bg-primary/5 transition-colors">
+                            <TableCell className="font-bold text-primary">{officeName}</TableCell>
+                            <TableCell className="font-mono bg-primary/10 px-2 rounded font-bold">{po.pincode}</TableCell>
+                            <TableCell className="text-sm">{po.officetype}</TableCell>
+                            <TableCell className="text-sm">{taluka}</TableCell>
+                            <TableCell className="text-sm">{district}</TableCell>
+                            <TableCell className="text-sm font-medium">{po.statename}</TableCell>
                           </TableRow>
                         );
                       })
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={6} className="h-24 text-center">
+                        <TableCell colSpan={6} className="h-64 text-center">
                           {noResultsMessage}
                         </TableCell>
                       </TableRow>
@@ -88,20 +87,20 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                                         </div>
                                         <div className="grid grid-cols-2 gap-y-2 text-sm border-t pt-3">
                                             <div>
-                                                <p className="text-muted-foreground text-xs uppercase font-semibold">Office Type</p>
+                                                <p className="text-muted-foreground text-xs uppercase font-bold">Office Type</p>
                                                 <p>{po.officetype}</p>
                                             </div>
                                             <div>
-                                                <p className="text-muted-foreground text-xs uppercase font-semibold">Taluka</p>
+                                                <p className="text-muted-foreground text-xs uppercase font-bold">Taluka</p>
                                                 <p>{taluka}</p>
                                             </div>
                                             <div>
-                                                <p className="text-muted-foreground text-xs uppercase font-semibold">District</p>
+                                                <p className="text-muted-foreground text-xs uppercase font-bold">District</p>
                                                 <p>{district}</p>
                                             </div>
                                             <div>
-                                                <p className="text-muted-foreground text-xs uppercase font-semibold">State</p>
-                                                <p className="truncate">{po.statename}</p>
+                                                <p className="text-muted-foreground text-xs uppercase font-bold">State</p>
+                                                <p className="truncate font-medium">{po.statename}</p>
                                             </div>
                                         </div>
                                     </CardContent>
@@ -109,7 +108,7 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                             );
                         })
                     ) : (
-                        <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
+                        <div className="h-64 flex items-center justify-center text-center text-muted-foreground">
                             {noResultsMessage}
                         </div>
                     )}

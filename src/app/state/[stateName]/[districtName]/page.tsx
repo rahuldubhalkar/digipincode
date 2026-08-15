@@ -1,4 +1,3 @@
-
 import { getStates } from '@/lib/data';
 import type { PostOffice } from '@/lib/types';
 import { notFound } from 'next/navigation';

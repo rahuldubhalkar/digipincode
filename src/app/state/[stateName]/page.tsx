@@ -1,4 +1,3 @@
-
 import { getStates } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -43,7 +42,7 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
     const offices = await getPostOfficesByState(matchedState);
     if (!offices || offices.length === 0) notFound();
     
-    // Hardened extraction of districts with multiple key support
+    // Robust district extraction
     const districts = [...new Set(offices.map(po => {
         const d = (po as any).district || (po as any).District || (po as any).districtname || (po as any).Districtname || '';
         return d.toString().trim();

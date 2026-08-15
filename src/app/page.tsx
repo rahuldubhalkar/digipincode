@@ -1,49 +1,89 @@
-
 import { getStates } from '@/lib/data';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import ImageArticles from '@/components/image-articles';
 import { PincodeZoneList } from '@/components/pincode-zone-list';
 import { PincodeClientPage } from './pincode/pincode-client-page';
-import { getTranslation } from '@/lib/i18n/get-translation';
+import { TrackingClientPage } from './tracking/tracking-client-page';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Search, PackageSearch } from 'lucide-react';
 
 const faqItems = [
     {
-      "question": "What is an Indian Postal PIN Code and why is it important for mail delivery?",
-      "answer": "A Postal Index Number (PIN), commonly known as a Pincode, is a unique 6-digit code assigned by the Indian postal service (India Post) to every delivery post office in the country. This code is the backbone of the mail sorting and delivery process. Each digit has a specific geographical meaning: the first digit indicates the postal zone, the second for the sub-zone, the third for the sorting district, and the last three for the specific delivery post office."
+      "question": "How do I find an Indian PIN Code for my area?",
+      "answer": "You can find any Indian PIN code by using our search directory. Simply select your state and district, or search directly by the post office name. Each PIN code is a 6-digit number where the first digit represents the region, the second the sub-region, the third the sorting district, and the last three digits represent the specific delivery post office."
     },
     {
-      "question": "How can I find a PIN code for a specific area, post office, or postal code?",
-      "answer": "Our website provides a powerful and flexible India PIN code search engine. If you know the 6-digit code, you can use the 'Search by Pincode' feature to get a complete list of all post offices associated with that postal code. Simply select a state or enter the name to find details instantly."
+      "question": "Can I track my Speed Post parcel here?",
+      "answer": "Yes, our real-time India Post tracking tool allows you to track Speed Post, Registered Post, and other domestic and international parcels. Simply enter your tracking number (e.g., EB123456789IN) in the tracking tab above."
     },
     {
-      "question": "What kind of post office details can I find when I perform a search?",
-      "answer": "Our all India PIN code directory offers comprehensive information for every listed post office, including official Post Office name, 6-digit Pincode, office type (e.g., Head Post Office, Sub-Office, or Branch Office), taluka (sub-district), district, and state."
+      "question": "What is the format of an India Post tracking number?",
+      "answer": "Most India Post tracking numbers consist of 13 alphanumeric characters. They typically start with two letters (like 'EB' for Speed Post), followed by nine digits, and end with the country code 'IN'."
+    },
+    {
+      "question": "Are the PIN codes updated?",
+      "answer": "Yes, we use the official All India Pincode Directory dataset provided by the Government of India. This ensures that you get the most accurate and up-to-date postal information available on record."
     }
-  ];
+];
 
 export default async function Home() {
   const states = await getStates();
-  const t = await getTranslation('en');
   
   return (
-    <main className="container mx-auto px-4 py-8 space-y-12">
-        <PincodeClientPage states={states} />
+    <div className="flex flex-col gap-12 pb-16">
+      {/* Hero Section with Tabs */}
+      <section className="bg-secondary pt-12 pb-24 text-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center space-y-6">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+              India Post Pincode & Tracking
+            </h1>
+            <p className="text-xl text-white/80 max-w-2xl mx-auto">
+              The fastest way to search for 155,000+ Indian Post Offices and track your parcels in real-time.
+            </p>
+            
+            <Card className="mt-8 border-none shadow-2xl overflow-hidden text-foreground">
+              <Tabs defaultValue="search" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 h-14 bg-muted/50 p-1">
+                  <TabsTrigger value="search" className="data-[state=active]:bg-white data-[state=active]:text-primary text-lg font-bold">
+                    <Search className="mr-2 h-5 w-5" /> Search Pincode
+                  </TabsTrigger>
+                  <TabsTrigger value="track" className="data-[state=active]:bg-white data-[state=active]:text-primary text-lg font-bold">
+                    <PackageSearch className="mr-2 h-5 w-5" /> Track Parcel
+                  </TabsTrigger>
+                </TabsList>
+                <CardContent className="p-0">
+                  <TabsContent value="search" className="m-0 p-6 md:p-8">
+                    <PincodeClientPage states={states} />
+                  </TabsContent>
+                  <TabsContent value="track" className="m-0 p-6 md:p-8">
+                    <TrackingClientPage />
+                  </TabsContent>
+                </CardContent>
+              </Tabs>
+            </Card>
+          </div>
+        </div>
+      </section>
 
+      <div className="container mx-auto px-4 space-y-16 -mt-12">
         <PincodeZoneList />
 
         <ImageArticles />
       
-        <Card className="w-full shadow-lg border-none">
-          <CardHeader>
-            <CardTitle className="text-2xl font-headline tracking-tight text-center">Post Office & PIN Code Search - FAQ</CardTitle>
+        <Card className="shadow-lg border-none">
+          <CardHeader className="bg-muted/30 border-b">
+            <CardTitle className="text-2xl font-bold text-center">Frequently Asked Questions</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto">
                 {faqItems.map((item, index) => (
-                    <AccordionItem value={`item-${index}`} key={index}>
-                        <AccordionTrigger>{item.question}</AccordionTrigger>
-                        <AccordionContent>
+                    <AccordionItem value={`item-${index}`} key={index} className="border-b last:border-0">
+                        <AccordionTrigger className="text-left font-bold text-lg hover:text-primary transition-colors">
+                          {item.question}
+                        </AccordionTrigger>
+                        <AccordionContent className="text-muted-foreground text-base leading-relaxed">
                             {item.answer}
                         </AccordionContent>
                     </AccordionItem>
@@ -51,6 +91,7 @@ export default async function Home() {
             </Accordion>
           </CardContent>
         </Card>
-    </main>
+      </div>
+    </div>
   );
 }
