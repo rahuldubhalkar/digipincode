@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Home, MapPin, ArrowLeft, Building2 } from 'lucide-react';
 import { getPostOfficesByState } from '@/lib/districts';
 import { PostOfficeTable } from '@/components/post-office-table';
+import type { PostOffice } from '@/lib/types';
 
 export async function generateStaticParams() {
     const states = await getStates();
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ stateName
 
 export default async function StatePage({ params }: { params: Promise<{ stateName: string }> }) {
     const p = await params;
-    const stateNameSlug = p.stateName;
+    const stateNameSlug = p?.stateName;
     if (!stateNameSlug) notFound();
 
     const states = await getStates();
@@ -42,9 +43,9 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
     const offices = await getPostOfficesByState(matchedState);
     if (!offices || offices.length === 0) notFound();
     
-    // Robust extraction of districts
+    // Hardened extraction of districts with multiple key support
     const districts = [...new Set(offices.map(po => {
-        const d = po.district || (po as any).District || (po as any).districtname || '';
+        const d = (po as any).district || (po as any).District || (po as any).districtname || (po as any).Districtname || '';
         return d.toString().trim();
     }).filter(Boolean))].sort();
 

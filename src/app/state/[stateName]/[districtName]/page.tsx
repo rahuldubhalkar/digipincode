@@ -26,8 +26,8 @@ export async function generateMetadata({ params }: { params: Promise<{ stateName
 
 export default async function DistrictPage({ params }: { params: Promise<{ stateName: string, districtName: string }> }) {
     const p = await params;
-    const sNameSlug = p.stateName;
-    const dNameSlug = p.districtName;
+    const sNameSlug = p?.stateName;
+    const dNameSlug = p?.districtName;
     
     if (!sNameSlug || !dNameSlug) notFound();
 
@@ -40,14 +40,14 @@ export default async function DistrictPage({ params }: { params: Promise<{ state
     
     const districtNameSlug = dNameSlug.toLowerCase();
     const districtPostOffices = allPostOffices.filter(po => {
-        const d = (po.district || (po as any).District || (po as any).districtname || '').toString();
+        const d = ((po as any).district || (po as any).District || (po as any).districtname || (po as any).Districtname || '').toString();
         return d && d.replace(/ /g, '-').toLowerCase() === districtNameSlug;
     });
 
     if (districtPostOffices.length === 0) notFound();
 
     const firstEntry = districtPostOffices[0];
-    const actualDistrictName = (firstEntry.district || (firstEntry as any).District || (firstEntry as any).districtname || dNameSlug.replace(/-/g, ' ')).toString().toUpperCase();
+    const actualDistrictName = ((firstEntry as any).district || (firstEntry as any).District || (firstEntry as any).districtname || (firstEntry as any).Districtname || dNameSlug.replace(/-/g, ' ')).toString().toUpperCase();
 
     return (
         <main className="container mx-auto px-4 py-8 space-y-8">

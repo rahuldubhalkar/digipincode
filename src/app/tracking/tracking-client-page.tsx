@@ -9,9 +9,7 @@ import { Button } from "@/components/ui/button";
 import { PackageSearch, Search, Loader2, MapPin, CheckCircle2, Clock, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-
-const API_KEY = "d3d6076396664a30b4a7c991ba219bf9";
-const TRACKING_API_URL = "https://api.shipway.in/v1/track"; // Example provider endpoint
+import { trackParcel } from "./actions";
 
 interface TrackingEvent {
   time: string;
@@ -38,7 +36,8 @@ export function TrackingClientPage() {
 
   const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!trackingNumber.trim()) {
+    const query = trackingNumber.trim();
+    if (!query) {
       setError(t('tracking.errorInvalid'));
       return;
     }
@@ -48,48 +47,12 @@ export function TrackingClientPage() {
     setResult(null);
 
     try {
-      // Real-time fetch from API
-      // Note: We use a robust error handling block to deal with different API responses
-      const response = await fetch(`${TRACKING_API_URL}?key=${API_KEY}&tracking_number=${trackingNumber}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      if (!response.ok) {
-        throw new Error('API request failed');
-      }
-
-      const data = await response.json();
-
-      // If API returns data, map it to our UI structure. 
-      // Falling back to mock data if the API response is empty for the demo.
-      if (data && data.status === "success") {
-        setResult({
-          trackingNumber: trackingNumber.toUpperCase(),
-          status: data.current_status || "In Transit",
-          lastUpdate: new Date().toLocaleString(),
-          origin: data.origin || "Unknown",
-          destination: data.destination || "Unknown",
-          events: data.history || []
-        });
-      } else {
-        // Fallback/Simulated data if specific API returns no results for the demo tracking number
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setResult({
-          trackingNumber: trackingNumber.toUpperCase(),
-          status: "In Transit",
-          lastUpdate: new Date().toLocaleString(),
-          origin: "Sorting Center",
-          destination: "Destination Hub",
-          events: [
-            {
-              time: new Date().toLocaleString(),
-              location: "Regional Hub",
-              description: "Item received at sorting facility",
-              status: "Processed"
-            }
-          ]
-        });
+      const response = await trackParcel(query);
+      
+      if (response.error) {
+        setError(response.error);
+      } else if (response.data) {
+        setResult(response.data as TrackingData);
       }
     } catch (err) {
       setError(t('tracking.errorGeneric'));
