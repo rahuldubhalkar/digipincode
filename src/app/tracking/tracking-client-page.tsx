@@ -327,46 +327,6 @@ export function TrackingClientPage() {
             </section>
         </div>
 
-        {/* Tariff Table */}
-        <section className="space-y-8">
-            <div className="flex items-center gap-5">
-                <Truck className="h-10 w-10 text-primary" />
-                <h2 className="text-3xl font-black text-slate-900">Speed POST Tariff Structure</h2>
-            </div>
-            <div className="border-2 rounded-[2.5rem] overflow-hidden bg-white shadow-xl">
-                <Table>
-                    <TableHeader className="bg-slate-50">
-                        <TableRow className="hover:bg-transparent">
-                            <TableHead className="font-black h-16 text-lg">Weight</TableHead>
-                            <TableHead className="font-black h-16 text-lg">Local</TableHead>
-                            <TableHead className="font-black h-16 text-lg">Up to 200km</TableHead>
-                            <TableHead className="font-black h-16 text-lg">201-1000km</TableHead>
-                            <TableHead className="font-black h-16 text-lg">1001-2000km</TableHead>
-                            <TableHead className="font-black h-16 text-lg">Above 2000km</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {[
-                            { w: "Up to 50g", l: "₹15", a: "₹35", b: "₹35", c: "₹35", d: "₹35" },
-                            { w: "51g to 200g", l: "₹25", a: "₹35", b: "₹40", c: "₹60", d: "₹70" },
-                            { w: "201g to 500g", l: "₹30", a: "₹50", b: "₹60", c: "₹80", d: "₹90" },
-                            { w: "Addl 500g", l: "₹10", a: "₹15", b: "₹30", c: "₹40", d: "₹50" },
-                        ].map((row, i) => (
-                            <TableRow key={i} className="hover:bg-primary/5">
-                                <TableCell className="font-bold py-5">{row.w}</TableCell>
-                                <TableCell className="font-medium">{row.l}</TableCell>
-                                <TableCell className="font-medium">{row.a}</TableCell>
-                                <TableCell className="font-medium">{row.b}</TableCell>
-                                <TableCell className="font-medium">{row.c}</TableCell>
-                                <TableCell className="font-medium">{row.d}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </div>
-            <p className="text-sm text-slate-500 italic px-4">* Taxes not included. Proof of Delivery (POD) fee is ₹10.00 per article.</p>
-        </section>
-
         {/* Delivery Time Table */}
         <section className="space-y-8">
             <div className="flex items-center gap-5">
