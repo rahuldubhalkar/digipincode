@@ -4,10 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { StateDetails } from '@/components/state-details';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home, MapPin, ArrowLeft, Building2 } from 'lucide-react';
+import { Home, MapPin, ArrowLeft } from 'lucide-react';
 import { getPostOfficesByState } from '@/lib/districts';
-import { PostOfficeTable } from '@/components/post-office-table';
-import type { PostOffice } from '@/lib/types';
 
 export async function generateStaticParams() {
     const states = await getStates();
@@ -40,7 +38,6 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
     const offices = await getPostOfficesByState(matchedState);
     if (!offices || offices.length === 0) notFound();
     
-    // Robust district extraction handling multiple source key formats
     const districts = [...new Set(offices.map(po => {
         const d = (po as any).district || (po as any).District || (po as any).districtname || (po as any).Districtname || '';
         return d.toString().trim();
@@ -66,7 +63,7 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
                                 {stateNameDisplay} <span className="text-primary">Postal Directory</span>
                              </CardTitle>
                              <CardDescription className="text-xl font-medium text-slate-600 max-w-3xl leading-relaxed">
-                                Complete directory of postal locations across <span className="text-secondary font-black">{districts.length}</span> districts in <span className="font-bold">{stateNameDisplay}</span>. Browse all <span className="text-secondary font-black">{offices.length}</span> post offices.
+                                Complete directory of postal locations across <span className="text-secondary font-black">{districts.length}</span> districts in <span className="font-bold">{stateNameDisplay}</span>. Select a district below to view its post offices.
                             </CardDescription>
                         </div>
                         <Button variant="outline" asChild className="rounded-2xl border-2 h-14 px-8 text-lg font-black hover:bg-primary hover:text-white transition-all shadow-md">
@@ -96,14 +93,6 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
                            <p className="text-xl font-black text-slate-500">District information for {stateNameDisplay} is being synchronized. Please refresh in a moment.</p>
                         </div>
                     )}
-
-                    <section className="space-y-10">
-                        <div className="flex items-center gap-4 border-l-[12px] border-l-primary pl-6">
-                            <Building2 className="text-primary h-10 w-10" />
-                            <h2 className="text-3xl font-black tracking-tight text-slate-900 uppercase tracking-widest">Full Post Office List</h2>
-                        </div>
-                        <PostOfficeTable postOffices={offices} searched={true} />
-                    </section>
                 </CardContent>
             </Card>
         </main>
