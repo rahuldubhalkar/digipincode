@@ -5,8 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { StateDetails } from '@/components/state-details';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home, MapPin, ArrowLeft } from 'lucide-react';
-import { getDistrictsByState } from '@/lib/districts';
+import { Home, MapPin, ArrowLeft, Building2 } from 'lucide-react';
+import { getPostOfficesByState } from '@/lib/districts';
+import { PostOfficeTable } from '@/components/post-office-table';
 
 export async function generateStaticParams() {
     const states = await getStates();
@@ -36,15 +37,19 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
     const stateNameParam = stateNameSlug.replace(/-/g, ' ').toUpperCase();
     const states = await getStates();
     
-    // Exact match check
-    if (!states.includes(stateNameParam)) {
-        // Try finding closest match or redirect
-        const found = states.find(s => s.replace(/ /g, '-').toLowerCase() === stateNameSlug);
-        if (!found) notFound();
+    // Find matching state name from the authorized list
+    const matchedState = states.find(s => s.replace(/ /g, '-').toLowerCase() === stateNameSlug) || stateNameParam;
+    
+    // Fetch offices directly to ensure we have data
+    const offices = await getPostOfficesByState(matchedState);
+    
+    if (!offices || offices.length === 0) {
+        notFound();
     }
     
-    const districts = await getDistrictsByState(stateNameParam);
-    const stateNameDisplay = stateNameParam.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    // Derive districts from the offices data
+    const districts = [...new Set(offices.map(po => po.district || (po as any).District).filter(Boolean))].sort();
+    const stateNameDisplay = matchedState.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
     return (
         <main className="container mx-auto px-4 py-8 space-y-8">
@@ -76,23 +81,30 @@ export default async function StatePage({ params }: { params: Promise<{ stateNam
                     </div>
                 </CardHeader>
                 <CardContent className="pt-8 space-y-12">
-                    <section>
-                        <div className="flex items-center gap-2 mb-6">
-                            <MapPin className="text-primary h-6 w-6" />
-                            <h2 className="text-2xl font-bold tracking-tight">Browse by District</h2>
-                        </div>
-                        {districts.length > 0 ? (
-                             <StateDetails 
-                                selectedState={stateNameParam}
+                    {districts.length > 0 && (
+                        <section>
+                            <div className="flex items-center gap-2 mb-6">
+                                <MapPin className="text-primary h-6 w-6" />
+                                <h2 className="text-2xl font-bold tracking-tight">Browse by District</h2>
+                            </div>
+                            <StateDetails 
+                                selectedState={matchedState}
                                 districts={districts}
                                 selectedDistrict=""
                                 selectedDivision=""
                             />
-                        ) : (
-                            <div className="text-center py-12 bg-muted/30 rounded-lg">
-                                <p className="text-muted-foreground">District information for {stateNameDisplay} is currently being updated. Please check back shortly.</p>
-                            </div>
-                        )}
+                        </section>
+                    )}
+
+                    <section className="space-y-6">
+                        <div className="flex items-center gap-2">
+                            <Building2 className="text-primary h-6 w-6" />
+                            <h2 className="text-2xl font-bold tracking-tight">All Post Offices in {stateNameDisplay}</h2>
+                        </div>
+                        <p className="text-muted-foreground">
+                            Below is the complete list of post offices and their respective 6-digit PIN codes for the entire state of {stateNameDisplay}.
+                        </p>
+                        <PostOfficeTable postOffices={offices} searched={true} />
                     </section>
                 </CardContent>
             </Card>

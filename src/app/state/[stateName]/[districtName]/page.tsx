@@ -6,22 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Home, ArrowLeft, MapPin, Hash } from 'lucide-react';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { getPostOfficesByState } from '@/lib/districts';
 import { PostOfficeTable } from '@/components/post-office-table';
-
-async function getPostOfficesByState(state: string): Promise<PostOffice[]> {
-    if (!state) return [];
-    try {
-        const filePath = path.join(process.cwd(), 'public', 'data', `${state.toUpperCase()}.json`);
-        const fileContent = await fs.readFile(filePath, 'utf-8');
-        const data = JSON.parse(fileContent);
-        return Array.isArray(data) ? data : [];
-    } catch (error) {
-        console.error(`Failed to read data for ${state}:`, error);
-        return [];
-    }
-}
 
 export async function generateMetadata({ params }: { params: Promise<{ stateName: string, districtName: string }> }) {
     const p = await params;
@@ -46,32 +32,39 @@ export default async function DistrictPage({ params }: { params: Promise<{ state
     
     if (!sNameSlug || !dNameSlug) notFound();
 
-    const stateNameParam = sNameSlug.replace(/-/g, ' ').toUpperCase();
-    const districtNameParam = dNameSlug.replace(/-/g, ' ').toUpperCase();
+    const states = await getStates();
+    const matchedState = states.find(s => s.replace(/ /g, '-').toLowerCase() === sNameSlug) || sNameSlug.replace(/-/g, ' ').toUpperCase();
     
-    const allPostOffices = await getPostOfficesByState(stateNameParam);
+    const allPostOffices = await getPostOfficesByState(matchedState);
     
     if (!allPostOffices || allPostOffices.length === 0) {
         notFound();
     }
     
-    const districtPostOffices = allPostOffices.filter(po => 
-        po && po.district && po.district.toUpperCase() === districtNameParam
-    );
+    const districtNameParam = dNameSlug.replace(/-/g, ' ').toUpperCase();
+    
+    // Filter with case-insensitivity and multiple key checks
+    const districtPostOffices = allPostOffices.filter(po => {
+        const d = po.district || (po as any).District;
+        return d && d.toUpperCase() === districtNameParam;
+    });
 
     if (districtPostOffices.length === 0) {
-        // Fallback: If no exact district match, it might be due to slug mismatch
-        const possibleDistricts = [...new Set(allPostOffices.map(po => po.district).filter(Boolean))];
-        const matched = possibleDistricts.find(d => d.replace(/ /g, '-').toLowerCase() === dNameSlug);
+        // Robust fallback: Find closest district match by slug
+        const matched = allPostOffices.find(po => {
+            const d = po.district || (po as any).District;
+            return d && d.replace(/ /g, '-').toLowerCase() === dNameSlug;
+        });
         
         if (matched) {
-            const redirectedOffices = allPostOffices.filter(po => po.district === matched);
-            return <DistrictView stateName={stateNameParam} districtName={matched} offices={redirectedOffices} sSlug={sNameSlug} />;
+            const targetDistrict = matched.district || (matched as any).District;
+            const redirectedOffices = allPostOffices.filter(po => (po.district || (po as any).District) === targetDistrict);
+            return <DistrictView stateName={matchedState} districtName={targetDistrict} offices={redirectedOffices} sSlug={sNameSlug} />;
         }
         notFound();
     }
 
-    return <DistrictView stateName={stateNameParam} districtName={districtNameParam} offices={districtPostOffices} sSlug={sNameSlug} />;
+    return <DistrictView stateName={matchedState} districtName={districtPostOffices[0].district || (districtPostOffices[0] as any).District} offices={districtPostOffices} sSlug={sNameSlug} />;
 }
 
 function DistrictView({ stateName, districtName, offices, sSlug }: { stateName: string, districtName: string, offices: PostOffice[], sSlug: string }) {
