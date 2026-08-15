@@ -1,3 +1,4 @@
+
 import 'server-only';
 import en from './locales/en.json';
 import mr from './locales/mr.json';
@@ -20,7 +21,8 @@ export async function getTranslation(locale: string) {
           return typeof curr === 'string' ? curr : null;
         };
 
-        let template = getFromDict(dictionary) || getFromDict(translations['en']) || key;
+        const templateValue = getFromDict(dictionary) || getFromDict(translations['en']);
+        const template = typeof templateValue === 'string' ? templateValue : key;
 
         if (values) {
             return template.replace(/\{\{(\w+)\}\}/g, (placeholder, placeholderKey) => {

@@ -47,7 +47,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       return typeof curr === 'string' ? curr : null;
     };
 
-    let template = getFromDict(translations[language]) || getFromDict(translations['en']) || key;
+    const templateValue = getFromDict(translations[language]) || getFromDict(translations['en']);
+    const template = typeof templateValue === 'string' ? templateValue : key;
 
     if (values) {
         return template.replace(/\{\{(\w+)\}\}/g, (placeholder, placeholderKey) => {

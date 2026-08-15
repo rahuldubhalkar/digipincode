@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PostOfficeTableProps {
@@ -39,12 +39,14 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                   <TableBody>
                     {postOffices.length > 0 ? (
                       postOffices.map((po, index) => {
-                        const district = po.district || (po as any).District || (po as any).districtname || 'N/A';
-                        const taluka = po.Taluk || (po as any).taluk || po.divisionname || 'N/A';
+                        if (!po) return null;
+                        const district = po.district || (po as any).District || (po as any).districtname || (po as any).Districtname || 'N/A';
+                        const taluka = po.Taluk || (po as any).taluk || (po as any).Taluka || po.divisionname || 'N/A';
+                        const officeName = po.officename || (po as any).officename || 'Unknown';
                         
                         return (
-                          <TableRow key={`${po.officename}-${po.pincode}-${index}`} className="hover:bg-muted/50 transition-colors">
-                            <TableCell className="font-medium text-primary">{po.officename}</TableCell>
+                          <TableRow key={`${officeName}-${po.pincode}-${index}`} className="hover:bg-muted/50 transition-colors">
+                            <TableCell className="font-medium text-primary">{officeName}</TableCell>
                             <TableCell className="font-mono bg-primary/5 px-2 rounded">{po.pincode}</TableCell>
                             <TableCell>{po.officetype}</TableCell>
                             <TableCell>{taluka}</TableCell>
@@ -69,14 +71,16 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                     <div className="space-y-4">
                     {postOffices.length > 0 ? (
                         postOffices.map((po, index) => {
-                            const district = po.district || (po as any).District || (po as any).districtname || 'N/A';
-                            const taluka = po.Taluk || (po as any).taluk || po.divisionname || 'N/A';
+                            if (!po) return null;
+                            const district = po.district || (po as any).District || (po as any).districtname || (po as any).Districtname || 'N/A';
+                            const taluka = po.Taluk || (po as any).taluk || (po as any).Taluka || po.divisionname || 'N/A';
+                            const officeName = po.officename || (po as any).officename || 'Unknown';
 
                             return (
-                                <Card key={`${po.officename}-${po.pincode}-${index}`} className="border-l-4 border-l-primary overflow-hidden shadow-sm">
+                                <Card key={`${officeName}-${po.pincode}-${index}`} className="border-l-4 border-l-primary overflow-hidden shadow-sm">
                                     <CardContent className="p-4">
                                         <div className="flex justify-between items-start mb-3">
-                                            <h3 className="font-bold text-primary text-lg">{po.officename}</h3>
+                                            <h3 className="font-bold text-primary text-lg">{officeName}</h3>
                                             <span className="font-mono bg-primary/10 text-primary px-2 py-1 rounded text-sm font-bold">
                                                 {po.pincode}
                                             </span>
