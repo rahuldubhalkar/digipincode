@@ -14,14 +14,10 @@ import {
   Clock, 
   AlertCircle, 
   TrendingUp, 
-  Info, 
-  HelpCircle,
-  Phone,
   MessageSquare,
   FileText,
   Truck,
   ShieldCheck,
-  ExternalLink
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -97,8 +93,8 @@ export function TrackingClientPage() {
       <div className="max-w-4xl mx-auto">
         <Card className="border-none shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] overflow-hidden bg-white rounded-3xl">
           <CardContent className="p-8 md:p-14">
-            <form onSubmit={handleTrack} className="flex flex-col md:flex-row gap-5">
-              <div className="relative flex-grow">
+            <form onSubmit={handleTrack} className="flex flex-col md:flex-row gap-5 items-center">
+              <div className="relative flex-grow w-full">
                 <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground" />
                 <Input
                   placeholder="Enter Tracking Number (e.g., EB123456789IN)"
@@ -111,7 +107,7 @@ export function TrackingClientPage() {
                 type="submit" 
                 disabled={isLoading || !trackingNumber.trim()} 
                 size="lg"
-                className="h-20 px-12 text-2xl font-black shadow-2xl transition-all active:scale-95 bg-primary hover:bg-primary/90 rounded-2xl"
+                className="h-20 w-full md:w-auto px-12 text-2xl font-black shadow-2xl transition-all active:scale-95 bg-primary hover:bg-primary/90 rounded-2xl shrink-0"
               >
                 {isLoading ? (
                   <>
@@ -119,7 +115,7 @@ export function TrackingClientPage() {
                     Searching...
                   </>
                 ) : (
-                  "TRACK SPEED POST"
+                  "TRACK NOW"
                 )}
               </Button>
             </form>
@@ -231,9 +227,14 @@ export function TrackingClientPage() {
         {/* Intro Section */}
         <section className="space-y-6">
             <h2 className="text-4xl font-black text-slate-900 tracking-tight">How to do Speed POST Tracking online?</h2>
-            <p className="text-xl text-slate-600 leading-relaxed font-medium">
-                After successfully sending Speed POST Parcel at Speed POST Office, customer or sender are given a 13 characters Speed POST Tracking Number. Sender can do Speed POST Tracking of their parcels using these tracking numbers.
-            </p>
+            <div className="text-xl text-slate-600 space-y-4 font-medium leading-relaxed">
+                <p>
+                    After successfully sending Speed POST Parcel at Speed POST Office, customer or sender are given a 13 characters Speed POST Tracking Number. Sender can do Speed POST Tracking of their parcels using these tracking numbers.
+                </p>
+                <p>
+                    Let's have a look at How to do Speed POST Tracking online.
+                </p>
+            </div>
         </section>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -250,7 +251,7 @@ export function TrackingClientPage() {
                     <ol className="space-y-4">
                         <li className="flex gap-4"><span className="font-black text-primary">01.</span> Enter ID in form above.</li>
                         <li className="flex gap-4"><span className="font-black text-primary">02.</span> Use receipt ID from Post Office.</li>
-                        <li className="flex gap-4"><span className="font-black text-primary">03.</span> Click "TRACK SPEED POST".</li>
+                        <li className="flex gap-4"><span className="font-black text-primary">03.</span> Click "TRACK NOW".</li>
                         <li className="flex gap-4"><span className="font-black text-primary">04.</span> View live events and status.</li>
                     </ol>
                 </div>
@@ -363,7 +364,7 @@ export function TrackingClientPage() {
                     </TableBody>
                 </Table>
             </div>
-            <p className="text-sm text-slate-500 italic px-4">* Taxes not included. Proof of Delivery (POD) fee is ₹10.00.</p>
+            <p className="text-sm text-slate-500 italic px-4">* Taxes not included. Proof of Delivery (POD) fee is ₹10.00 per article.</p>
         </section>
 
         {/* Delivery Time Table */}
@@ -396,6 +397,7 @@ export function TrackingClientPage() {
                     </TableBody>
                 </Table>
             </div>
+            <p className="text-sm text-slate-500 italic text-center">For Branch Offices, one additional day will be taken.</p>
         </section>
 
         {/* Disclaimer */}
