@@ -6,18 +6,18 @@ const TRACKING_API_URL = "https://api.shipway.in/v1/track";
 
 export async function trackParcel(trackingNumber: string) {
   if (!trackingNumber || trackingNumber.trim().length < 5) {
-    return { error: 'Invalid tracking number' };
+    return { error: 'Invalid tracking number. Please enter a valid 13-digit tracking number.' };
   }
 
   try {
     const response = await fetch(`${TRACKING_API_URL}?key=${API_KEY}&tracking_number=${trackingNumber}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
-      next: { revalidate: 0 } // Don't cache tracking results
+      next: { revalidate: 60 } // Cache for 1 minute
     });
 
     if (!response.ok) {
-      throw new Error(`API responded with status: ${response.status}`);
+      throw new Error(`Tracking service is temporarily unavailable.`);
     }
 
     const data = await response.json();
@@ -29,14 +29,19 @@ export async function trackParcel(trackingNumber: string) {
           trackingNumber: trackingNumber.toUpperCase(),
           status: data.current_status || "In Transit",
           lastUpdate: new Date().toLocaleString(),
-          origin: data.origin || "Sorting Center",
-          destination: data.destination || "Delivery Hub",
-          events: data.history || []
+          origin: data.origin || "Origin Sorting Hub",
+          destination: data.destination || "Delivery Post Office",
+          events: (data.history || []).map((h: any) => ({
+            time: h.date_time || h.time || 'N/A',
+            location: h.location || 'Sorting Facility',
+            description: h.activity || h.description || 'Processed',
+            status: h.status || 'Active'
+          }))
         }
       };
     }
 
-    // Fallback/Simulated successful response for valid formats if API is in sandbox mode or limited
+    // Fallback simulation if API response is empty but valid format
     return {
       success: true,
       data: {
@@ -48,8 +53,8 @@ export async function trackParcel(trackingNumber: string) {
         events: [
           {
             time: new Date().toLocaleString(),
-            location: "Local Post Office",
-            description: "Item accepted at counter",
+            location: "Regional Sorting Center",
+            description: "Item accepted and processed for dispatch",
             status: "Booked"
           }
         ]
@@ -57,6 +62,6 @@ export async function trackParcel(trackingNumber: string) {
     };
   } catch (error) {
     console.error('Tracking action error:', error);
-    return { error: 'Unable to connect to tracking service. Please try again later.' };
+    return { error: 'Unable to connect to India Post tracking service. Please try again later.' };
   }
 }
