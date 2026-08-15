@@ -38,16 +38,21 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                   </TableHeader>
                   <TableBody>
                     {postOffices.length > 0 ? (
-                      postOffices.map((po, index) => (
-                        <TableRow key={`${po.officename}-${po.pincode}-${index}`}>
-                          <TableCell className="font-medium">{po.officename}</TableCell>
-                          <TableCell className="font-mono">{po.pincode}</TableCell>
-                          <TableCell>{po.officetype}</TableCell>
-                          <TableCell>{po.Taluk || po.divisionname || 'N/A'}</TableCell>
-                          <TableCell>{po.district}</TableCell>
-                          <TableCell>{po.statename}</TableCell>
-                        </TableRow>
-                      ))
+                      postOffices.map((po, index) => {
+                        const district = po.district || (po as any).District || (po as any).districtname || 'N/A';
+                        const taluka = po.Taluk || (po as any).taluk || po.divisionname || 'N/A';
+                        
+                        return (
+                          <TableRow key={`${po.officename}-${po.pincode}-${index}`} className="hover:bg-muted/50 transition-colors">
+                            <TableCell className="font-medium text-primary">{po.officename}</TableCell>
+                            <TableCell className="font-mono bg-primary/5 px-2 rounded">{po.pincode}</TableCell>
+                            <TableCell>{po.officetype}</TableCell>
+                            <TableCell>{taluka}</TableCell>
+                            <TableCell>{district}</TableCell>
+                            <TableCell>{po.statename}</TableCell>
+                          </TableRow>
+                        );
+                      })
                     ) : (
                       <TableRow>
                         <TableCell colSpan={6} className="h-24 text-center">
@@ -63,23 +68,41 @@ export function PostOfficeTable({ postOffices, searched = true }: PostOfficeTabl
                 <ScrollArea className="h-[600px]">
                     <div className="space-y-4">
                     {postOffices.length > 0 ? (
-                        postOffices.map((po, index) => (
-                            <Card key={`${po.officename}-${po.pincode}-${index}`} className="border rounded-lg p-4">
-                                <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                                    <div className="font-semibold col-span-2 text-base text-primary">{po.officename}</div>
-                                    <div className="text-muted-foreground">Pincode</div>
-                                    <div className="font-mono">{po.pincode}</div>
-                                    <div className="text-muted-foreground">Type</div>
-                                    <div>{po.officetype}</div>
-                                    <div className="text-muted-foreground">Taluka</div>
-                                    <div>{po.Taluk || 'N/A'}</div>
-                                    <div className="text-muted-foreground">District</div>
-                                    <div>{po.district}</div>
-                                    <div className="text-muted-foreground">State</div>
-                                    <div>{po.statename}</div>
-                                </div>
-                            </Card>
-                        ))
+                        postOffices.map((po, index) => {
+                            const district = po.district || (po as any).District || (po as any).districtname || 'N/A';
+                            const taluka = po.Taluk || (po as any).taluk || po.divisionname || 'N/A';
+
+                            return (
+                                <Card key={`${po.officename}-${po.pincode}-${index}`} className="border-l-4 border-l-primary overflow-hidden shadow-sm">
+                                    <CardContent className="p-4">
+                                        <div className="flex justify-between items-start mb-3">
+                                            <h3 className="font-bold text-primary text-lg">{po.officename}</h3>
+                                            <span className="font-mono bg-primary/10 text-primary px-2 py-1 rounded text-sm font-bold">
+                                                {po.pincode}
+                                            </span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-y-2 text-sm border-t pt-3">
+                                            <div>
+                                                <p className="text-muted-foreground text-xs uppercase font-semibold">Office Type</p>
+                                                <p>{po.officetype}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-muted-foreground text-xs uppercase font-semibold">Taluka</p>
+                                                <p>{taluka}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-muted-foreground text-xs uppercase font-semibold">District</p>
+                                                <p>{district}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-muted-foreground text-xs uppercase font-semibold">State</p>
+                                                <p className="truncate">{po.statename}</p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            );
+                        })
                     ) : (
                         <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
                             {noResultsMessage}

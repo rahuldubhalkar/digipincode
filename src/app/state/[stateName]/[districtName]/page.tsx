@@ -33,38 +33,32 @@ export default async function DistrictPage({ params }: { params: Promise<{ state
     if (!sNameSlug || !dNameSlug) notFound();
 
     const states = await getStates();
-    const matchedState = states.find(s => s.replace(/ /g, '-').toLowerCase() === sNameSlug) || sNameSlug.replace(/-/g, ' ').toUpperCase();
+    const matchedState = states.find(s => s.replace(/ /g, '-').toLowerCase() === sNameSlug);
     
+    if (!matchedState) notFound();
+
     const allPostOffices = await getPostOfficesByState(matchedState);
     
     if (!allPostOffices || allPostOffices.length === 0) {
         notFound();
     }
     
-    const districtNameParam = dNameSlug.replace(/-/g, ' ').toUpperCase();
+    const districtNameSlug = dNameSlug.toLowerCase();
     
-    // Filter with case-insensitivity and multiple key checks
+    // Filter with case-insensitivity and multiple key checks (district, District, districtname)
     const districtPostOffices = allPostOffices.filter(po => {
-        const d = po.district || (po as any).District;
-        return d && d.toUpperCase() === districtNameParam;
+        const d = (po.district || (po as any).District || (po as any).districtname || '').toString();
+        return d && d.replace(/ /g, '-').toLowerCase() === districtNameSlug;
     });
 
     if (districtPostOffices.length === 0) {
-        // Robust fallback: Find closest district match by slug
-        const matched = allPostOffices.find(po => {
-            const d = po.district || (po as any).District;
-            return d && d.replace(/ /g, '-').toLowerCase() === dNameSlug;
-        });
-        
-        if (matched) {
-            const targetDistrict = matched.district || (matched as any).District;
-            const redirectedOffices = allPostOffices.filter(po => (po.district || (po as any).District) === targetDistrict);
-            return <DistrictView stateName={matchedState} districtName={targetDistrict} offices={redirectedOffices} sSlug={sNameSlug} />;
-        }
         notFound();
     }
 
-    return <DistrictView stateName={matchedState} districtName={districtPostOffices[0].district || (districtPostOffices[0] as any).District} offices={districtPostOffices} sSlug={sNameSlug} />;
+    const firstEntry = districtPostOffices[0];
+    const actualDistrictName = (firstEntry.district || (firstEntry as any).District || (firstEntry as any).districtname || dNameSlug.replace(/-/g, ' ')).toUpperCase();
+
+    return <DistrictView stateName={matchedState} districtName={actualDistrictName} offices={districtPostOffices} sSlug={sNameSlug} />;
 }
 
 function DistrictView({ stateName, districtName, offices, sSlug }: { stateName: string, districtName: string, offices: PostOffice[], sSlug: string }) {
